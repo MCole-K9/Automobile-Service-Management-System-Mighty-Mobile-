@@ -15,12 +15,6 @@ export default class Routes{
             res.send("API Call");
         });
 
-        // router.route("/test").get(async (req:Request, res:Response)=>{
-        //    const todoAll = await prisma.todo.findMany({})
-        //    res.send(todoAll)
-        // })
-
-
         return router;
 
     }
