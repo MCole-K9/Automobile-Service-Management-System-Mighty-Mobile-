@@ -10,11 +10,130 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
   referentialIntegrity = "prisma"
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 //Models Go here
 model User {
   id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+  email String  @db.VarChar(60) @unique
+  firstName  String @db.VarChar(70)
+  lastName String @db.VarChar(60)
+  password String @db.VarChar(255)
+  phoneNumber String? @db.VarChar(13)
+  vehicles Vehicle[]
+  assignedJobs Job[] @relation("AssignedMechanic") //name argument is to disambiguate
+  createdJobs Job[] @relation("CreatedBy")
+  roles Role[]
+  appointments Appointment[] @relation("MadeAppointment")
+  assignedAppointments Appointment[] @relation("AssignedMechanic")
+  addresses Address[]
+
+
 }
+
+model Address{
+  id Int @id @default(autoincrement())
+  streetAddress String @db.Text
+  town String @db.VarChar(100)
+  parish String @db.VarChar(90)
+  user User @relation(fields: [userId], references: [id])
+  userId Int 
+}
+
+model Role{
+  id Int @id @default(autoincrement())
+  role String @db.VarChar(40)
+  users User[]
+}
+model Vehicle{
+  id Int @id @default(autoincrement())
+  licensePlate String? @db.VarChar(8)
+  make String @db.VarChar(100)
+  model String @db.VarChar(100)
+  year Int 
+  owner User @relation(fields: [ownerId], references: [id])
+  ownerId Int
+  image String @db.VarChar(255)
+  jobs Job[]
+  
+  
+}
+
+model Appointment{
+  id Int @id @default(autoincrement())
+  problemDescription String @db.Text
+  date DateTime @db.DateTime()
+  streetAddress String @db.Text
+  town String @db.VarChar(255)
+  parish String @db.VarChar(90)
+  images Appointment_Image[]
+  customer User @relation(name: "MadeAppointment", fields: [customerId], references: [id])
+  customerId Int
+  fullfilled Boolean @db.TinyInt
+  assignedMech User? @relation(name: "AssignedMechanic", fields: [assignedMechId], references: [id])
+  assignedMechId Int
+
+}
+
+model Appointment_Image{
+  id Int @id @default(autoincrement())
+  imageUrl String 
+  appointment Appointment @relation(fields: [appoinmentId], references: [id])
+  appoinmentId Int
+}
+
+model Job {
+  jobNumber Int @id @default(autoincrement())
+  startDate DateTime @db.Date
+  endDate DateTime @db.Date
+  summary String @db.Text
+  totalCost Decimal? @db.Decimal()
+  isPaid Boolean @default(false)
+  serviceFee Decimal @db.Decimal()
+  streetAddress String? @db.Text
+  town String? @db.VarChar(255)
+  parish String? @db.VarChar(90)
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id])
+  vehicleId Int 
+  assignedMechanic User? @relation(name: "AssignedMechanic", fields: [assignedMechanicId], references: [id])
+  assignedMechanicId Int?
+  createdBy User @relation(name:"CreatedBy", fields: [createdById], references: [id])
+  createdById Int
+  stages JobStage[]
+  requiredParts JobPart[]
+
+}
+
+model JobStage{
+  id Int @id @default(autoincrement())
+  stageNumber Int
+  description String @db.Text
+  date DateTime @db.DateTime()
+  duration Int 
+  images JobStage_Image[]
+  job Job @relation(fields: [jobNumber], references: [jobNumber])
+  jobNumber Int
+  
+
+}
+model JobStage_Image{
+  id Int @id @default(autoincrement())
+  imageUrl String 
+  stage JobStage @relation(fields: [jobId], references: [id])
+  jobId Int
+  
+}
+
+model JobPart{
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(255)
+  price Decimal @db.Decimal()
+  job Job @relation(fields: [jobId], references: [jobNumber])
+  jobId Int
+
+
+}
+
+
+
 
