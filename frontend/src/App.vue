@@ -5,11 +5,7 @@ import HomeView from './views/HomeView.vue'
 </script>
 
 <template> 
- <div>
-  <HomeView />
-   <!-- <RouterView /> -->
- </div>
- 
+   <RouterView />
 </template>
 
 <style >
