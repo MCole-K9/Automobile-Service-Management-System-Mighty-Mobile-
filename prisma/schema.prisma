@@ -53,7 +53,7 @@ model Vehicle{
   year Int 
   owner User @relation(fields: [ownerId], references: [id])
   ownerId Int
-  image String @db.VarChar(255)
+  image String? @db.VarChar(255)
   jobs Job[]
   
   
@@ -69,9 +69,9 @@ model Appointment{
   images Appointment_Image[]
   customer User @relation(name: "MadeAppointment", fields: [customerId], references: [id])
   customerId Int
-  fullfilled Boolean @db.TinyInt
+  fullfilled Boolean @db.TinyInt @default(false)
   assignedMech User? @relation(name: "AssignedMechanic", fields: [assignedMechId], references: [id])
-  assignedMechId Int
+  assignedMechId Int?
 
 }
 
