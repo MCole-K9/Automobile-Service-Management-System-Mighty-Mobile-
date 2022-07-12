@@ -9,6 +9,7 @@
     "type-check": "vue-tsc --noEmit"
   },
   "dependencies": {
+    "@vuepic/vue-datepicker": "^3.3.1",
     "daisyui": "^2.18.0",
     "pinia": "^2.0.14",
     "vue": "^3.2.37",
