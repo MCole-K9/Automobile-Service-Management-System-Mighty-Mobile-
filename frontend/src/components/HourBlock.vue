@@ -2,12 +2,26 @@
 import { onMounted } from 'vue';
 
     
-    defineProps<{
+    const props = defineProps<{
         id: number
         blockType: string
         duration: number
         startTime: number
     }>()
+
+    onMounted(()=>{
+        if (props.id === undefined){
+            // Just leave this as it is, pretty much
+            
+        }
+        else{
+            // This needs to:
+            // * make block match duration
+            // * make the block's start time work
+            // * indicate the blockType 
+        }
+
+    })
 
 </script>
 
