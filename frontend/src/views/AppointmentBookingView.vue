@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import { defineComponent, reactive, ref } from "@vue/runtime-core";
 import NavBar from "../components/NavBar.vue";
+import BackendService from "../../BackendService"
+import type User from "../classlib/User";
+import RegisterForm from "../components/RegisterForm.vue";
 
 defineComponent({
     NavBar,
+    RegisterForm
 
 })
 
@@ -13,13 +17,51 @@ interface IVehicle{
     year:Number
 };
 
- let vehicle = reactive<IVehicle>({
+ let vehicle:IVehicle = reactive<IVehicle>({
+
     make: "",
     model: "",
     year: 2006,
  })
 
- const date = ref()
+ const date = ref<Date>()
+
+ let appointment = reactive({
+    appointmentDate: date,
+
+ })
+
+let fullName = ref("");
+
+ let user = reactive<User>({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
+
+ })
+
+//Will Relocate Function To a RegisterView.. Also Considering using the function from that Component/View here
+async function createUser(){
+     const res = await BackendService.createUser(user);
+     console.log(res);
+ }
+
+async function register(password:string) {
+    user.password = password;
+
+    createUser()
+}
+
+function handleContinueClick (){
+   let nameArray = fullName.value.split(" ");
+   if(nameArray.length === 2){
+       user.firstName = nameArray[0];
+       user.lastName = nameArray[1];
+   }
+}
+
+ 
 
 </script>
 
@@ -65,9 +107,9 @@ interface IVehicle{
             <div>
                 <div class="mx-auto flex flex-col space-y-4 w-full">
                     <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg" >Contact Information</label>
-                    <input class="input w-full input-bordered " placeholder="Full Name (John Doe)" type="text" id="name">
-                    <input class="input w-full input-bordered " placeholder="Email Address" type="email" id="email">
-                    <input class="input w-full input-bordered " placeholder="Phone Number" type="text" id="firstNam">
+                    <input class="input w-full input-bordered " v-model="fullName" placeholder="Full Name (John Doe)" type="text" id="name">
+                    <input class="input w-full input-bordered " v-model="user.email" placeholder="Email Address" type="email" id="email">
+                    <input class="input w-full input-bordered " v-model="user.phoneNumber" placeholder="Phone Number" type="text" id="firstNam">
                 </div>
                 <p class=" px-2 my-2"><small>Note: This information will be used in the creation of your account</small></p>
             </div>
@@ -98,6 +140,17 @@ interface IVehicle{
         </div>
         <div class="flex justify-center my-4">
             <button class="btn bg-ourYellow border-ourYellow w-4/12">Continue</button>
+        </div>
+        <!-- The button to open modal -->
+        <label @click="handleContinueClick" for="my-modal-3" class="btn modal-button">Continue</label>
+
+        <!-- Put this part before </body> tag -->
+        <input type="checkbox" id="my-modal-3" class="modal-toggle" />
+        <div class="modal">
+        <div class="modal-box relative  w-3/4 max-w-5xl">
+            <label for="my-modal-3" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+            <RegisterForm header="Complete Booking by Creating An Account" @Register="register" :User="user"/>
+        </div>
         </div>
         
     </section>
