@@ -1,16 +1,8 @@
 <script setup lang="ts">
     import {ref} from 'vue'
+    import HourBlock from './HourBlock.vue';
 
-    const appointments = ref([])
-
-    /* To do this i need to know the:
-     * - Start Time
-     * - Duration
-     * - Details
-     * 
-     * and then generate a component whose size fits according to that
-     * 
-    */
+    const dayBlocks = ref([])
 
 
 </script>
@@ -18,7 +10,7 @@
 <template>
     <div class="flex-nowrap">
         <div>
-            <!--This will contain the various blocks-->
+
         </div>
         <div>
             <p>&nbsp;8 AM</p>

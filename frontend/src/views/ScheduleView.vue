@@ -1,8 +1,9 @@
 <script setup lang="ts">
     import NavBar from '../components/NavBar.vue'
 
+    // Broadly: open the modal that's attached to the page
     function openScheduler(){
-
+        
 
     }
 
@@ -13,7 +14,7 @@
 
 
 
-    <div v-show="yes" class="modal">
+    <div v-show="" class="modal">
         <!--Placeholder-->
     </div>
 
