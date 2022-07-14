@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router';
+import {newUserStore} from "../stores/User"
 
+ const newUser = newUserStore()
 </script>
 <template>
  <div class="navbar bg-ourYellow">
@@ -47,7 +49,7 @@ import { RouterLink } from 'vue-router';
     </ul>
   </div>
   <div class="navbar-end">
-    <router-link to="/appointmentbooking" class="bg-red-600 border-ourYellow btn px-8">Login/Register</router-link>
+    <router-link @click="newUser.clearData" to="/register" class="bg-red-600 border-ourYellow btn px-8">Login/Register</router-link>
   </div>
 </div>
 </template>

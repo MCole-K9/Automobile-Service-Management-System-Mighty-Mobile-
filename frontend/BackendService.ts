@@ -8,14 +8,14 @@ export default class BackendService{
     static async createUser(user:User) {
         
         try{
-            console.log(user)
-            const res = await axios.post(URL+"/user", {
+            
+            const res = await axios.post(URL+"/user/register", {
                 user   
             })
-            return(res.data)
+            return(res)
 
         }catch(err){
-
+            
         }
     }
 }

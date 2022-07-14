@@ -2,8 +2,8 @@
 import { defineComponent, reactive, ref } from "@vue/runtime-core";
 import NavBar from "../components/NavBar.vue";
 import BackendService from "../../BackendService"
-import type User from "../classlib/User";
 import RegisterForm from "../components/RegisterForm.vue";
+import {newUserStore} from "../stores/User"
 
 defineComponent({
     NavBar,
@@ -31,34 +31,29 @@ interface IVehicle{
 
  })
 
+ const newUser = newUserStore()
+
+ 
+
 let fullName = ref("");
+let email = ref("")
+let phoneNumber = ref("")
 
- let user = reactive<User>({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phoneNumber: "",
-
- })
-
-//Will Relocate Function To a RegisterView.. Also Considering using the function from that Component/View here
-async function createUser(){
-     const res = await BackendService.createUser(user);
-     console.log(res);
- }
-
-async function register(password:string) {
-    user.password = password;
-
-    createUser()
-}
 
 function handleContinueClick (){
-   let nameArray = fullName.value.split(" ");
-   if(nameArray.length === 2){
-       user.firstName = nameArray[0];
-       user.lastName = nameArray[1];
-   }
+
+    newUser.splitName(fullName.value)
+    newUser.$state.User.email = email.value;
+    newUser.$state.User.phoneNumber = phoneNumber.value;
+
+    
+}
+
+
+function onRegister(){
+
+    newUser.clearData()
+    //Route to login
 }
 
  
@@ -108,8 +103,8 @@ function handleContinueClick (){
                 <div class="mx-auto flex flex-col space-y-4 w-full">
                     <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg" >Contact Information</label>
                     <input class="input w-full input-bordered " v-model="fullName" placeholder="Full Name (John Doe)" type="text" id="name">
-                    <input class="input w-full input-bordered " v-model="user.email" placeholder="Email Address" type="email" id="email">
-                    <input class="input w-full input-bordered " v-model="user.phoneNumber" placeholder="Phone Number" type="text" id="firstNam">
+                    <input class="input w-full input-bordered " v-model="email" placeholder="Email Address" type="email" id="email">
+                    <input class="input w-full input-bordered " v-model="phoneNumber" placeholder="Phone Number" type="text" id="firstNam">
                 </div>
                 <p class=" px-2 my-2"><small>Note: This information will be used in the creation of your account</small></p>
             </div>
@@ -139,17 +134,17 @@ function handleContinueClick (){
             </div>
         </div>
         <div class="flex justify-center my-4">
-            <button class="btn bg-ourYellow border-ourYellow w-4/12">Continue</button>
+            <!-- The button to open modal -->
+            <label @click="handleContinueClick" for="my-modal-3" class="btn bg-ourYellow border-ourYellow w-4/12 modal-button">Continue</label>
         </div>
-        <!-- The button to open modal -->
-        <label @click="handleContinueClick" for="my-modal-3" class="btn modal-button">Continue</label>
+        
 
         <!-- Put this part before </body> tag -->
         <input type="checkbox" id="my-modal-3" class="modal-toggle" />
         <div class="modal">
         <div class="modal-box relative  w-3/4 max-w-5xl">
             <label for="my-modal-3" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
-            <RegisterForm header="Complete Booking by Creating An Account" @Register="register" :User="user"/>
+            <RegisterForm header="Complete Booking by Creating An Account" @Registered="onRegister"/>
         </div>
         </div>
         

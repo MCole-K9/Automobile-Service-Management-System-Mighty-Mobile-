@@ -21,6 +21,11 @@ const router = createRouter({
       path: "/appointmentbooking",
       name: "appointmentbooking",
       component: ()=> import("../views/AppointmentBookingView.vue")
+    },
+    {
+      path: "/register",
+      name: "register",
+      component: ()=> import("@/views/RegisterView.vue")
     }
   ]
 })
