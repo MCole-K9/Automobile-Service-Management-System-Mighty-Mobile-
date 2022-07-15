@@ -1,7 +1,20 @@
 
 export class MonthlySchedule{
-
+    // rn i have no idea whether or not i should use a class, type, interface, or god knows what else
 }
+
+type HourBlock = {
+    time: Date
+    description: string
+    duration: number
+    
+}
+
+type DayBlock = {
+    day: number
+    hourBlocks: HourBlock[];
+}
+
 
 // Returns a class object that holds all of the remaining days of the month
 // (from the current day), along with all of their scheduled events and/or
