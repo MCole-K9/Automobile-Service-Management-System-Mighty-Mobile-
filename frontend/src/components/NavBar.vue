@@ -49,7 +49,7 @@ import {newUserStore} from "../stores/User"
     </ul>
   </div>
   <div class="navbar-end">
-    <router-link @click="newUser.clearData" to="/register" class="bg-red-600 border-ourYellow btn px-8">Login/Register</router-link>
+    <router-link @click="newUser.clearData" to="/login" class="bg-red-600 border-ourYellow btn px-8">Login/Register</router-link>
   </div>
 </div>
 </template>

@@ -1,6 +1,6 @@
 import { Response, Request, Router} from "express";
 import { PrismaClient } from "@prisma/client"; //Db Connection
-import {genSalt, hash} from "bcrypt"
+import bcrypt, {genSalt, hash} from "bcrypt"
 
 enum UserRole{
     ADMIN = 1,
@@ -23,7 +23,7 @@ export default class Routes{
             res.send("API Call");
         });
 
-        router.route("/user/register").post(async (req:Request, res:Response)=>{
+        router.post("/user/register", (async (req:Request, res:Response)=>{
 
             try{
                 
@@ -32,15 +32,15 @@ export default class Routes{
                 const email:string = req.body.user.email;
                 const phoneNumber:string = req.body.user.phoneNumber;
 
-                let user = prisma.user.findFirst({
+                let user = await prisma.user.findFirst({
                     where: {
                         email: email
                     }
                 })
 
-                if (typeof user != null){
+                if (user !== null){
                     
-                    res.send({message: "User Already Exits"})
+                    res.send({message: "User Already Exits", registered: false})
 
                 }else{
                     const salt = await genSalt();
@@ -63,7 +63,7 @@ export default class Routes{
                         }
                     });
 
-                    res.status(200).send(createdUser)
+                    res.status(200).send({createdUser, registered: true})
                 }
 
             }catch(err){
@@ -71,8 +71,47 @@ export default class Routes{
                 res.status(400).send(err)
             }
 
-        })
+        }))
 
+        router.post("/user/login", (async (req:Request, res:Response)=>{
+
+            try{
+                
+                const email:string = req.body.email;
+
+                let user = await prisma.user.findUnique({
+                    where: {
+                        email: email
+                    },
+                    
+                });
+        
+                if (user !==  null){
+
+                    const isMatch = await bcrypt.compare(req.body.password as string , user?.password as string);
+
+                    if (isMatch){
+
+
+                        res.status(200).send({user, login: true})
+                        
+                    }else{
+                        res.send({message: "Email or Password Incorrect", login: false});
+                    }  
+
+                }else{
+
+                    res.send({message: "Email or Password Incorrect", login: false});
+                }
+
+
+
+            }catch(err){
+
+                res.status(400).send(err)
+            }
+
+        }))
 
 
 

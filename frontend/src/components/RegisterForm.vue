@@ -1,7 +1,13 @@
 <script setup lang="ts">
-import { computed, ref, reactive , onMounted } from "vue"
+import { computed, ref, reactive , onMounted, defineComponent } from "vue"
 import BackendService from "../../BackendService";
 import {newUserStore} from "../stores/User"
+
+defineComponent({
+    name: "RegisterForm",
+    
+})
+
 
 const props = defineProps({
     header: String,
@@ -33,13 +39,16 @@ function handleInputChange(event: any){
 }
 
 async function register(){
+    
+    if (passwordIsMatch){ 
 
-    if (passwordIsMatch){
 
         newUser.changeAttr("password", password.value)
 
         const res = await BackendService.createUser(newUser.User);
         //emit('Registered')
+
+        //Give Message if registered
         console.log(res);
 
     }
@@ -91,9 +100,9 @@ async function register(){
                     </div>
                     <div class="mt-6 text-grey-dark">
                         Already have an account?
-                        <a class="text-blue-600 hover:underline" href="#">
+                        <router-link to="/login" class="text-blue-600 hover:underline" href="#">
                             Log in
-                        </a>
+                        </router-link>
                     </div>
             </form>
         </div>
