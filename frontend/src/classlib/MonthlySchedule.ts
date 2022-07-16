@@ -1,7 +1,8 @@
-
-export class MonthlySchedule{
-    // rn i have no idea whether or not i should use a class, type, interface, or god knows what else
+type MonthBlock = {
+    month: number
+    workingDays: DayBlock[]
 }
+
 
 type HourBlock = {
     time: Date
@@ -12,17 +13,20 @@ type HourBlock = {
 
 type DayBlock = {
     day: number
-    hourBlocks: HourBlock[];
+    hourBlocks: HourBlock[]
 }
 
 
-// Returns a class object that holds all of the remaining days of the month
+// Returns an object that holds all of the remaining days of the month
 // (from the current day), along with all of their scheduled events and/or
 // free blocks for scheduling
-export default function createMonthObject(month: number, currentDate: Date): MonthlySchedule {
+export default function createMonthObject(month: number, currentDate: Date): MonthBlock {
+    const monthlySchedule = {} as MonthBlock;
+    
     try{
+        monthlySchedule.month = month;
+        
         let daysInMonth: number = 0;
-        let workingDays: number[] = [];
 
         // get the number of days in the month
         switch (month){
@@ -77,40 +81,42 @@ export default function createMonthObject(month: number, currentDate: Date): Mon
                 break;
         }
         
-        // It's necessary to distinguish between whether or not the month given
-        // is the current month or not
-        if (month === currentDate.getMonth()){
-            // use the current day to get rid of every day up to (not including) the currentDay
-            for (let i: number = currentDate.getDate() ; daysInMonth; i++){
-                let dayCompare: Date = new Date(currentDate.getFullYear(), 
-                                        currentDate.getMonth(), i);
+        // It's necessary to distinguish between whether the month passed is the current one
+        // or one the user wishes to see
+        let chosenMonth: Date;
+
+        if (currentDate.getMonth() === month){
+            chosenMonth = new Date(currentDate);
+        }
+        else{
+            chosenMonth = new Date(currentDate.getFullYear(), month, 1);
+        }
+        
+
+        // Creating the objects for each day
+        for (let i: number = chosenMonth.getDate(); i <= daysInMonth; i++){
+            // Check for and exclude Saturdays and Sundays
+            if (!(chosenMonth.getDay() === 6) && !(chosenMonth.getDay() === 0)){
                 
-                // Excludes Saturday and Sunday from the list of available days
-                if (!(dayCompare.getDay() === 0) && !(dayCompare.getDay() === 6)){
-                    workingDays.push(i);
-                }
-                
-                           
-                // For each day, DB call to get the number of scheduled events for that day
-                // put the scheduled blocks into the day object
-                // - Needs to actually be an object that can hold days and hour-blocks
+                let workingDayBlock: DayBlock = {} as DayBlock;
+                workingDayBlock.day = chosenMonth.getDate();
+                monthlySchedule.workingDays.push(workingDayBlock);
+
+                chosenMonth.setDate(chosenMonth.getDate()+1);
                 
             }
         }
-        else{
-            for (let i: number = 0; daysInMonth; i++){
-                let dayCompare: Date = new Date(currentDate.getFullYear(), month);
-                
-                // Excludes Saturday and Sunday from the list of available days
-                if (!(dayCompare.getDay() === 0) && !(dayCompare.getDay() === 6)){
-                    workingDays.push(i);
-                }
-            }           
+
+        // once every day added to the month object, check each day to see which
+        // hours are taken and available 
+        for (let day in monthlySchedule.workingDays){
+            // This should probably be one API call, rather than several ones
         }
+
     }
     catch(functionError){
         alert(functionError);
     }
 
-    return new MonthlySchedule();
+    return monthlySchedule;
 }
