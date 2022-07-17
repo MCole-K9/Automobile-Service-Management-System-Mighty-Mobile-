@@ -2,6 +2,7 @@ import { Response, Request, Router} from "express";
 import { PrismaClient } from "@prisma/client"; //Db Connection
 import bcrypt, {genSalt, hash} from "bcrypt"
 
+
 enum UserRole{
     ADMIN = 1,
     Manager,
@@ -26,6 +27,7 @@ export default class Routes{
         router.post("/user/register", (async (req:Request, res:Response)=>{
 
             try{
+                console.log(req.body)
                 
                 const firstName:string = req.body.user.firstName;
                 const lastName:string = req.body.user.lastName;
@@ -40,7 +42,7 @@ export default class Routes{
 
                 if (user !== null){
                     
-                    res.send({message: "User Already Exits", registered: false})
+                    res.send({message: "Account Already Exits", registered: false})
 
                 }else{
                     const salt = await genSalt();
@@ -51,7 +53,7 @@ export default class Routes{
                             
                             firstName: firstName,
                             lastName: lastName,
-                            email: email,
+                            email: email.toLowerCase(),
                             phoneNumber: phoneNumber,
                             password: hashedPassword ,
                             roles: {
@@ -68,6 +70,7 @@ export default class Routes{
 
             }catch(err){
 
+                console.log(err)
                 res.status(400).send(err)
             }
 
@@ -76,12 +79,13 @@ export default class Routes{
         router.post("/user/login", (async (req:Request, res:Response)=>{
 
             try{
+
                 
                 const email:string = req.body.email;
 
                 let user = await prisma.user.findUnique({
                     where: {
-                        email: email
+                        email: email.toLowerCase()
                     },
                     
                 });
@@ -111,7 +115,83 @@ export default class Routes{
                 res.status(400).send(err)
             }
 
-        }))
+        }));
+
+        router.route("/user/:id/vehicle").get(async (req:Request, res:Response)=>{
+
+            //Get User Vehicles 
+            
+        }).post(async (req:Request, res:Response)=>{
+
+            try{
+                console.log(req.body)
+
+
+                const userId: number = Number.parseInt(req.params.id) ;
+
+                let vehicle = await prisma.vehicle.create({
+
+                    data: {
+                        make: req.body.vehicle.make as string,
+                        model: req.body.vehicle.model as string,
+                        year: Number.parseInt(req.body.vehicle.year) ,
+                        owner: {
+                            connect: {
+                                id: userId
+                            }
+                        }
+                    }
+
+                })
+
+                res.status(200).send(vehicle);
+
+            }catch(err){
+
+            }
+        })
+
+        router.route("/user/:id/appointmentbooking").post(async (req:Request, res:Response)=>{
+
+            try{
+
+                console.log(req.body)
+
+                const userId: number = Number.parseInt(req.params.id) ;
+
+                let appointment = await prisma.appointment.create({
+                    data: {
+                        problemDescription: req.body.appointment.problemDescription as string,
+                        date: req.body.appointment.date,
+                        streetAddress: req.body.appointment.streetAddress as string,
+                        town: req.body.appointment.town as string,
+                        parish: req.body.appointment.parish as string,
+                        customer: {
+                            connect: {
+                                id: userId
+                            }
+                        },
+                        vehicle:{
+                            connect: {
+                                id: Number.parseInt(req.body.appointment.vehicleId)
+                            }
+                        }
+                    }
+                })
+
+                res.status(200).send(appointment)
+
+
+            }catch(err){
+
+                
+                res.send(err)
+            }
+            
+
+
+            
+        });
 
 
 

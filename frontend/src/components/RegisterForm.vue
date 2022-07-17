@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, reactive , onMounted, defineComponent } from "vue"
+import { computed, ref, defineComponent } from "vue"
 import BackendService from "../../BackendService";
 import {newUserStore} from "../stores/User"
 
@@ -14,7 +14,7 @@ const props = defineProps({
 })
 
 
-const emit = defineEmits(['Registered']);
+const emit = defineEmits(['registered']);
 
 const newUser = newUserStore()
 
@@ -46,10 +46,18 @@ async function register(){
         newUser.changeAttr("password", password.value)
 
         const res = await BackendService.createUser(newUser.User);
-        //emit('Registered')
+        console.log(res?.data)
+
+        if (res?.data.registered){
+
+            const userId: number = res?.data.createdUser.id
+            emit('registered', userId)
+        }
+        
+        
 
         //Give Message if registered
-        console.log(res);
+        
 
     }
      

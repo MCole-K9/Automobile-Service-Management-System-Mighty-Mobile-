@@ -23,7 +23,7 @@ function onRegister(){
 <template>
   <main>
     <NavBar />
-    <RegisterForm header="Register"  @Registered="onRegister"/>
+    <RegisterForm header="Register"  @registered="onRegister"/>
   
   </main>
 </template>
