@@ -4,6 +4,7 @@ import NavBar from "../components/NavBar.vue";
 import BackendService from "../../BackendService"
 import RegisterForm from "../components/RegisterForm.vue";
 import {newUserStore} from "../stores/User"
+import type { Appointment, Vehicle } from "../classlib/Types";
 
 defineComponent({
     NavBar,
@@ -11,27 +12,38 @@ defineComponent({
 
 })
 
-interface IVehicle{
-    make:String,
-    model:String,
-    year:Number
-};
-
- let vehicle:IVehicle = reactive<IVehicle>({
-
+ let vehicle = reactive<Vehicle>({
+    id: 0,
     make: "",
     model: "",
     year: 2006,
+    ownerId: 0,
+    licensePlate: null,
+    image: null
  })
 
- const date = ref<Date>()
+ const date = ref<Date>(new Date())
 
- let appointment = reactive({
-    appointmentDate: date,
+ let appointment = reactive<Appointment>({
+   id: 0,
+   date: new Date(),
+   problemDescription: "",
+   streetAddress: "",
+   town: "",
+   parish: "",
+   customerId: 0,
+   assignedMechId: 0,
+   vehicleId: 0,
+   fulfilled: false
 
- })
 
- const newUser = newUserStore()
+ });
+
+ let firstNoticed = ref<string>();
+
+
+
+ const newUser = newUserStore();
 
  
 
@@ -50,10 +62,25 @@ function handleContinueClick (){
 }
 
 
-function onRegister(){
+async function onRegister(userId:number){
+    try{
+        newUser.clearData()
+        
 
-    newUser.clearData()
-    //Route to login
+        const vehicleRegRes = await BackendService.registerVehicle(userId, vehicle);
+        console.log(vehicleRegRes?.data)
+
+        appointment.vehicleId = vehicleRegRes?.data.id;
+
+        const aptBookingRes = await BackendService.makeAppointment(userId, appointment);
+        console.log(aptBookingRes)
+        //Route to login
+
+    }catch(err){
+
+        console.log({error:err, source: "onRegister Function in AppointmentBookingView"})
+    }
+    
 }
 
  
@@ -93,7 +120,7 @@ function onRegister(){
                 <div class="mx-auto flex flex-col space-y-4 w-full">
                     <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg" for="aptdate">Appointment Date</label>
                     <!-- <input class="input w-full input-bordered " type="date"  id="aptdate"> -->
-                    <Datepicker v-model="date" inputClassName="input w-full input-bordered" id="aptdate"></Datepicker>
+                    <Datepicker v-model="appointment.date" inputClassName="input w-full input-bordered" id="aptdate"></Datepicker>
 
                     <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg" for="apttime">Appointment Time</label>
                     <input class="input w-full input-bordered " type="time"  id="apttime">
@@ -114,22 +141,22 @@ function onRegister(){
             <div>
                 <div class="mx-auto flex flex-col space-y-4 w-full">
                     <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg" for="problemDescription">Problem Description</label>
-                    <textarea rows="6" class="textarea textarea-bordered" placeholder="Problem Description" id="problemDescription"></textarea>
-                    <select class="select select-bordered w-full" id="firstNoticed">
-                        <option disabled selected>First Noticed?</option>
-                        <option>Today</option>
-                        <option>Yesterday</option>
-                        <option>Last 7 Days</option>
-                        <option>Some Time this Month</option>
+                    <textarea rows="6" class="textarea textarea-bordered" v-model="appointment.problemDescription" placeholder="Problem Description" id="problemDescription"></textarea>
+                    <select v-model="firstNoticed" class="select select-bordered w-full" id="firstNoticed">
+                        <option  disabled selected>First Noticed?</option>
+                        <option value="Today">Today</option>
+                        <option value="Yesterday">Yesterday</option>
+                        <option value="Last 7 Days">Last 7 Days</option>
+                        <option value="Some Time this Month">Some Time this Month</option>
                     </select>
                 </div>
             </div>
             <div>
                 <div class="mx-auto flex flex-col space-y-4 w-full">
                     <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg" >Location</label>
-                    <input class="input w-full input-bordered " placeholder="Street Address" type="text" name="street_address" id="street_address">
-                    <input class="input w-full input-bordered " placeholder="City/Town" type="text" name="city" id="city">
-                    <input class="input w-full input-bordered " placeholder="Parish" type="text" name="parish" id="parish">
+                    <input v-model="appointment.streetAddress" class="input w-full input-bordered " placeholder="Street Address" type="text" name="street_address" id="street_address">
+                    <input v-model="appointment.town" class="input w-full input-bordered " placeholder="City/Town" type="text" name="city" id="city">
+                    <input v-model="appointment.parish" class="input w-full input-bordered " placeholder="Parish" type="text" name="parish" id="parish">
                 </div>
             </div>
         </div>
@@ -144,7 +171,7 @@ function onRegister(){
         <div class="modal">
         <div class="modal-box relative  w-3/4 max-w-5xl">
             <label for="my-modal-3" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
-            <RegisterForm header="Complete Booking by Creating An Account" @Registered="onRegister"/>
+            <RegisterForm header="Complete Booking by Creating An Account" @registered="onRegister"/>
         </div>
         </div>
         

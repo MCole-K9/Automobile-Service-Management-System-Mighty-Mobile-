@@ -1,9 +1,19 @@
 import { defineStore} from "pinia";
-import User from "@/classlib/User";
+import type {User} from "@/classlib/Types";
+
+
+let User: User  =  {
+    id: 0,
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    phoneNumber: ""
+};
 
 export const newUserStore = defineStore("newUser", {
     state: ()=>({
-        User  :  new User("", "", "", "")
+        User  :  User
     }),
     actions: {
         changeAttr(attrName:string, value:string){
@@ -24,7 +34,7 @@ export const newUserStore = defineStore("newUser", {
             }
         },
         clearData(){
-            this.User = new User("", "", "", "");
+            this.User = User;
         }
     },
     getters: {

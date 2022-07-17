@@ -1,7 +1,6 @@
+import type { User, Appointment, Vehicle } from "./src/classlib/Types";
 import axios from "axios";
 
-
-import User from "./src/classlib/User";
 
 const URL = "http://localhost:5000/api"
 
@@ -14,7 +13,7 @@ export default class BackendService{
             const res = await axios.post(URL + "/user/register", {
                 user   
             })
-            return(res)
+            return(res);
 
         }catch(err){
             
@@ -32,6 +31,32 @@ export default class BackendService{
 
         }
         
+    }
+
+    static async registerVehicle(userId: number, vehicle:Vehicle){
+
+        try{
+            const res = await axios.post(URL + `/user/${userId}/vehicle`, {
+                vehicle
+            })
+            return res;
+
+        }catch(err){
+
+        }
+            
+    }
+
+    static async makeAppointment(userId: number, appointment:Appointment){
+        try{
+            const res = await axios.post(URL + `/user/${userId}/appointmentbooking`, {
+                appointment
+            })
+            return res;
+
+        }catch(err){
+
+        }
     }
 
 }
