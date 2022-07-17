@@ -4,10 +4,16 @@ type MonthBlock = {
 }
 
 
-type HourBlock = {
-    time: Date
-    description: string
-    duration: number
+class HourBlock {
+    time: Date;
+    description: string;
+    duration: number;
+
+    constructor(){
+        this.time = new Date()
+        this.description = "";
+        this.duration = 1;
+    }
     
 }
 
@@ -106,6 +112,12 @@ export default function createMonthObject(month: number, currentDate: Date): Mon
                 
             }
         }
+        
+        // this should be able to generate a default list of however many blocks are
+        // available in one working day (9h, 8AM->5PM)
+
+        // default values imply
+
 
         // once every day added to the month object, check each day to see which
         // hours are taken and available 
