@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import {ref} from 'vue'
-    import HourBlock from './HourBlock.vue';
+    import HourBlock from './HourBlockComponent.vue';
 
     const dayBlocks = ref([])
 

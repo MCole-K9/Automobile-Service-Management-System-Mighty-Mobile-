@@ -55,31 +55,34 @@ model Vehicle{
   ownerId Int
   image String? @db.VarChar(255)
   jobs Job[]
-  
-  
+  appointments Appointment[]
 }
 
 model Appointment{
   id Int @id @default(autoincrement())
   problemDescription String @db.Text
-  date DateTime @db.DateTime()
+  suggestedDate DateTime @db.DateTime()
   streetAddress String @db.Text
   town String @db.VarChar(255)
   parish String @db.VarChar(90)
   images Appointment_Image[]
-  customer User @relation(name: "MadeAppointment", fields: [customerId], references: [id])
+  customer User @relation(name: "MadeAppointment", fields: [customerId], references: [id], onDelete: Cascade)
   customerId Int
-  fullfilled Boolean @db.TinyInt @default(false)
-  assignedMech User? @relation(name: "AssignedMechanic", fields: [assignedMechId], references: [id])
+  fulfilled Boolean @db.TinyInt @default(false)
+  assignedMech User? @relation(name: "AssignedMechanic", fields: [assignedMechId], references: [id], onDelete: SetNull)
   assignedMechId Int?
-
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
+  vehicleId Int
+  /// Corresponds to the scheduled date and information created by the Manager after processing the appt
+  scheduledItem Schedule? @relation(fields: [scheduledItemId], references: [id], onUpdate: Cascade)
+  scheduledItemId Int? @unique
 }
 
 model Appointment_Image{
   id Int @id @default(autoincrement())
   imageUrl String 
-  appointment Appointment @relation(fields: [appoinmentId], references: [id])
-  appoinmentId Int
+  appointment Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  appointmentId Int
 }
 
 model Job {
@@ -93,11 +96,11 @@ model Job {
   streetAddress String? @db.Text
   town String? @db.VarChar(255)
   parish String? @db.VarChar(90)
-  vehicle Vehicle @relation(fields: [vehicleId], references: [id])
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
   vehicleId Int 
-  assignedMechanic User? @relation(name: "AssignedMechanic", fields: [assignedMechanicId], references: [id])
+  assignedMechanic User? @relation(name: "AssignedMechanic", fields: [assignedMechanicId], references: [id], onDelete: SetNull)
   assignedMechanicId Int?
-  createdBy User @relation(name:"CreatedBy", fields: [createdById], references: [id])
+  createdBy User @relation(name:"CreatedBy", fields: [createdById], references: [id], onDelete: Cascade)
   createdById Int
   stages JobStage[]
   requiredParts JobPart[]
@@ -105,22 +108,25 @@ model Job {
 }
 
 model JobStage{
-  id Int @id @default(autoincrement())
   stageNumber Int
   description String @db.Text
-  date DateTime @db.DateTime()
   duration Int 
   images JobStage_Image[]
-  job Job @relation(fields: [jobNumber], references: [jobNumber])
+  job Job @relation(fields: [jobNumber], references: [jobNumber], onDelete: Cascade)
   jobNumber Int
-  
+  /// Corresponds to the schedule stored in the database
+  scheduledItem Schedule? @relation(fields: [scheduledItemId], references: [id], onUpdate: Cascade)
+  scheduledItemId Int? @unique
+
+  @@id([stageNumber, jobNumber], name: "id")
 
 }
 model JobStage_Image{
   id Int @id @default(autoincrement())
   imageUrl String 
-  stage JobStage @relation(fields: [jobId], references: [id])
-  jobId Int
+  stage JobStage @relation(fields: [jobStageId, jobNumberId], references: [stageNumber, jobNumber], onDelete: Cascade)
+  jobStageId Int
+  jobNumberId Int
   
 }
 
@@ -128,12 +134,17 @@ model JobPart{
   id Int @id @default(autoincrement())
   name String @db.VarChar(255)
   price Decimal @db.Decimal()
-  job Job @relation(fields: [jobId], references: [jobNumber])
+  job Job @relation(fields: [jobId], references: [jobNumber], onDelete: Cascade)
   jobId Int
 
 
 }
 
-
+model Schedule{
+  id Int @id @default(autoincrement())
+  date DateTime @unique
+  appointment Appointment?
+  jobStage JobStage?
+}
 
 
