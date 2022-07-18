@@ -165,7 +165,7 @@ export default class Routes{
                 let appointment = await prisma.appointment.create({
                     data: {
                         problemDescription: req.body.appointment.problemDescription as string,
-                        date: req.body.appointment.date,
+                        suggestedDate: req.body.appointment.date,
                         streetAddress: req.body.appointment.streetAddress as string,
                         town: req.body.appointment.town as string,
                         parish: req.body.appointment.parish as string,
