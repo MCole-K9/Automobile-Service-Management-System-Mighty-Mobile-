@@ -1,5 +1,7 @@
-import { defineStore} from "pinia";
+import {defineStore} from "pinia";
 import type {User} from "@/classlib/Types";
+
+
 
 
 let User: User  =  {
@@ -8,12 +10,34 @@ let User: User  =  {
     lastName: "",
     email: "",
     password: "",
-    phoneNumber: ""
+    phoneNumber: "",
+    roles: []
 };
+
+
+
+export const currentUserStore = defineStore("currentUser", {
+    state: ()=>({
+        User: User,
+        loggedIn: false,
+    }),
+    actions:{
+        
+        setUser(user:User){
+            this.User = user;
+            this.User.password = "";
+            this.loggedIn = true;
+        }
+    },
+    persist: true
+})
+
+
+
 
 export const newUserStore = defineStore("newUser", {
     state: ()=>({
-        User  :  User
+        User : User
     }),
     actions: {
         changeAttr(attrName:string, value:string){
@@ -43,3 +67,4 @@ export const newUserStore = defineStore("newUser", {
         }
     }
 })
+
