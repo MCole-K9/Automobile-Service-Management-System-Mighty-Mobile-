@@ -74,7 +74,7 @@ model Appointment{
   vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
   vehicleId Int
   /// Corresponds to the scheduled date and information created by the Manager after processing the appt
-  scheduledItem Schedule? @relation(fields: [scheduledItemId], references: [id])
+  scheduledItem Schedule? @relation(fields: [scheduledItemId], references: [id], onUpdate: Cascade)
   scheduledItemId Int? @unique
 }
 
@@ -108,15 +108,17 @@ model Job {
 }
 
 model JobStage{
-  id Int @id @default(autoincrement())
   stageNumber Int
   description String @db.Text
   duration Int 
   images JobStage_Image[]
   job Job @relation(fields: [jobNumber], references: [jobNumber], onDelete: Cascade)
   jobNumber Int
-  scheduledItem Schedule? @relation(fields: [scheduledItemId], references: [id])
+  /// Corresponds to the schedule stored in the database
+  scheduledItem Schedule? @relation(fields: [scheduledItemId], references: [id], onUpdate: Cascade)
   scheduledItemId Int? @unique
+
+  @@id([stageNumber, jobNumber])
 
 }
 model JobStage_Image{
