@@ -1,12 +1,18 @@
-<!-- <script setup lang="ts">
-import NavBar from "../components/NavBar.vue";
+<script lang="ts">
 
+import DashboardLayout from "@/components/DashboardLayout.vue";
+export default{
+    components:{
+        DashboardLayout
+    }
+}
 </script>
 
 <template>
   <main>
-      <NavBar />
-      <p class="text-4xl text-left mx-5 text-black font-bold my-10">Dashboard</p>
+    <DashboardLayout>
+        <template #content>
+            <p class="text-4xl mx-5 text-black font-bold my-5 text-center">Dashboard</p>
       <div class="flex lg:flex-row flex-col w-full px-5 h-fit gap-5 lg:justify-between">
 
         <div class="bg-gray-200 rounded grow h-96 relative">
@@ -27,30 +33,8 @@ import NavBar from "../components/NavBar.vue";
             <p class="text-2xl font bold text-gray-200">Ongoing Repairs</p>
         </div>
       </div>
-  </main>
-</template> -->
-<script lang="ts">
-    import {defineComponent} from '@vue/runtime-core';
-    import DashboardLayout from '../components/DashboardLayout.vue';
-
-    defineComponent({
-        name: "DashboardView",
-        components: {
-            DashboardLayout
-        }
-    })
-</script>
-
-<template>
-
-    <DashboardLayout>
-        <template #content>
-             <h1 class="text-black">Testing</h1>
         </template>
-    </DashboardLayout>
+        </DashboardLayout>
+  </main>
 </template>
 
-
-<style>
-
-</style>
