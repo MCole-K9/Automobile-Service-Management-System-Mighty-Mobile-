@@ -1,6 +1,8 @@
-<script setup lang="ts">
+<script lang="ts">
 import { RouterLink } from 'vue-router';
-
+export default{
+  name : 'NavBar'
+}
 </script>
 <template>
  <div class="navbar bg-ourYellow">
