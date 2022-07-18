@@ -87,8 +87,12 @@ export default class Routes{
                     where: {
                         email: email.toLowerCase()
                     },
+                    include: {
+                        roles: true
+                    }
                     
                 });
+                console.log(user)
         
                 if (user !==  null){
 
@@ -96,11 +100,10 @@ export default class Routes{
 
                     if (isMatch){
 
-
                         res.status(200).send({user, login: true})
                         
                     }else{
-                        res.send({message: "Email or Password Incorrect", login: false});
+                        res.send({user: null, message: "Email or Password Incorrect", login: false});
                     }  
 
                 }else{

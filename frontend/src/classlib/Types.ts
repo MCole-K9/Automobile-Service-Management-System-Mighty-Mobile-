@@ -9,6 +9,7 @@
     lastName: string
     password: string
     phoneNumber: string | null
+    roles: Role[] | null
   }
   
   /**
