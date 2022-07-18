@@ -118,14 +118,15 @@ model JobStage{
   scheduledItem Schedule? @relation(fields: [scheduledItemId], references: [id], onUpdate: Cascade)
   scheduledItemId Int? @unique
 
-  @@id([stageNumber, jobNumber])
+  @@id([stageNumber, jobNumber], name: "id")
 
 }
 model JobStage_Image{
   id Int @id @default(autoincrement())
   imageUrl String 
-  stage JobStage @relation(fields: [jobId], references: [id], onDelete: Cascade)
-  jobId Int
+  stage JobStage @relation(fields: [jobStageId, jobNumberId], references: [stageNumber, jobNumber], onDelete: Cascade)
+  jobStageId Int
+  jobNumberId Int
   
 }
 
