@@ -20,7 +20,7 @@
                                 <p class="font-bold">Job No. #12345 </p>
                             </span>
                             <span class="flex flex-col justify-end">
-                                 <button class="btn btn-sm">
+                                 <button class="btn btn-sm" @click="$router.push('/viewjob')">
                                     view
                                 </button>
                             </span>
