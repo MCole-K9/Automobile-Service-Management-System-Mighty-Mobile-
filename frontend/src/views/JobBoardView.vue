@@ -1,0 +1,55 @@
+<script setup lang="ts">
+    import DashboardLayout from '@/components/DashboardLayout.vue';
+    import {ref} from '@vue/runtime-core';
+    import Jobs from "@/components/Jobs.vue"
+    import PendingJobs from "@/components/PendingJobs.vue"
+    import ConfirmedJobs from "@/components/ConfirmedJobs.vue"
+
+    let activeTab = ref("Jobs")
+
+    function changeActiveTab(tab: string){
+
+        activeTab.value = tab;
+    }
+
+
+</script>
+
+<template>
+<DashboardLayout>
+    <template #content>
+        <div class="flex justify-center">
+            <div class="btn-group">
+                <button @click="changeActiveTab('Jobs')" :class="['btn','btn-sm' , 'px-10', 'bg-ourYellow', activeTab == 'Jobs' ? 'btn-active': '']">All</button> <!--btn-active-->  
+                <button @click="changeActiveTab('PendingJobs')" :class="['btn','btn-sm' , 'bg-ourYellow', activeTab == 'PendingJobs' ? 'btn-active': '']">Pending </button>
+                <button @click="changeActiveTab('ConfirmedJobs')" :class="['btn','btn-sm' , 'bg-ourYellow', activeTab == 'ConfirmedJobs' ? 'btn-active': '']">Confirmed</button>
+            </div>
+        </div>
+        <section id="Jobs"  class="mt-8">
+            <component  :is="activeTab"/>
+        </section>
+        <button class="btn  bg-ourYellow rounded-full w-12 h-12 fixed bottom-4 right-4">
+            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+        </button>
+    </template>
+</DashboardLayout>
+  
+</template>
+
+
+
+<style>
+
+</style>
+
+<script lang="ts">
+    export default {
+        name: "JobBoardView",
+        components: {
+            DashboardLayout,
+            Jobs, 
+            PendingJobs,
+            ConfirmedJobs
+        }
+    }
+</script>
