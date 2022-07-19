@@ -38,9 +38,14 @@ const router = createRouter({
       component: ()=>import("@/views/DashboardView.vue")
     },
     {
-      path: "/workhistory",
+      path: "/dashboard/workhistory",
       name: "workhistory",
       component: ()=>import("@/views/WorkHistoryView.vue")
+    },
+    {
+      path: "/dashboard/jobboard",
+      name: "jobboard",
+      component: import("@/views/JobBoardView.vue")
     }
   ]
 })

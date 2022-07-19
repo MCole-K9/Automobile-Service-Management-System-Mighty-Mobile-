@@ -55,8 +55,8 @@ let phoneNumber = ref("")
 function handleContinueClick (){
 
     newUser.splitName(fullName.value)
-    newUser.$state.User.email = email.value;
-    newUser.$state.User.phoneNumber = phoneNumber.value;
+    newUser.User.email = email.value;
+    newUser.User.phoneNumber = phoneNumber.value;
 
     
 }
