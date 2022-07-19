@@ -87,8 +87,12 @@ export default class Routes{
                     where: {
                         email: email.toLowerCase()
                     },
+                    include: {
+                        roles: true
+                    }
                     
                 });
+                console.log(user)
         
                 if (user !==  null){
 
@@ -96,11 +100,10 @@ export default class Routes{
 
                     if (isMatch){
 
-
                         res.status(200).send({user, login: true})
                         
                     }else{
-                        res.send({message: "Email or Password Incorrect", login: false});
+                        res.send({user: null, message: "Email or Password Incorrect", login: false});
                     }  
 
                 }else{
@@ -162,7 +165,7 @@ export default class Routes{
                 let appointment = await prisma.appointment.create({
                     data: {
                         problemDescription: req.body.appointment.problemDescription as string,
-                        date: req.body.appointment.date,
+                        suggestedDate: req.body.appointment.date,
                         streetAddress: req.body.appointment.streetAddress as string,
                         town: req.body.appointment.town as string,
                         parish: req.body.appointment.parish as string,

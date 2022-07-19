@@ -2,8 +2,9 @@
 import NavBar from '@/components/NavBar.vue';
 import { defineComponent, ref} from 'vue';
 import BackendService from '../../BackendService';
-
-import router from "@/router/index";
+import router from "../router/index";
+import type { User } from '../classlib/Types';
+import {currentUserStore} from "../stores/User";
 
 defineComponent({
     name: "LoginView",
@@ -18,15 +19,18 @@ let password = ref("")
 
 let message = ref("")
 
+const currentUser = currentUserStore();
+
 async function login() {
 
-    const res = await BackendService.login(email.value, password.value)
+    const res = await BackendService.login(email.value, password.value);
 
     if(res?.data.login){
-        /// Logged in 
-       // console.log(res?.data)
+        // Logged in 
 
-       await router.push({path: "/appointmentbooking"})//.. Testing..
+      currentUser.setUser(res.data.user as User)
+      
+      await router.push({path: "/dashboard"})
        
     }else{
       message.value = res?.data.message;
