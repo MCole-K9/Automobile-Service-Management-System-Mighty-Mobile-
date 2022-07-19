@@ -33,7 +33,7 @@ defineComponent({
       <li><router-link to="/dashboard/jobboard">Job Board</router-link></li>
       <li><a>Schedule</a></li>
       <li><a>Vehicles</a></li>
-      <li><router-link to="/workhistory">Work History</router-link></li>
+      <li><router-link to="/dashboard/workhistory">Work History</router-link></li>
     </ul>
   
   </div>
