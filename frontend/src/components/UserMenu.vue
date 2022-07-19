@@ -4,11 +4,10 @@
 
 
     const currentUser = currentUserStore();    
-    const props = defineProps({
-        onDashboard: {
-            default: false,
-        }
-    })
+    const props = defineProps<{
+      onDashboard?: boolean
+    }>()
+    
 
     async function logout(){
 
