@@ -1,3 +1,6 @@
+import {PrismaClient} from '@prisma/client';
+import {newUserStore} from '../stores/User';
+
 type MonthBlock = {
     month: number
     workingDays: DayBlock[]
@@ -26,7 +29,7 @@ type DayBlock = {
 // Returns an object that holds all of the remaining days of the month
 // (from the current day), along with all of their scheduled events and/or
 // free blocks for scheduling
-export default function createMonthObject(month: number, currentDate: Date): MonthBlock {
+export default async function createMonthObject(month: number, currentDate: Date): MonthBlock {
     const monthlySchedule = {} as MonthBlock;
     
     try{
@@ -105,16 +108,70 @@ export default function createMonthObject(month: number, currentDate: Date): Mon
             if (!(chosenMonth.getDay() === 6) && !(chosenMonth.getDay() === 0)){
                 
                 let workingDayBlock: DayBlock = {} as DayBlock;
-                workingDayBlock.day = chosenMonth.getDate();
+                workingDayBlock.day = i;
                 monthlySchedule.workingDays.push(workingDayBlock);
 
-                chosenMonth.setDate(chosenMonth.getDate()+1);
+                chosenMonth.setDate(i);
                 
             }
         }
         
+        // creating a ref to the user account store for the query
+        // needs double-checking
+        const currentUser = newUserStore();
+
+
         // this should be able to generate a default list of however many blocks are
         // available in one working day (9h, 8AM->5PM)
+
+        const prisma = new PrismaClient();
+
+        // Get all of the scheduled items for the month of
+        const schedule = await prisma.schedule.findMany({
+            
+            select: {
+                // so this should pull:
+                // -id:
+                // - date
+                // - appointment
+                //      - description
+                //      - customerId
+                //      - address
+                // - jobstage
+                //      - customerId
+                //      - description
+                //      - address
+                //
+            },        
+            
+            where: {
+                AND: [
+                    {
+                        date: {
+                            lte: chosenMonth.getFullYear() + '-' + chosenMonth.getMonth() + '-01',
+                            gte: chosenMonth.getFullYear() + '-' + chosenMonth.getMonth() + '-' + daysInMonth
+                        }
+                    },
+                    {
+                        OR: [
+                            {
+                                appointment: {
+                                    assignedMechId: currentUser.User.id
+                                }
+                            },
+
+                            {
+                                jobStage: {
+                                    job: {
+                                        assignedMechanicId: currentUser.User.id
+                                    }
+                                }
+                            }
+                        ] 
+                    }
+                ]
+            }
+        });
 
         // default values imply
 
