@@ -12,7 +12,8 @@ defineComponent({
 
 </script>
 <template>
-    <div class="navbar bg-ourYellow shadow-lg">
+    <div class="navbar bg-ourYellow shadow-lg sticky top-0 z-50">
+        <!-- sticky or fixed make the shadow appear on the drawer, looks nice but if you dont like just take off sticky, top-0 and z-50 - elliot-->
         <div class="flex-none">
             <slot></slot>
         </div>
