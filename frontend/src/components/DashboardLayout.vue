@@ -19,7 +19,7 @@ defineComponent({
       </svg>
     </label>
  </AppBar>
-<div class="drawer drawer-mobile ">
+<div class="drawer drawer-mobile">
   <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
   <div class="drawer-content px-6 py-4">
     <slot name="content"></slot>
@@ -33,7 +33,7 @@ defineComponent({
       <li><a>Job Board</a></li>
       <li><a>Schedule</a></li>
       <li><a>Vehicles</a></li>
-      <li><a>Work History</a></li>
+      <li><router-link to="/workhistory">Work History</router-link></li>
     </ul>
   
   </div>
