@@ -1,4 +1,5 @@
 import {PrismaClient} from '@prisma/client';
+import { time } from 'console';
 import {newUserStore} from '../stores/User';
 
 type MonthBlock = {
@@ -8,7 +9,7 @@ type MonthBlock = {
 
 
 class HourBlock {
-    time: number | null;
+    time: number;
     description: string;
     duration: number;
     id: number | null;
@@ -16,7 +17,7 @@ class HourBlock {
     blocktype: "APPOINTMENT" | "JOBSTAGE" | null;
 
     constructor(){
-        this.time = null;
+        this.time = 0;
         this.description = "";
         this.duration = 1;
         this.id = null;
@@ -186,8 +187,8 @@ export default function createMonthObject(month: number, currentDate: Date): Mon
                     AND: [
                         {
                             date: {
-                                lte: chosenMonth.getFullYear() + '-' + chosenMonth.getMonth() + '-01',
-                                gte: chosenMonth.getFullYear() + '-' + chosenMonth.getMonth() + '-' + daysInMonth
+                                gte: chosenMonth.getFullYear() + '-' + chosenMonth.getMonth() + '-01',
+                                lte: chosenMonth.getFullYear() + '-' + chosenMonth.getMonth() + '-' + daysInMonth
                             }
                         },
                         {
@@ -263,12 +264,70 @@ export default function createMonthObject(month: number, currentDate: Date): Mon
                     break;
                 }
             }while(true);
-
-            // code here needs to determine how many more spaces i need to fill with empty blocks
         });
 
-        // unsure whether to handle the padding of hourblocks in a dayblock here or in the other function
-        // 
+        let hourIndex: number = 0;
+        let timeToCheck: number = 8;
+        let timeDifference: number = 0;
+
+        // recursive function that adds in the missing blocks between others. i literally don't know if this will work
+        function checkBlockDifferenceAddMissing(workingDay: DayBlock){
+            // this should break the recursion
+            if (timeToCheck >= 17 || workingDay.hourBlocks.length > 9){
+                return;
+            }
+
+            if (workingDay.hourBlocks[hourIndex].time == timeToCheck){
+                    
+                timeToCheck = workingDay.hourBlocks[hourIndex].time + workingDay.hourBlocks[hourIndex].duration;
+                hourIndex++;
+
+                checkBlockDifferenceAddMissing(workingDay);
+
+                
+            }
+            else{
+                
+                timeDifference = workingDay.hourBlocks[hourIndex].time - timeToCheck;
+
+                for (let i: number = 0; i < timeDifference; i++){
+                    let newHourBlock: HourBlock = new HourBlock();
+                    newHourBlock.time = i;
+                    newHourBlock.duration = 1;
+
+                    workingDay.hourBlocks.push(newHourBlock);
+                }
+
+                timeToCheck = workingDay.hourBlocks[hourIndex].time + workingDay.hourBlocks[hourIndex].duration;
+                hourIndex += timeDifference;
+            }
+        }
+
+
+
+        // pad the remaining empty spaces of each day with empty hourBlocks
+        monthlySchedule.workingDays.forEach((workingDay)=>{
+            // this starts when the business starts, i.e. 8AM
+            
+            if (workingDay.hourBlocks.length == 0){
+                // i.e 8AM to 5PM
+                for (let i = timeToCheck; i < 17; i++){
+                    let newHourBlock: HourBlock = new HourBlock();
+                    newHourBlock.time = i;
+                    newHourBlock.duration = 1;
+
+                    workingDay.hourBlocks.push(newHourBlock);
+                }
+            }
+            else{
+                // sort whatever blocks are there in ascending order by time
+                // this is probably poorly narrowed, need to consult TS docs
+                // also: almost certainly going to break, not sure when and how yet
+                workingDay.hourBlocks.sort((a, b)=> a.time != null ? (b.time != null ? a.time-b.time : -1) : -1);
+                
+                checkBlockDifferenceAddMissing(workingDay);
+            }
+        })
 
     }
     catch(functionError){
