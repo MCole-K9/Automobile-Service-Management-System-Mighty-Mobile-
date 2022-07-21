@@ -1,9 +1,11 @@
 <script setup lang="ts">
     import DashboardLayout from '@/components/DashboardLayout.vue';
-    import {ref} from '@vue/runtime-core';
+    import {onMounted, ref} from '@vue/runtime-core';
     import Jobs from "@/components/Jobs.vue"
     import PendingJobs from "@/components/PendingJobs.vue"
     import ConfirmedJobs from "@/components/ConfirmedJobs.vue"
+    import type {Job} from "../classlib/Types";
+    import BackendService from '../../BackendService';
 
     let activeTab = ref("Jobs")
 
@@ -11,6 +13,19 @@
 
         activeTab.value = tab;
     }
+
+    let jobs = ref<Job[]>([]);
+
+    onMounted(async ()=>{
+
+    
+        const res = await BackendService.getUpcomingJobs();
+
+        jobs.value = [...jobs.value, ...res?.data]
+
+
+        console.log(res)
+    })
 
 
 </script>
@@ -26,7 +41,9 @@
             </div>
         </div>
         <section id="Jobs"  class="mt-8">
-            <component  :is="activeTab"/>
+            <div class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4">
+                <component :jobs="jobs" :is="activeTab"/>
+            </div>  
         </section>
         <button class="btn  bg-ourYellow rounded-full w-12 h-12 fixed bottom-4 right-4">
             <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>

@@ -2,6 +2,7 @@ import type { User, Appointment, Vehicle } from "./src/classlib/Types";
 import axios from "axios";
 
 
+
 const URL = "http://localhost:5000/api"
 
 export default class BackendService{
@@ -58,5 +59,17 @@ export default class BackendService{
 
         }
     }
+
+    static async getUpcomingJobs() {
+
+        try{
+            const res = await axios.get(URL + "/jobs/upcoming");
+            return res;
+
+        }catch(err){
+            
+        }
+    }
+
 
 }

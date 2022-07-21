@@ -3,20 +3,16 @@
   import type {Job} from "../classlib/Types";
   import JobComponent from "../components/JobComponent.vue"
 
+  const props = defineProps<{
+        jobs: Job[],
+    }>();
 
-  let jobs = ref<Job[]>();
-  
-  onMounted(()=>{
-  // Get and Populate Jobs4
-  }) 
+
 </script>
 
 <template>
 
-<div v-for="job in jobs" :key="job.jobNumber" >
-  <JobComponent  :job="job"/>
-</div>
-
+    <JobComponent  v-for="job in props.jobs" :key="job.jobNumber" :job="job"/>
 
 </template>
 
