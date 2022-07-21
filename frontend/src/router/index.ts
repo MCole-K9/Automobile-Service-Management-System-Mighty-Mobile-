@@ -38,10 +38,20 @@ const router = createRouter({
       component: ()=>import("@/views/DashboardView.vue")
     },
     {
+      path: "/dashboard/workhistory",
+      name: "workhistory",
+      component: ()=>import("@/views/WorkHistoryView.vue")
+    },
+    {
       path: "/dashboard/jobboard",
       name: "jobboard",
       component: import("@/views/JobBoardView.vue")
-    }
+    },
+    {
+      path: "/viewjob",
+      name: "viewjob",
+      component: import("@/views/JobDetailsView.vue")
+    },
   ]
 })
 
