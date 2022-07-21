@@ -1,14 +1,13 @@
 import {PrismaClient} from '@prisma/client';
-import { time } from 'console';
 import {newUserStore} from '../stores/User';
 
-type MonthBlock = {
+export type MonthBlock = {
     month: number
     workingDays: DayBlock[]
 }
 
 
-class HourBlock {
+export class HourBlock {
     time: number;
     description: string;
     duration: number;
@@ -27,7 +26,7 @@ class HourBlock {
     
 }
 
-type DayBlock = {
+export type DayBlock = {
     day: number
     hourBlocks: HourBlock[]
 }
@@ -36,7 +35,7 @@ type DayBlock = {
 // Returns an object that holds all of the remaining days of the month
 // (from the current day), along with all of their scheduled events and/or
 // free blocks for scheduling
-export default function createMonthObject(month: number, currentDate: Date): MonthBlock {
+export function createMonthObject(month: number, currentDate: Date): MonthBlock {
     const monthlySchedule = {} as MonthBlock;
     
     try{
@@ -272,7 +271,7 @@ export default function createMonthObject(month: number, currentDate: Date): Mon
 
         // recursive function that adds in the missing blocks between others. i literally don't know if this will work
         function checkBlockDifferenceAddMissing(workingDay: DayBlock){
-            // this should break the recursion
+            // this should break the recursion (intentionally)
             if (timeToCheck >= 17 || workingDay.hourBlocks.length > 9){
                 return;
             }
@@ -295,17 +294,17 @@ export default function createMonthObject(month: number, currentDate: Date): Mon
                     newHourBlock.time = i;
                     newHourBlock.duration = 1;
 
-                    workingDay.hourBlocks.push(newHourBlock);
+                    // need to rework this to account for splice
+                    workingDay.hourBlocks.splice( hourIndex++, 0, newHourBlock);
                 }
 
                 timeToCheck = workingDay.hourBlocks[hourIndex].time + workingDay.hourBlocks[hourIndex].duration;
-                hourIndex += timeDifference;
+                // ASSUMING the postfix in the splice works, the following SHOULDN'T be necessary
+                //hourIndex += timeDifference;
             }
         }
 
-
-
-        // pad the remaining empty spaces of each day with empty hourBlocks
+        // forEach to pad the remaining empty spaces of each day with empty hourBlocks
         monthlySchedule.workingDays.forEach((workingDay)=>{
             // this starts when the business starts, i.e. 8AM
             
