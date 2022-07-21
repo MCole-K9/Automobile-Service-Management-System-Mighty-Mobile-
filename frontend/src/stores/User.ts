@@ -1,5 +1,5 @@
 import {defineStore} from "pinia";
-import type {User} from "@/classlib/Types";
+import type {User} from "../classlib/Types";
 
 
 
