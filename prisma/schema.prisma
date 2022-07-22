@@ -92,10 +92,12 @@ model Job {
   summary String @db.Text
   totalCost Decimal? @db.Decimal()
   isPaid Boolean @default(false)
+  serviceType String @db.VarChar(9)
   serviceFee Decimal @db.Decimal()
   streetAddress String? @db.Text
   town String? @db.VarChar(255)
   parish String? @db.VarChar(90)
+  confirmed Boolean @default(false)
   vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
   vehicleId Int 
   assignedMechanic User? @relation(name: "AssignedMechanic", fields: [assignedMechanicId], references: [id], onDelete: SetNull)

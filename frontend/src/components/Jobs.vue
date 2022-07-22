@@ -1,11 +1,19 @@
 <script setup lang="ts">
+  import { onMounted, reactive, ref } from 'vue';
+  import type {Job} from "../classlib/Types";
+  import JobComponent from "../components/JobComponent.vue"
+
+  const props = defineProps<{
+        jobs: Job[],
+    }>();
+
 
 </script>
+
 <template>
-  
-  <div>
-    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptatem, error accusantium dolore fugiat molestias officia voluptatum aliquam et assumenda obcaecati non tenetur accusamus delectus nostrum inventore dignissimos maxime eaque nam?</p>
-  </div>
+
+    <JobComponent  v-for="job in props.jobs" :key="job.jobNumber" :job="job"/>
+
 </template>
 
 
@@ -16,6 +24,9 @@
 
 <script lang="ts">
     export default {
-        name: "Jobs"
+        name: "Jobs",
+        components: {
+          JobComponent
+        }
     }
 </script>

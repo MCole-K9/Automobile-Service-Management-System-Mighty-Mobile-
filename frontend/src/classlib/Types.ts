@@ -7,8 +7,8 @@
     email: string
     firstName: string
     lastName: string
-    password: string
-    phoneNumber: string | null
+    password?: string
+    phoneNumber?: string | null
     roles: Role[] | null
   }
   
@@ -39,12 +39,13 @@
    */
   export type Vehicle = {
     id: number
-    licensePlate: string | null
+    licensePlate?: string | null
     make: string
     model: string
     year: number
     ownerId: number
-    image: string | null
+    owner?: User
+    image?: string | null
   }
   
   /**
@@ -84,14 +85,21 @@
     endDate: Date
     summary: string
     totalCost: number | null
-    isPaid: boolean
+    isPaid?: boolean
+    confirmed?: boolean
     serviceFee: number
+    serviceType: string
     streetAddress: string | null
     town: string | null
     parish: string | null
     vehicleId: number
-    assignedMechanicId: number | null
+    vehicle?: Vehicle
+    assignedMechanicId?: number
+    assignedMechanic?: User | null
     createdById: number
+    createdBy?: User
+
+
   }
   
   /**
