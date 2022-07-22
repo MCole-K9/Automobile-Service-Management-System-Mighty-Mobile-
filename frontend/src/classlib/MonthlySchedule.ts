@@ -87,7 +87,7 @@ export function createMonthObject(month: number, currentDate: Date, userId: numb
                 daysInMonth = 31;
                 break;
             default:
-                if (!(typeof month === 'number')){
+                if (typeof month !== 'number'){
                     throw new TypeError("Type of Month must be a number");
                 }
                 else if (month > 12){
@@ -121,10 +121,6 @@ export function createMonthObject(month: number, currentDate: Date, userId: numb
                 
             }
         }
-        
-        // creating a ref to the user account store for the query
-        // needs double-checking
-        const currentUser = newUserStore();
 
         // this should be able to generate a default list of however many blocks are
         // available in one working day (9h, 8AM->5PM)
@@ -186,6 +182,7 @@ export function createMonthObject(month: number, currentDate: Date, userId: numb
                     AND: [
                         {
                             date: {
+                                // this may be a point of failure, because i'm not sure that this is how you do this for dates
                                 gte: chosenMonth.getFullYear() + '-' + chosenMonth.getMonth() + '-01',
                                 lte: chosenMonth.getFullYear() + '-' + chosenMonth.getMonth() + '-' + daysInMonth
                             }
@@ -219,7 +216,11 @@ export function createMonthObject(month: number, currentDate: Date, userId: numb
 
         // Put the scheduled items into their corresponding hour blocks of every working day
         monthlySchedule.workingDays.forEach((workingDay)=>{
-            // need to check if schedule is null before i do this, but that's for later
+            if (schedule === null){
+                return;
+            }
+
+            // not sure that this is correct, do not want to truth-table it
             do {
                 if(workingDay.day == schedule[incrementor].date.getDate()){
                     // this means that it's a jobStage
@@ -259,14 +260,18 @@ export function createMonthObject(month: number, currentDate: Date, userId: numb
                     incrementor++;
                 }
                 else{
-                    incrementor++;
+                    // if the working day is 13 and the day doesn't match because it's 14, then you break without incrementing 
+                    // incrementor++;
                     break;
                 }
             }while(true);
         });
 
+        // this tracks the position of each schedule item as a list of all of the ones in the array
         let hourIndex: number = 0;
+        // this tracks the hour to ask about, and starts at 8AM. duration of items are added to it to advance which time to check
         let timeToCheck: number = 8;
+        // this stores the difference between the hourIndex of a schedule item's time and the time the algorithm checks for next 
         let timeDifference: number = 0;
 
         // recursive function that adds in the missing blocks between others. i literally don't know if this will work
@@ -283,7 +288,6 @@ export function createMonthObject(month: number, currentDate: Date, userId: numb
 
                 checkBlockDifferenceAddMissing(workingDay);
 
-                
             }
             else{
                 
@@ -308,6 +312,7 @@ export function createMonthObject(month: number, currentDate: Date, userId: numb
         monthlySchedule.workingDays.forEach((workingDay)=>{
             // this starts when the business starts, i.e. 8AM
             
+            // for days with literally no scheduled items, it just generates 9 empty items
             if (workingDay.hourBlocks.length == 0){
                 // i.e 8AM to 5PM
                 for (let i = timeToCheck; i < 17; i++){
