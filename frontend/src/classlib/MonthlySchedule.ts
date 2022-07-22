@@ -35,7 +35,7 @@ export type DayBlock = {
 // Returns an object that holds all of the remaining days of the month
 // (from the current day), along with all of their scheduled events and/or
 // free blocks for scheduling
-export function createMonthObject(month: number, currentDate: Date): MonthBlock {
+export function createMonthObject(month: number, currentDate: Date, userId: number): MonthBlock {
     const monthlySchedule = {} as MonthBlock;
     
     try{
@@ -194,14 +194,14 @@ export function createMonthObject(month: number, currentDate: Date): MonthBlock 
                             OR: [
                                 {
                                     appointment: {
-                                        assignedMechId: currentUser.User.id
+                                        assignedMechId: userId
                                     }
                                 },
     
                                 {
                                     jobStage: {
                                         job: {
-                                            assignedMechanicId: currentUser.User.id
+                                            assignedMechanicId: userId
                                         }
                                     }
                                 }
