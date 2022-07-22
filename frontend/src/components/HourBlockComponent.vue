@@ -26,13 +26,15 @@ import { onMounted } from 'vue';
     </div>
 </template>
 
-<style scoped>
+<style scoped lang="css">
+    @import "../index.css";
+
     .filledBlock {
-        background-color: white;
+        @apply bg-ourYellow;
     }
 
     .emptyBlock{
-        background-color: white;
+        @apply bg-white;
     }
 
 </style>

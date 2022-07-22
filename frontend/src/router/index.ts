@@ -52,11 +52,11 @@ const router = createRouter({
       name: "viewjob",
       component: import("@/views/JobDetailsView.vue")
     },
-    {
-      path: "/yourschedule",
-      name: "yourschedule",
-      component: import("@/views/ScheduleView.vue")
-    },
+    // {
+    //   path: "/yourschedule",
+    //   name: "yourschedule",
+    //   component: import("@/views/ScheduleView.vue")
+    // },
   ]
 })
 
