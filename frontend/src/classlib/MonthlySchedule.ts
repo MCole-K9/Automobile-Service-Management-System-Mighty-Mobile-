@@ -7,7 +7,7 @@ export type MonthBlock = {
 }
 
 
-export class HourBlock {
+export class HourDataBlock {
     time: number;
     description: string;
     duration: number;
@@ -28,7 +28,7 @@ export class HourBlock {
 
 export type DayBlock = {
     day: number
-    hourBlocks: HourBlock[]
+    hourBlocks: HourDataBlock[]
 }
 
 
@@ -225,7 +225,7 @@ export function createMonthObject(month: number, currentDate: Date, userId: numb
                 if(workingDay.day == schedule[incrementor].date.getDate()){
                     // this means that it's a jobStage
                     if (schedule[incrementor].jobStage !== null){
-                        let hourBlock = new HourBlock();
+                        let hourBlock = new HourDataBlock();
 
                         hourBlock.blocktype = "JOBSTAGE";
                         hourBlock.id = schedule[incrementor].id;
@@ -242,7 +242,7 @@ export function createMonthObject(month: number, currentDate: Date, userId: numb
                     }
                     // this means that it's an appointment
                     else{
-                        let hourBlock = new HourBlock();
+                        let hourBlock = new HourDataBlock();
 
                         hourBlock.blocktype = "APPOINTMENT";
                         hourBlock.id = schedule[incrementor].id;
@@ -294,7 +294,7 @@ export function createMonthObject(month: number, currentDate: Date, userId: numb
                 timeDifference = workingDay.hourBlocks[hourIndex].time - timeToCheck;
 
                 for (let i: number = 0; i < timeDifference; i++){
-                    let newHourBlock: HourBlock = new HourBlock();
+                    let newHourBlock: HourDataBlock = new HourDataBlock();
                     newHourBlock.time = i;
                     newHourBlock.duration = 1;
 
@@ -316,7 +316,7 @@ export function createMonthObject(month: number, currentDate: Date, userId: numb
             if (workingDay.hourBlocks.length == 0){
                 // i.e 8AM to 5PM
                 for (let i = timeToCheck; i < 17; i++){
-                    let newHourBlock: HourBlock = new HourBlock();
+                    let newHourBlock: HourDataBlock = new HourDataBlock();
                     newHourBlock.time = i;
                     newHourBlock.duration = 1;
 

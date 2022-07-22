@@ -2,31 +2,38 @@
 import { onMounted } from 'vue';
 
     
-    const props = defineProps<{
-        id: number
-        blockType: string
-        duration: number
-        startTime: number
+    defineProps<{
+        hourDataBlock: {
+            time: number,
+            description: string,
+            duration: number,
+            id: number | null,
+            client: string,
+            blocktype: "APPOINTMENT" | "JOBSTAGE" | null,
+        }
     }>()
-
-    onMounted(()=>{
-        if (props.id === undefined){
-            // Just leave this as it is, pretty much
-            
-        }
-        else{
-            // This needs to:
-            // * make block match duration
-            // * make the block's start time work
-            // * indicate the blockType 
-        }
-
-    })
 
 </script>
 
 <template>
-    <div class="w-24 h-24 text-4xl text-center" @click="$emit('open-scheduler')">
-        + 
+    <div class="{{id == null ? filledBlock : emptyBlock}} " @click="$emit('open-scheduler{{time}}')">
+        <!--shows if the id for the block isn't blank-->
+        <span v-if="hourDataBlock.description!=''" class="truncate">{{hourDataBlock.description}}</span>
+        <span v-if="hourDataBlock.client!=''">Client: {{hourDataBlock.client}}</span>
+        
+        <!--shows if the id for the block Is blank-->
+        <span v-if="hourDataBlock.id===null">+</span>
     </div>
 </template>
+
+<style scoped>
+    .filledBlock{
+        bg-ourYellow
+
+    }
+
+    .emptyBlock{
+        bg-white
+    }
+
+</style>
