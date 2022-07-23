@@ -1,16 +1,20 @@
 <script setup lang="ts">
     import NavBar from '../components/NavBar.vue'
-    import {createMonthObject, type MonthBlock, type DayBlock, HourBlock}  from '@/classlib/MonthlySchedule';
+    import DayPlanComponent from '@/components/DayPlanComponent.vue';
+    import HourBlockComponent from '@/components/HourBlockComponent.vue';
+    import {createMonthObject, type MonthBlock, type DayBlock, HourDataBlock}  from '@/classlib/MonthlySchedule';
+    import {newUserStore} from "../stores/User";
+    import { onMounted } from 'vue';
 
 
-    const test: MonthBlock = createMonthObject(new Date(Date.now()).getMonth(), new Date(Date.now()));
+    const currentUser = newUserStore();
+
+    const test: MonthBlock = createMonthObject(new Date(Date.now()).getMonth(), new Date(Date.now()), currentUser.User.id);
     
-    // Broadly: open the modal that's attached to the page
-    function openScheduler(){
-        
+    // onMounted(function openScheduler(){
+    //     // so this needs to pass this to the 
 
-    }
-
+    // });
 </script>
 
 <template>

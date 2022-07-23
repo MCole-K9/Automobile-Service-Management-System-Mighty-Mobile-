@@ -1,16 +1,22 @@
 <script setup lang="ts">
     import {ref} from 'vue'
-    import HourBlock from './HourBlockComponent.vue';
+    import type {HourDataBlock} from '../classlib/MonthlySchedule';
+    import HourBlockComponent from './HourBlockComponent.vue';
 
-    const dayBlocks = ref([])
-
+    defineProps<{
+        dayBlock: {
+            day: number
+            hourBlocks: HourDataBlock[]
+        }
+    }>()
 
 </script>
 
 <template>
+    <span>Fri, Feb. 26</span>
     <div class="flex-nowrap">
-        <div>
-
+        <div v-for="hourBlock in dayBlock.hourBlocks">
+            <HourBlockComponent :hourDataBlock="hourBlock" />
         </div>
         <div>
             <p>&nbsp;8 AM</p>
