@@ -92,7 +92,7 @@ model Job {
   summary String @db.Text
   totalCost Decimal? @db.Decimal()
   isPaid Boolean @default(false)
-  serviceType String @db.VarChar(9)
+  serviceType String @db.VarChar(12)
   serviceFee Decimal @db.Decimal()
   streetAddress String? @db.Text
   town String? @db.VarChar(255)
