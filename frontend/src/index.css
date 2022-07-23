@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+
+/* not actually sure where this will go, but the adding custom styles thing suggests not scoping css, so--KS */
+@layer components{
+    .filledBlock {
+        @apply bg-ourYellow;
+    }
+    
+    .emptyBlock{
+        @apply bg-white;
+    }
+}
+
+
