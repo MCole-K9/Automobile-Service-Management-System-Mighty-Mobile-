@@ -9,7 +9,8 @@
     lastName: string
     password?: string
     phoneNumber?: string | null
-    roles: Role[] | null
+    roles?: Role[] | null
+    vehicles?: Vehicle[]
   }
   
   /**
@@ -84,20 +85,21 @@
     startDate: Date
     endDate: Date
     summary: string
-    totalCost: number | null
+    totalCost?: number | null
     isPaid?: boolean
     confirmed?: boolean
     serviceFee: number
     serviceType: string
-    streetAddress: string | null
-    town: string | null
-    parish: string | null
+    streetAddress?: string | null
+    town?: string | null
+    parish?: string | null
     vehicleId: number
     vehicle?: Vehicle
     assignedMechanicId?: number
     assignedMechanic?: User | null
-    createdById: number
+    createdById?: number
     createdBy?: User
+    requiredParts?:  JobPart[]
 
 
   }
@@ -130,9 +132,9 @@
    * 
    */
   export type JobPart = {
-    id: number
+    id?: number
     name: string
     price: number
-    jobId: number
+    jobId?: number
   }
   

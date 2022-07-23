@@ -1,5 +1,5 @@
 import { Response, Request, Router} from "express";
-import { PrismaClient } from "@prisma/client"; //Db Connection
+import { Job, JobPart, PrismaClient } from "@prisma/client"; //Db Connection
 import bcrypt, {genSalt, hash} from "bcrypt"
 
 
@@ -152,7 +152,33 @@ export default class Routes{
             }catch(err){
 
             }
-        })
+        });
+
+        router.route("/user/customers").get(async (req:Request, res:Response)=>{
+            try{
+                const customers = await prisma.user.findMany({
+                    where: {
+                        roles: {
+                            some: {
+                                id: UserRole.Customer
+                            }
+                        }
+                    },
+                    include: {
+                        vehicles:true,
+                        roles: true
+                    }
+                })
+
+                res.status(200).send(customers);
+
+            }catch(err){
+
+            }
+            
+
+           
+        });
 
         router.route("/user/:id/appointmentbooking").post(async (req:Request, res:Response)=>{
 
@@ -199,7 +225,46 @@ export default class Routes{
         router.route("/jobs").get(async (req:Request, res:Response)=>{
             //Code Here
         }).post(async (req:Request, res:Response)=>{
-            //Code Here
+            
+            try{
+                //console.log(req.body.job)
+                let job = await prisma.job.create({
+                    data: {
+                        startDate: req.body.job.startDate as Date,
+                        endDate: req.body.job.endDate as Date,
+                        serviceFee:  req.body.job.serviceFee as number,
+                        serviceType:  req.body.job.serviceType as string,
+                        summary: req.body.job.summary as string,
+                        createdBy: {
+                            connect: {
+                                id: req.body.job.createdById as number
+                            }
+                        },
+                        vehicle: {
+                            connect: {
+                                id:  req.body.job.vehicleId as number
+                            }
+                        },
+                        requiredParts: {
+                            createMany: {
+                                data: req.body.job.requiredParts as JobPart[]
+                            }
+                        }
+                        
+                    },
+
+                    
+                })
+
+                console.log(job)
+
+                res.status(200).send(job)
+            }catch(err){
+                console.log(err)
+            }
+         
+
+            
         })
 
         router.get("/jobs/upcoming", async (req:Request, res:Response)=>{

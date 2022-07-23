@@ -1,4 +1,4 @@
-import type { User, Appointment, Vehicle } from "./src/classlib/Types";
+import type { User, Appointment, Vehicle, Job } from "./src/classlib/Types";
 import axios from "axios";
 
 
@@ -70,6 +70,29 @@ export default class BackendService{
             
         }
     }
+    static async getCustomers() {
+
+        try{
+            const res = await axios.get(URL + "/user/customers");
+            return res;
+
+        }catch(err){
+            
+        }
+    }
+    static async createJob(job:Job) {
+
+        try{
+            const res = await axios.post(URL + "/jobs", {
+                job
+            });
+            return res;
+
+        }catch(err){
+            
+        }
+    }
+
 
 
 }
