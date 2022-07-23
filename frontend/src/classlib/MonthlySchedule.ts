@@ -1,5 +1,4 @@
 import {PrismaClient} from '@prisma/client';
-import {newUserStore} from '../stores/User';
 
 export type MonthBlock = {
     month: number
@@ -35,16 +34,16 @@ export type DayBlock = {
 // Returns an object that holds all of the remaining days of the month
 // (from the current day), along with all of their scheduled events and/or
 // free blocks for scheduling
-export function createMonthObject(month: number, currentDate: Date, userId: number): MonthBlock {
+export function createMonthObject(selectedMonth: number, currentDate: Date, userId: number): MonthBlock {
     const monthlySchedule = {} as MonthBlock;
     
     try{
-        monthlySchedule.month = month;
+        monthlySchedule.month = selectedMonth;
         
         let daysInMonth: number = 0;
 
         // get the number of days in the month
-        switch (month){
+        switch (selectedMonth){
             case 0:
                 daysInMonth = 31;
                 break;
@@ -87,10 +86,10 @@ export function createMonthObject(month: number, currentDate: Date, userId: numb
                 daysInMonth = 31;
                 break;
             default:
-                if (typeof month !== 'number'){
+                if (typeof selectedMonth !== 'number'){
                     throw new TypeError("Type of Month must be a number");
                 }
-                else if (month > 12){
+                else if (selectedMonth > 12){
                     throw new RangeError("Value of Month must be less than or equal to 12");
                 }
                 break;
@@ -100,18 +99,18 @@ export function createMonthObject(month: number, currentDate: Date, userId: numb
         // or one the user wishes to see
         let chosenMonth: Date;
 
-        if (currentDate.getMonth() === month){
-            chosenMonth = new Date(currentDate);
+        if (currentDate.getMonth() === selectedMonth){
+            chosenMonth = currentDate;
         }
         else{
-            chosenMonth = new Date(currentDate.getFullYear(), month, 1);
+            chosenMonth = new Date(currentDate.getFullYear(), selectedMonth, 1);
         }
         
 
         // Creating the objects for each day
         for (let i: number = chosenMonth.getDate(); i <= daysInMonth; i++){
             // Check for and exclude Saturdays and Sundays
-            if (!(chosenMonth.getDay() === 6) && !(chosenMonth.getDay() === 0)){
+            if (chosenMonth.getDay() !== 6 && chosenMonth.getDay() !== 0){
                 
                 let workingDayBlock: DayBlock = {} as DayBlock;
                 workingDayBlock.day = i;
@@ -121,9 +120,6 @@ export function createMonthObject(month: number, currentDate: Date, userId: numb
                 
             }
         }
-
-        // this should be able to generate a default list of however many blocks are
-        // available in one working day (9h, 8AM->5PM)
 
         const prisma = new PrismaClient();
 
@@ -337,6 +333,8 @@ export function createMonthObject(month: number, currentDate: Date, userId: numb
     catch(functionError){
         console.error(functionError);
     }
+
+    console.log(monthlySchedule);
 
     return monthlySchedule;
 }

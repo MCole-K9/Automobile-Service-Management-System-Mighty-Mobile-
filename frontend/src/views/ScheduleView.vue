@@ -3,19 +3,12 @@
     import DayPlanComponent from '@/components/DayPlanComponent.vue';
     import HourBlockComponent from '@/components/HourBlockComponent.vue';
     import {createMonthObject, type MonthBlock, type DayBlock, HourDataBlock}  from '@/classlib/MonthlySchedule';
-    import {newUserStore} from "../stores/User";
-    import { onMounted } from 'vue';
-    import reactive from 'vue';
+    import {currentUserStore, newUserStore} from "../stores/User";
+    import { onMounted, ref, reactive } from 'vue';
 
-
-    const currentUser = newUserStore();
-
-    const test: MonthBlock = reactive(createMonthObject(new Date(Date.now()).getMonth(), new Date(Date.now()), currentUser.User.id));
+    const currentUser = currentUserStore();
+    let test: MonthBlock = createMonthObject(new Date(Date.now()).getMonth(), new Date(Date.now()), currentUser.User.id);;
     
-    // onMounted(function openScheduler(){
-    //     // so this needs to pass this to the 
-
-    // });
 </script>
 
 <template>
