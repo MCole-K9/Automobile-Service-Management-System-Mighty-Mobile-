@@ -3,7 +3,7 @@ import { onMounted, ref } from "vue";
 import DashboardLayout from '@/components/DashboardLayout.vue';
 import BackendService from "../../BackendService";
 import type { Job, User, Vehicle, JobPart } from '@/classlib/Types';
-import {currentUserStore} from "@/stores/User";
+import { currentUserStore } from "@/stores/User";
 
 let currentUser = currentUserStore();
 let customers = ref<User[]>([]);
@@ -33,9 +33,9 @@ let jobPart = ref<JobPart>({
     price: 0,
 })
 
-function addPart(){
-   
-    job.value.requiredParts?.push({...jobPart.value}); // solves the pushing the reference of jobPart object issue
+function addPart() {
+
+    job.value.requiredParts?.push({ ...jobPart.value }); // solves the pushing the reference of jobPart object issue
 
     jobPart.value.name = "";
     jobPart.value.price = 0;
@@ -43,12 +43,16 @@ function addPart(){
 
 }
 
-async function addJob(){
+function removePart(position: number) {
+    job.value.requiredParts = job.value.requiredParts?.filter((part, index) => {
+        return index != position;
+    })
+}
+
+async function addJob() {
     //Do checks before doing these(Validation)
     job.value.createdById = currentUser.User.id;
     job.value.vehicleId = customerVehicle.value?.id as number;
-
-    //job.value.startDate = job.value.startDate.
 
     const res = await BackendService.createJob(job.value);
     console.log(res)
@@ -69,7 +73,7 @@ onMounted(async () => {
 <template>
     <DashboardLayout>
         <template #content>
-            
+
             <section id="customer_info">
                 <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 text-center">
                     <div class="mx-auto flex flex-col space-y-4 w-full">
@@ -112,14 +116,16 @@ onMounted(async () => {
                     <div class="mx-auto flex flex-col space-y-4 w-full">
                         <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg">Start Date</label>
                         <!-- <input class="input input-bordered"  type="date" v-model="job.startDate"> -->
-                        <Datepicker v-model="job.startDate" inputClassName="input w-full input-bordered" format="yyyy-mm-dd"></Datepicker>
+                        <Datepicker v-model="job.startDate" inputClassName="input w-full input-bordered"
+                            format="yyyy-mm-dd"></Datepicker>
 
                     </div>
                     <div class="mx-auto flex flex-col space-y-4 w-full">
                         <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg">End Date</label>
                         <div class="flex w-full space-x-2 items-center">
                             <!-- <input class="input input-bordered w-full flex-grow-1" type="date"  v-model="job.endDate"> -->
-                            <Datepicker v-model="job.endDate" inputClassName="input w-full input-bordered flex-grow-1" format="yyyy-mm-dd"></Datepicker>
+                            <Datepicker v-model="job.endDate" inputClassName="input w-full input-bordered flex-grow-1"
+                                format="yyyy-mm-dd"></Datepicker>
                             <button class="btn btn-sm" @click="job.endDate = job.startDate">Same Day</button>
                         </div>
 
@@ -139,16 +145,21 @@ onMounted(async () => {
                     <div class="mx-auto flex flex-col space-y-4 w-full sm:col-span-2">
                         <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg">Parts Needed</label>
                         <div class="flex space-x-3 ">
-                            <input type="text" class="input input-bordered w-full" placeholder="Name"  v-model="jobPart.name"/>
+                            <input type="text" class="input input-bordered w-full" placeholder="Name"
+                                v-model="jobPart.name" />
                             <label class="input-group w-full">
                                 <span>$</span>
-                                <input type="number" class="input input-bordered w-full" placeholder="Cost"  v-model="jobPart.price" />
+                                <input type="number" class="input input-bordered w-full" placeholder="Cost"
+                                    v-model="jobPart.price" />
                             </label>
                         </div>
-                        <div class="flex justify-end">
+                        <div class="flex justify-end space-x-3">
+                            <label for="my-modal-4"
+                                :class="`btn btn-sm modal-button ${job.requiredParts && job.requiredParts?.length > 0 ? '' : 'hidden'}`">Preview
+                                Parts</label>
                             <button class="btn  btn-sm" @click="addPart()">Add Part +</button>
                         </div>
-                        
+
                     </div>
                 </div>
             </section>
@@ -156,13 +167,36 @@ onMounted(async () => {
                 <div class="grid grid-cols-1 text-center">
                     <div class="mx-auto flex flex-col space-y-4 w-full ">
                         <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg">Summery</label>
-                        <textarea rows="8" class="textarea textarea-bordered" placeholder="Summery" v-model="job.summary"></textarea>
+                        <textarea rows="8" class="textarea textarea-bordered" placeholder="Summery"
+                            v-model="job.summary"></textarea>
                     </div>
-                   
+
                 </div>
             </section>
-            <div class="flex justify-center">
-                <button @click="addJob" class="btn">Create</button>
+            <div class="flex justify-center mt-4">
+                <button @click="addJob" class="btn btn-sm px-8  bg-ourYellow">Create</button>
+            </div>
+
+            <input type="checkbox" id="my-modal-4" class="modal-toggle" />
+            <div class="modal">
+                <div class="modal-box relative">
+                    <label for="my-modal-4" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+                    <h3 class="text-lg font-bold text-center">Job Parts</h3>
+                    <ul class="flex flex-col space-y-3 mt-4">
+                        <li v-for="(part, index) in job.requiredParts" :key="index"
+                            class="flex justify-between items-center">
+                            <span>{{ part.name }}</span>
+                            <span>${{ part.price }}</span>
+                            <span class="btn btn-ghost cursor-pointer" @click="removePart(index)">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
             </div>
 
 
