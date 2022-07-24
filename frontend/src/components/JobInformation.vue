@@ -60,7 +60,38 @@ const props = defineProps<{
                       <label for="phone-number" class="block text-sm font-medium text-gray-700">Created By User Id</label>
                       <p class="h-10 flex px-3 items-center bg-gray-300 rounded text-black font-medium">123456</p>
                     </div>
-
+                    <div class="overflow-x-auto col-span-6 sm:col-span-3">
+                    <table class="table w-full">
+                      <label for="parts" class="block text-lg font-medium text-gray-700">Parts</label>
+                      <thead>
+                        <tr class="text-center">
+                          <th>Name</th>
+                          <th>Price</th>
+                          <th>ID</th>
+                        </tr>
+                      </thead>
+                      <tbody class="text-center">
+                        <!-- row 1 -->
+                        <tr>
+                          <td>Part 1</td>
+                          <td>$500</td>
+                          <td>12345</td>
+                        </tr>
+                        <!-- row 2 -->
+                        <tr>
+                          <td>Part 2</td>
+                          <td>$800</td>
+                          <td>75472</td>
+                        </tr>
+                        <!-- row 3 -->
+                        <tr>
+                          <td>Part 3</td>
+                          <td>$400</td>
+                          <td>09985</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                   </div>
                 </div>
               </div>
