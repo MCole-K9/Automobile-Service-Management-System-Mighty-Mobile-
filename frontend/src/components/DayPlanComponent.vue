@@ -8,12 +8,13 @@
             day: number
             hourBlocks: HourDataBlock[]
         }
+        dateTitle : string
     }>()
 
 </script>
 
 <template>
-    <span>Fri, Feb. 26</span>
+    <span>{{dateTitle}}</span>
     <div class="flex-nowrap">
         <div v-for="hourBlock in dayBlock.hourBlocks">
             <HourBlockComponent :hourDataBlock="hourBlock" />
