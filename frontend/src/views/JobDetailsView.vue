@@ -5,8 +5,8 @@
     </span>
 </template>
 <script lang="ts">
-import NavBar from "@/components/NavBar.vue"
-import Job from "../components/Job.vue"
+import NavBar from "../components/NavBar.vue"
+import Job from "../components/JobInformation.vue"
     export default{
         name:'JobDetailsView',
         components:{

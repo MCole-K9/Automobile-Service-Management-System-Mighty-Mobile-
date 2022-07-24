@@ -106,7 +106,7 @@ model Job {
   createdById Int
   stages JobStage[]
   requiredParts JobPart[]
-
+  // completed Boolean @default(false)
 }
 
 model JobStage{
