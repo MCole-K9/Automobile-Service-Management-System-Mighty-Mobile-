@@ -8,7 +8,7 @@
 </script>
 
 <template>
-  <div class="card  bg-base-100 shadow-xl relative">
+  <div class="card  bg-gray-200 shadow-xl relative">
   <div class="card-body">
     <h2 class="card-title">Job #: {{props.job.jobNumber}}</h2>
     <p><span class="text-md font-semibold">Service Type: </span> {{props.job.serviceType}}</p>

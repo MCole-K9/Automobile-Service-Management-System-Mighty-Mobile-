@@ -23,7 +23,7 @@ defineComponent({
                 <h4 class="text-xl hidden md:block">Mighty Mobile Auto Service & Repair</h4>
             </router-link>
         </div>
-        <UserMenu onDashboard="true" />
+        <UserMenu :onDashboard="true" />
     </div>
 </template>
 
@@ -32,3 +32,6 @@ defineComponent({
 <style>
 
 </style>
+<script lang="ts">
+export default {};
+</script>

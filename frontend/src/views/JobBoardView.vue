@@ -1,9 +1,9 @@
 <script setup lang="ts">
-    import DashboardLayout from '@/components/DashboardLayout.vue';
+    import DashboardLayout from '../components/DashboardLayout.vue';
     import {onMounted, ref} from '@vue/runtime-core';
-    import Jobs from "@/components/Jobs.vue"
-    import PendingJobs from "@/components/PendingJobs.vue"
-    import ConfirmedJobs from "@/components/ConfirmedJobs.vue"
+    import Jobs from "../components/Jobs.vue"
+    import PendingJobs from "../components/PendingJobs.vue"
+    import ConfirmedJobs from "../components/ConfirmedJobs.vue"
     import type {Job} from "../classlib/Types";
     import BackendService from '../../BackendService';
 
