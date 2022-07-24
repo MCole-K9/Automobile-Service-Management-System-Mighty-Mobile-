@@ -7,24 +7,28 @@ const props = defineProps<{
 </script>
 
 <template>
-        <div class="mx-24 my-10">
+        <div class="mx-5 xl:mx-24 my-10">
           <div class="md:col-span-2">
-            <p class="text-4xl text-center font-bold">Job Information</p>
+            <p class="text-4xl my-10 text-center font-bold">Job Information</p>
               <div class="shadow-xl overflow-hidden rounded-lg">
-                <div :class="`px-4 py-5 bg-white sm:p-6`">
+                <div :class="`px-4 py-5 bg-white border border-gray-800 sm:p-6`">
                   <div class="grid grid-cols-6 gap-6">
                     <div class="col-span-6 sm:col-span-2">
                       <label for="full-name" class="block text-sm font-medium text-gray-700">Job No.</label>
                       <p class="h-10 flex px-3 items-center bg-gray-300 rounded text-black font-medium">123456</p>
                     </div>
                     <div class="col-span-6 sm:col-span-2">
+                      <label for="service" class="block text-sm font-medium text-gray-700">Service type</label>
+                      <p class="h-10 flex px-3 items-center bg-gray-300 rounded text-black font-medium">repair</p>
+                    </div>
+                    <div class="col-span-3 sm:col-span-1">
                       <label for="email-address" class="block text-sm font-medium text-gray-700">Start Date</label>
-                      <p class="h-10 flex px-3 items-center bg-gray-300 rounded text-black font-medium">123456</p>
+                      <p class="h-10 flex px-3 items-center  rounded bg-gray-300 text-black font-medium">24/7/2022</p>
                     </div>
 
-                    <div class="col-span-6 sm:col-span-2">
+                    <div class="col-span-3 sm:col-span-1">
                       <label for="phone-number" class="block text-sm font-medium text-gray-700">End Date</label>
-                      <p class="h-10 flex px-3 items-center bg-gray-300 rounded text-black font-medium">123456</p>
+                      <p class="h-10 flex px-3 items-center rounded bg-gray-300 text-black font-medium">05/8/2022</p>
                     </div>
 
                     <div class="col-span-6 sm:col-span-6">
@@ -37,12 +41,12 @@ const props = defineProps<{
                       <p class="h-10 flex px-3 items-center bg-gray-300 rounded text-black font-medium">123456</p>
                     </div>
 
-                    <div class="col-span-6 sm:col-span-6 lg:col-span-3">
+                    <div class="col-span-3">
                       <label for="city" class="block text-sm font-medium text-gray-700">City</label>
                       <p class="h-10 flex px-3 items-center bg-gray-300 rounded text-black font-medium">123456</p>
                     </div>
 
-                    <div class="col-span-6 sm:col-span-3 lg:col-span-3">
+                    <div class="col-span-3">
                       <label for="region" class="block text-sm font-medium text-gray-700">State / Province</label>
                       <p class="h-10 flex px-3 items-center bg-gray-300 rounded text-black font-medium">123456</p>
                     </div>
@@ -62,12 +66,12 @@ const props = defineProps<{
                     </div>
                     <div class="overflow-x-auto col-span-6 sm:col-span-3">
                     <table class="table w-full">
-                      <label for="parts" class="block text-lg font-medium text-gray-700">Parts</label>
-                      <thead>
-                        <tr class="text-center">
-                          <th>Name</th>
-                          <th>Price</th>
-                          <th>ID</th>
+                      <label for="parts" class="block text-sm font-medium text-gray-700">Parts</label>
+                      <thead >
+                        <tr class="text-center ">
+                          <th class="bg-gray-300">Name</th>
+                          <th class="bg-gray-300">Price</th>
+                          <th class="bg-gray-300">ID</th>
                         </tr>
                       </thead>
                       <tbody class="text-center">
@@ -92,6 +96,13 @@ const props = defineProps<{
                       </tbody>
                     </table>
                   </div>
+                  <div class="col-span-6 sm:col-span-3 flex flex-col justify-between gap-2">
+                      <label for="phone-number" class="block text-sm font-medium text-gray-700">Service Fee</label>
+                      <p class="h-10 flex px-3 items-center border border-success bg-gray-300 rounded text-black font-medium">$4000</p>
+                      <label for="phone-number" class="block text-sm font-medium text-gray-700">Total Cost</label>
+                      <p class="h-10 flex px-3 items-center border border-success bg-gray-300 rounded text-black font-medium">$12000</p>
+                      <p :class="`h-10 px-3 m-3 flex rounded-lg self-center items-center max-w-fit ${true ? 'bg-success':'bg-error'}`">Payment {{true ?  'made' : 'not made'}}</p>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -8,9 +8,9 @@
 </script>
 
 <template>
-<div class="card sm-600:card-side h-fit bg-gray-200 rounded mx-5">
+<div class="card sm-600:card-side h-fit bg-gray-200 rounded mx-5 w-fit">
                         <div class="card-body p-10 flex justify-start gap-x-5">
-                            <span class="flex flex-co justify-between">
+                            <span class="flex justify-between">
                                 <p class="font-medium m-2">Mechanic :
                                      John Doe 
                                      </p>
@@ -22,9 +22,9 @@
                                     </p>
                                 <p class="font-bold m-2">Job No. #12345 </p>
                             </span>
-                            <span class="flex flex-col justify-between">
-                                in
-                                 <button class="btn btn-sm" @click="$router.push('/viewjob')">
+                            <span class="flex flex-row justify-between items-center">
+                                <label class="badge-success badge">completed</label>
+                                <button class="btn btn-sm" @click="$router.push('/viewjob')">
                                     view
                                 </button>
                             </span>
