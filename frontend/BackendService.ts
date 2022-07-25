@@ -108,62 +108,64 @@ export default class BackendService{
     static async getMonthSchedule(selectedMonth: number, userId: number){
         try {
             
+            console.log( "Month: " + selectedMonth + " UserID: " + userId)
+
             const schedule = await axios.get(URL + `/user/${userId}/schedule/${selectedMonth}-${Date.now()}`).then((result)=>result.data);
 
-            let daysInMonth: number = 0;
+            // let daysInMonth: number = 0;
             let currentDate: Date = new Date(Date.now());
 
-            switch (selectedMonth){
-                case 0:
-                    daysInMonth = 31;
-                    break;
-                case 1:
-                    if ((currentDate.getFullYear() % 4) === 0){
-                        daysInMonth = 29;
-                    }
-                    else{
-                        daysInMonth = 28;
-                    }
-                    break;
-                case 2:
-                    daysInMonth = 31;
-                    break;
-                case 3:
-                    daysInMonth = 30;
-                    break;
-                case 4:
-                    daysInMonth = 31;
-                    break;
-                case 5:
-                    daysInMonth = 30;
-                    break;
-                case 6:
-                    daysInMonth = 31;
-                    break;
-                case 7:
-                    daysInMonth = 31;
-                    break;
-                case 8:
-                    daysInMonth = 30;
-                    break;
-                case 9:
-                    daysInMonth = 31;
-                    break;
-                case 10:
-                    daysInMonth = 30;
-                    break;
-                case 11:
-                    daysInMonth = 31;
-                    break;
-                default:
-                    if (typeof selectedMonth !== 'number'){
-                        throw new TypeError("Type of Month must be a number");
-                    }
-                    else if (selectedMonth > 12){
-                        throw new RangeError("Value of Month must be less than or equal to 12");
-                    }
-                    break;
-            }
+            // switch (selectedMonth){
+            //     case 0:
+            //         daysInMonth = 31;
+            //         break;
+            //     case 1:
+            //         if ((currentDate.getFullYear() % 4) === 0){
+            //             daysInMonth = 29;
+            //         }
+            //         else{
+            //             daysInMonth = 28;
+            //         }
+            //         break;
+            //     case 2:
+            //         daysInMonth = 31;
+            //         break;
+            //     case 3:
+            //         daysInMonth = 30;
+            //         break;
+            //     case 4:
+            //         daysInMonth = 31;
+            //         break;
+            //     case 5:
+            //         daysInMonth = 30;
+            //         break;
+            //     case 6:
+            //         daysInMonth = 31;
+            //         break;
+            //     case 7:
+            //         daysInMonth = 31;
+            //         break;
+            //     case 8:
+            //         daysInMonth = 30;
+            //         break;
+            //     case 9:
+            //         daysInMonth = 31;
+            //         break;
+            //     case 10:
+            //         daysInMonth = 30;
+            //         break;
+            //     case 11:
+            //         daysInMonth = 31;
+            //         break;
+            //     default:
+            //         if (typeof selectedMonth !== 'number'){
+            //             throw new TypeError("Type of Month must be a number");
+            //         }
+            //         else if (selectedMonth > 12){
+            //             throw new RangeError("Value of Month must be less than or equal to 12");
+            //         }
+            //         break;
+            // }
 
             const res: MonthBlock = {} as MonthBlock;
 
