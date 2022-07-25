@@ -39,7 +39,7 @@
    * 
    */
   export type Vehicle = {
-    id: number
+    id?: number
     licensePlate?: string | null
     make: string
     model: string
@@ -54,16 +54,19 @@
    * 
    */
   export type Appointment = {
-    id: number
+    id?: number
     problemDescription: string
-    date: Date
+    suggestedDate: Date
     streetAddress: string
     town: string
     parish: string
     customerId: number
-    fulfilled: boolean
-    assignedMechId: number | null
+    customer?: User
+    fulfilled?: boolean
+    assignedMechId?: number | null
+    assignedMech?: User
     vehicleId: number
+    vehicle?: Vehicle
   }
   
   /**
@@ -137,3 +140,9 @@
     jobId?: number
   }
   
+  export enum UserRole{
+    ADMIN = 1,
+    Manager,
+    Mechanic,
+    Customer 
+}

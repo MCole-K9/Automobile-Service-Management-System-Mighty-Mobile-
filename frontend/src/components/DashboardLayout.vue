@@ -30,6 +30,7 @@ defineComponent({
     <ul class="menu p-4 overflow-y-auto w-60  text-base-content bg-ourYellow">
       <!-- Sidebar content here -->
       <li><router-link to="/dashboard">Dashboard</router-link></li>
+      <li><router-link to="/dashboard/requests">Requests</router-link></li>
       <li><router-link to="/dashboard/jobboard">Job Board</router-link></li>
       <li><a>Schedule</a></li>
       <li><a>Vehicles</a></li>

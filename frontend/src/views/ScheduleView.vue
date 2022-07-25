@@ -2,12 +2,14 @@
     import NavBar from '../components/NavBar.vue'
     import DayPlanComponent from '@/components/DayPlanComponent.vue';
     import HourBlockComponent from '@/components/HourBlockComponent.vue';
-    import {createMonthObject, type MonthBlock, type DayBlock, HourDataBlock}  from '@/classlib/MonthlySchedule';
+    import type {MonthBlock, DayBlock}  from '@/classlib/MonthlySchedule';
+    import {HourDataBlock} from '@/classlib/MonthlySchedule';
     import {currentUserStore, newUserStore} from "../stores/User";
     import { onMounted, ref, reactive } from 'vue';
+    import BackendService from '../../BackendService';
 
     const currentUser = currentUserStore();
-    let test: MonthBlock = createMonthObject(new Date(Date.now()).getMonth(), new Date(Date.now()), currentUser.User.id);;
+    let test: MonthBlock = BackendService.getMonthSchedule(new Date(Date.now()).getMonth(), currentUser.User.id);
     
 </script>
 

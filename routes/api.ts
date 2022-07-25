@@ -222,6 +222,17 @@ export default class Routes{
             
         });
 
+        router.get("/appointments", async (req:Request, res:Response)=>{
+            const appointments = await prisma.appointment.findMany({
+                include: {
+                    assignedMech: true,
+                    customer: true,
+                    vehicle: true,
+                }
+            })
+            res.send(appointments);
+        });
+
         router.route("/jobs").get(async (req:Request, res:Response)=>{
             //Code Here
         }).post(async (req:Request, res:Response)=>{
@@ -281,6 +292,162 @@ export default class Routes{
             console.log(jobs)
 
             res.status(200).send(jobs)
+        });
+
+        router.get("/user/:id/schedule/:currentDate-:givenMonth", async (req:Request, res: Response)=>{
+            // route parameters transformed
+
+            console.log(req.params.id + " " + req.params.currentDate + " " + req.params.givenMonth);
+
+
+
+            const currentDate: Date = new Date(parseInt(req.params.currentDate, 10));
+            const givenMonth: number = parseInt(req.params.givenMonth, 10);
+            const userId: number = parseInt(req.params.id, 10);
+
+            console.log(currentDate.toString() + " " + givenMonth + " " + userId);
+
+            // determining the days of the week and the current month
+            let daysInMonth: number = 0;
+            const selectedMonth: Date = new Date(currentDate.getFullYear(), givenMonth);
+
+            switch (givenMonth){
+                case 0:
+                    daysInMonth = 31;
+                    break;
+                case 1:
+                    if ((currentDate.getFullYear() % 4) === 0){
+                        daysInMonth = 29;
+                    }
+                    else{
+                        daysInMonth = 28;
+                    }
+                    break;
+                case 2:
+                    daysInMonth = 31;
+                    break;
+                case 3:
+                    daysInMonth = 30;
+                    break;
+                case 4:
+                    daysInMonth = 31;
+                    break;
+                case 5:
+                    daysInMonth = 30;
+                    break;
+                case 6:
+                    daysInMonth = 31;
+                    break;
+                case 7:
+                    daysInMonth = 31;
+                    break;
+                case 8:
+                    daysInMonth = 30;
+                    break;
+                case 9:
+                    daysInMonth = 31;
+                    break;
+                case 10:
+                    daysInMonth = 30;
+                    break;
+                case 11:
+                    daysInMonth = 31;
+                    break;
+                default:
+                    if (typeof givenMonth !== 'number'){
+                        throw new TypeError("Type of Month must be a number");
+                    }
+                    // else if (givenMonth >= 12){
+                    //     throw new RangeError("Value of Month must be less than or equal to 11");
+                    // }
+                    break;
+            }
+
+            // getting the information from the database
+            const schedule = await prisma.schedule.findMany({
+                orderBy: {
+                    date: 'asc'
+                },
+                //  but since a schedule only has appt OR jobstage, kinda wondering what happens when i try to pull for both
+                select: {
+                    id: true,
+                    date: true,
+                    appointment: {
+                        select: {
+                            problemDescription: true,
+                            customer: {
+                                select: {
+                                    id: true,
+                                    firstName: true,
+                                    lastName: true
+                                }
+                            },
+                            streetAddress: true,
+                            town: true,
+                            parish: true
+                        }
+                    },
+                    jobStage: {
+                        select: {
+                            description: true,
+                            duration: true,
+                            job: {
+                                select: {
+                                    jobNumber: true,
+                                    streetAddress: true,
+                                    town: true,
+                                    parish: true,
+                                    vehicle: {
+                                        select: {
+                                            owner: {
+                                                select: {
+                                                    id: true,
+                                                    firstName: true,
+                                                    lastName: true
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },        
+                where: {
+                    AND: [
+                        {
+                            date: {
+                                // this may be a point of failure, because i'm not sure that this is how you do this for dates
+                                // might need to turn these into date objects, not sure.
+                                gte: new Date(selectedMonth.getFullYear(), selectedMonth.getMonth(), 1),
+                                lte: new Date(selectedMonth.getFullYear(), selectedMonth.getMonth(), daysInMonth)
+                            }
+                        },
+                        {
+                            OR: [
+                                {
+                                    appointment: {
+                                        assignedMechId: userId
+                                    }
+                                },
+    
+                                {
+                                    jobStage: {
+                                        job: {
+                                            assignedMechanicId: userId
+                                        }
+                                    }
+                                }
+                            ] 
+                        }
+                    ]
+                }
+            })
+        
+            console.log(schedule);
+
+            res.status(200).send(schedule);
+        
         });
 
 
