@@ -4,8 +4,7 @@
             <template #content>
                     <p class="text-4xl font-bold text-center my-5">Work history</p>
                     <div class="flex justify-start gap-5 overflow-y-auto">
-                        
-                        <CompletedJob :job="job" v-for="job in upcomingJobs" :key="job.jobNumber"/>
+                        <JobComponent :completed="true" :job="job" v-for="job in upcomingJobs" :key="job.jobNumber"/>
                     </div>
                 </template>
         </DashboardLayout>
@@ -15,14 +14,13 @@
 import { defineComponent } from 'vue'
 import BackendService from '../../BackendService'
 import DashboardLayout from "../components/DashboardLayout.vue"
-import CompletedJob from '../components/CompletedJob.vue'
-import type { AxiosResponse } from 'axios'
+import JobComponent from '../components/JobComponent.vue'
 import type {Job} from "../classlib/Types";
 
 export default defineComponent({
   components:{
     DashboardLayout,
-    CompletedJob,
+    JobComponent,
   },
   // type inference enabled
   props: {

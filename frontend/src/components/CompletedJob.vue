@@ -24,7 +24,7 @@
                             </span>
                             <span class="flex flex-row justify-between items-center">
                                 <label class="badge-success badge">completed</label>
-                                <button class="btn btn-sm" @click="$router.push('/viewjob')">
+                                <button class="btn btn-sm" @click="$router.push('/dashboard/viewjob')">
                                     view
                                 </button>
                             </span>

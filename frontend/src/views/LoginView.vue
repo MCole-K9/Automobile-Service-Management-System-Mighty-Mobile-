@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import NavBar from '@/components/NavBar.vue';
+import NavBar from '../components/NavBar.vue';
 import { defineComponent, ref} from 'vue';
 import BackendService from '../../BackendService';
 import router from "../router/index";

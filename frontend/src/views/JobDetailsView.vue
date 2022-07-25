@@ -1,17 +1,18 @@
 <template>
-    <span>
-        <NavBar/>
-        <Job :job="g"/>
-    </span>
+        <DashboardLayout>
+            <template #content>
+                <Job :job="g"/>
+            </template>
+        </DashboardLayout>
 </template>
 <script lang="ts">
-import NavBar from "../components/NavBar.vue"
 import Job from "../components/JobInformation.vue"
+import DashboardLayout from "../components/DashboardLayout.vue";
     export default{
         name:'JobDetailsView',
         components:{
-            NavBar,
-            Job
+            Job,
+            DashboardLayout
         },
         data(){
             return{

@@ -1,7 +1,7 @@
 <script lang="ts">
 
-import DashboardLayout from "@/components/DashboardLayout.vue";
-import UserDashboard from "@/components/UserDashboard.vue";
+import DashboardLayout from "../components/DashboardLayout.vue";
+import UserDashboard from "../components/UserDashboard.vue";
 export default{
     components:{
         DashboardLayout,

@@ -38,17 +38,17 @@ const props = defineProps<{
 
                     <div class="col-span-6">
                       <label for="street-address" class="block text-sm font-medium text-gray-700">Street address</label>
-                      <p class="h-10 flex px-3 items-center bg-gray-300 rounded text-black font-medium">123456</p>
+                      <p class="h-10 flex px-3 items-center bg-gray-300 rounded text-black font-medium">1 Gold Street</p>
                     </div>
 
                     <div class="col-span-3">
                       <label for="city" class="block text-sm font-medium text-gray-700">City</label>
-                      <p class="h-10 flex px-3 items-center bg-gray-300 rounded text-black font-medium">123456</p>
+                      <p class="h-10 flex px-3 items-center bg-gray-300 rounded text-black font-medium">Gold City</p>
                     </div>
 
                     <div class="col-span-3">
                       <label for="region" class="block text-sm font-medium text-gray-700">State / Province</label>
-                      <p class="h-10 flex px-3 items-center bg-gray-300 rounded text-black font-medium">123456</p>
+                      <p class="h-10 flex px-3 items-center bg-gray-300 rounded text-black font-medium">Kingston</p>
                     </div>
 
                     <div class="col-span-6 sm:col-span-2">
@@ -57,12 +57,12 @@ const props = defineProps<{
                     </div>
                     <div class="col-span-6 sm:col-span-2">
                       <label for="email-address" class="block text-sm font-medium text-gray-700">Assigned Mechanic Id</label>
-                      <p class="h-10 flex px-3 items-center bg-gray-300 rounded text-black font-medium">123456</p>
+                      <p class="h-10 flex px-3 items-center bg-gray-300 rounded text-black font-medium">654321</p>
                     </div>
 
                     <div class="col-span-6 sm:col-span-2">
                       <label for="phone-number" class="block text-sm font-medium text-gray-700">Created By User Id</label>
-                      <p class="h-10 flex px-3 items-center bg-gray-300 rounded text-black font-medium">123456</p>
+                      <p class="h-10 flex px-3 items-center bg-gray-300 rounded text-black font-medium">615243</p>
                     </div>
                     <div class="overflow-x-auto col-span-6 sm:col-span-3">
                     <table class="table w-full">
