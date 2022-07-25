@@ -18,24 +18,20 @@ defineComponent({
     model: "",
     year: 2006,
     ownerId: 0,
-    licensePlate: null,
-    image: null
+
  })
 
  const date = ref<Date>(new Date())
 
  let appointment = reactive<Appointment>({
    id: 0,
-   date: new Date(),
+   suggestedDate: new Date(),
    problemDescription: "",
    streetAddress: "",
    town: "",
    parish: "",
    customerId: 0,
-   assignedMechId: 0,
    vehicleId: 0,
-   fulfilled: false
-
 
  });
 
