@@ -222,6 +222,17 @@ export default class Routes{
             
         });
 
+        router.get("/appointments", async (req:Request, res:Response)=>{
+            const appointments = await prisma.appointment.findMany({
+                include: {
+                    assignedMech: true,
+                    customer: true,
+                    vehicle: true,
+                }
+            })
+            res.send(appointments);
+        });
+
         router.route("/jobs").get(async (req:Request, res:Response)=>{
             //Code Here
         }).post(async (req:Request, res:Response)=>{

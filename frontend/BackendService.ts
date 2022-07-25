@@ -94,6 +94,16 @@ export default class BackendService{
             
         }
     }
+    static async getAppointments() {
+
+        try{
+            const res = await axios.get(URL + "/appointments")
+            return res;
+
+        }catch(err){
+            
+        }
+    }
 
     static async getMonthSchedule(selectedMonth: number, userId: number){
         try {
