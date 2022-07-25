@@ -105,7 +105,7 @@ export default class BackendService{
         }
     }
 
-    static async getMonthSchedule(selectedMonth: number, userId: number){
+    static async getMonthSchedule(selectedMonth: number, userId: number = 0){
         try {
             
             console.log( "Month: " + selectedMonth + " UserID: " + userId)
