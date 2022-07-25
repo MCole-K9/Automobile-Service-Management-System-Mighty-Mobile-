@@ -1,6 +1,6 @@
 import type { User, Appointment, Vehicle, Job } from "./src/classlib/Types";
 import axios from "axios";
-import { MonthBlock, HourDataBlock, DayBlock } from "./src/classlib/MonthlySchedule";
+import  type { MonthBlock, HourDataBlock, DayBlock } from "./src/classlib/MonthlySchedule";
 
 
 
