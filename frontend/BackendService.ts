@@ -97,7 +97,7 @@ export default class BackendService{
     static async getMonthSchedule(selectedMonth: number, userId: number){
         try {
             
-            const schedule = await axios.get<[]>(URL + `/user/${userId}/schedule/${selectedMonth}-${Date.now()}`);
+            const schedule = await axios.get(URL + `/user/${userId}/schedule/${selectedMonth}-${Date.now()}`).then((result)=>result.data);
 
             let daysInMonth: number = 0;
             let currentDate: Date = new Date(Date.now());
