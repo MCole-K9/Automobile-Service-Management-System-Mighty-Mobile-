@@ -355,9 +355,9 @@ export default class Routes{
                     if (typeof givenMonth !== 'number'){
                         throw new TypeError("Type of Month must be a number");
                     }
-                    // else if (givenMonth >= 12){
-                    //     throw new RangeError("Value of Month must be less than or equal to 11");
-                    // }
+                    else if (givenMonth >= 12){
+                        throw new RangeError("Value of Month must be less than or equal to 11");
+                    }
                     break;
             }
 
@@ -442,7 +442,9 @@ export default class Routes{
                 }
             })
         
-            console.log(schedule);
+            schedule.forEach(schedule =>{
+                console.log(schedule);
+            });
 
             res.status(200).send(schedule);
         

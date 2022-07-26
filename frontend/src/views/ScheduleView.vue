@@ -9,7 +9,24 @@
     import BackendService from '../../BackendService';
 
     const currentUser = currentUserStore();
-    let test: MonthBlock = BackendService.getMonthSchedule(new Date(Date.now()).getMonth(), currentUser.User.id).then(result =>result);
+    
+    const monthSchedulePromise: Promise<MonthBlock | undefined> = BackendService.getMonthSchedule(new Date(Date.now()).getMonth(), currentUser.User.id);
+    console.log(monthSchedulePromise);
+    
+    let monthlySchedule: MonthBlock | undefined;
+
+    monthSchedulePromise.then(result=>monthlySchedule = result);
+    
+    
+    let test = ref({} as MonthBlock);
+
+    if (monthlySchedule !== undefined){
+        test = ref<MonthBlock>(monthlySchedule);
+
+        console.log(test.value);
+    }
+
+    
     
 </script>
 
