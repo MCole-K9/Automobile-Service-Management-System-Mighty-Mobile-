@@ -1,5 +1,8 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import HomeView from '../views/HomeView.vue';
+import { currentUserStore } from '@/stores/User';
+
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -7,6 +10,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
+      meta: {auth: false},
       component: HomeView
     },
     {
@@ -15,59 +19,85 @@ const router = createRouter({
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
+      meta: {auth: false},
       component: () => import('../views/AboutView.vue')
     },
     {
       path: "/appointmentbooking",
-      name: "appointmentbooking",
+      name: "appointmentbooking",  
+      meta: {auth: false},
       component: ()=> import("../views/AppointmentBookingView.vue")
     },
     {
       path: "/register",
       name: "register",
+      meta: {auth: false},
       component: ()=> import("@/views/RegisterView.vue")
     },
     {
       path: "/login",
       name: "login",
+      meta: {auth: false},
       component: ()=> import("@/views/LoginView.vue")
     },
     {
       path: "/dashboard",
       name: "dashboard",
+      meta: {auth: true},
       component: ()=>import("@/views/DashboardView.vue")
     },
     {
       path: "/dashboard/workhistory",
       name: "workhistory",
+      meta: {auth: true},
       component: ()=>import("@/views/WorkHistoryView.vue")
     },
     {
       path: "/dashboard/jobboard",
       name: "jobboard",
+      meta: {auth: true},
       component: ()=> import("@/views/JobBoardView.vue")
     },
     {
       path: "/dashboard/viewjob",
       name: "viewjob",
+      meta: {auth: true},
       component: ()=> import("@/views/JobDetailsView.vue")
     },
     {
       path: "/dashboard/createjob",
       name: "createjob", 
+      meta: {auth: true},
       component: ()=> import("@/views/CreateJobView.vue")
     },
     {
       path: "/yourschedule",
       name: "yourschedule",
+      //Add Auth requirement
       component: () => import("../views/ScheduleView.vue")
     },
     {
       path: "/dashboard/requests",
       name: "requests",
+      meta: {auth: true},
       component: ()=> import("@/views/RequestView.vue")
     }
   ]
 })
+
+router.beforeEach((to, from, next)=>{
+
+  const currentUser = currentUserStore();
+  
+  //If auth is true and User is not logged in. i.e Route that requires user Authentication
+  if(to.meta.auth && !currentUser.loggedIn){
+    next({path: "/login"});
+  }else{
+    next();
+  }
+  
+}) 
+
+
 
 export default router
