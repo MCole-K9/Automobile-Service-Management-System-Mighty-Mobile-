@@ -278,6 +278,29 @@ export default class Routes{
             
         })
 
+        router.route("/job/:id").get(async (req:Request, res:Response) => {
+
+            const jobNumber = Number.parseInt(req.params.id);
+
+            const job = await prisma.job.findUniqueOrThrow({
+                where: {
+                    jobNumber
+                },
+                include: {
+                    vehicle: {
+                        include: {
+                            owner: true
+                        }
+                    },
+                    requiredParts: true,
+                    assignedMechanic: true,
+                    createdBy: true
+                }
+            });
+
+            res.status(200).send(job);
+        })
+
         router.get("/jobs/upcoming", async (req:Request, res:Response)=>{
             const jobs = await prisma.job.findMany({
                 include: {
