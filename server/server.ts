@@ -1,4 +1,4 @@
-import express, {Application, Response, Request} from "express";
+import express, {Application, Response, Request, query} from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import path from 'path';
@@ -16,6 +16,7 @@ const corsOptions = {
     optionSuccessStatus:200,
  }
 app.use(cors(corsOptions)); 
+//app.set("query parser", "simple")
 
 app.use("/api", Routes.routes())
 app.use(express.static(path.join(__dirname, "/public/")))

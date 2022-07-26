@@ -295,12 +295,10 @@ export default class Routes{
         });
 
         router.get("/user/:id/schedule/:currentDate-:givenMonth", async (req:Request, res: Response)=>{
+            
+            console.log(req.params.id + " " + req.query.currentDate + " " + req.query.givenMonth);
+
             // route parameters transformed
-
-            console.log(req.params.id + " " + req.params.currentDate + " " + req.params.givenMonth);
-
-
-
             const currentDate: Date = new Date(parseInt(req.params.currentDate, 10));
             const givenMonth: number = parseInt(req.params.givenMonth, 10);
             const userId: number = parseInt(req.params.id, 10);

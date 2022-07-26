@@ -9,7 +9,7 @@
     import BackendService from '../../BackendService';
 
     const currentUser = currentUserStore();
-    let test: MonthBlock = BackendService.getMonthSchedule(new Date(Date.now()).getMonth(), currentUser.User.id);
+    let test: MonthBlock = BackendService.getMonthSchedule(new Date(Date.now()).getMonth(), currentUser.User.id).then(result =>result);
     
 </script>
 
