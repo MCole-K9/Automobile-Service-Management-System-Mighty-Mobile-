@@ -27,6 +27,16 @@ export const currentUserStore = defineStore("currentUser", {
             this.User = user;
             this.User.password = "";
             this.loggedIn = true;
+        },
+        hasRole(roleId: number):boolean{
+            
+            let hasRole = false;
+            this.User.roles?.forEach((role)=>{
+                
+                hasRole =  (roleId === role.id);
+            });
+
+            return hasRole;
         }
     },
     persist: true

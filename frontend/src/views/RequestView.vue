@@ -2,19 +2,30 @@
 import DashboardLayout from '@/components/DashboardLayout.vue';
 import BackendService from "../../BackendService"
 import type { Appointment, Job } from "@/classlib/Types"
+import { UserRole } from '@/classlib/Types';
 import Request from '@/components/Request.vue';
 import { onMounted, ref } from 'vue';
+import {currentUserStore} from "@/stores/User"
+
+const currentUser = currentUserStore();
 
 let appointments = ref<Appointment[]>([])
 let jobs = ref<Job[]>([])
 
 onMounted(async () => {
-    const apptRes = await BackendService.getAppointments();
-    const jobRes = await BackendService.getUpcomingJobs();
 
+    if(currentUser.hasRole(UserRole.Customer) ){
+
+        const jobRes = await BackendService.getUpcomingJobs();
+        jobs.value = [...jobRes?.data]
+    }else{
+
+        const apptRes = await BackendService.getAppointments();
+        appointments.value = [...apptRes?.data]
+    }
+
+   
     
-    appointments.value = [...apptRes?.data]
-    jobs.value = [...jobRes?.data]
 })
 
 
