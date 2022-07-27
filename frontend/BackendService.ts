@@ -117,13 +117,13 @@ export default class BackendService{
         }
     }
 
-    static async getMonthSchedule(selectedMonth: number, userId: number = 0): Promise<MonthBlock | undefined>{
-        const res: MonthBlock = {} as MonthBlock;
-        res.month = selectedMonth;
+    static async getMonthSchedule(selectedMonth: number, userId: number = 0): Promise<MonthBlock>{
+        const res: MonthBlock = {month: selectedMonth, workingDays: []} as MonthBlock;
 
         try {
-            const schedule = await axios.get(URL + `/user/${userId}/schedule/${Date.now()}-${selectedMonth}`).then((result)=>result.data, response=>{throw new Error("whoops lol")});
+            const schedule: any = await axios.get(URL + `/user/${userId}/schedule/${Date.now()}-${selectedMonth}`);
             
+            // generating the amount of days in the month for calculations later
             let daysInMonth: number = 0;
             switch (selectedMonth){
                 case 0:
@@ -168,18 +168,17 @@ export default class BackendService{
                     daysInMonth = 31;
                     break;
                 default:
-                    if (typeof selectedMonth !== 'number'){
-                        throw new TypeError("Type of Month must be a number");
-                    }
-                    else if (selectedMonth >= 12){
-                        throw new RangeError("Value of Month must be less than or equal to 11");
-                    }
+                        if (typeof selectedMonth !== 'number'){
+                            throw new TypeError("Type of Month must be a number");
+                        }
+                        else if (selectedMonth >= 12){
+                            throw new RangeError("Value of Month must be less than or equal to 11");
+                        }
                     break;
             }
 
             // generate a Date object that corresponds to the month the user wants to be fed
-            // 
-            const intendedDate: Date = new Date(Date());
+            const intendedDate: Date = new Date(Date.now());
             if (intendedDate.getMonth() === selectedMonth){
                 // nothing, will probably refactor this
             }
@@ -193,20 +192,25 @@ export default class BackendService{
                 // Check for and exclude Saturdays and Sundays
                 if (intendedDate.getDay() !== 6 && intendedDate.getDay() !== 0){
                     
-                    let workingDayBlock: DayBlock = {} as DayBlock;
+                    const workingDayBlock: DayBlock = {} as DayBlock;
                     workingDayBlock.day = i;
                     res.workingDays.push(workingDayBlock);
     
-                    intendedDate.setDate(i);
+                    // i don't even remember why i did this.
+                    // intendedDate.setDate(i);
                 }
             }
 
+            // arrays are objects in javascript, so i have to do this
+            res.workingDays.forEach(workingDay =>{
+                workingDay.hourBlocks = [];
+            });
 
             let incrementor: number = 0;
 
             // Put the scheduled items into their corresponding hour blocks of every working day
             res.workingDays.forEach((workingDay)=>{
-                if (schedule === null){
+                if (!Array.isArray(schedule)){
                     return;
                 }
 
@@ -280,7 +284,6 @@ export default class BackendService{
 
                 }
                 else{
-                    
                     timeDifference = workingDay.hourBlocks[hourIndex].time - timeToCheck;
 
                     for (let i: number = 0; i < timeDifference; i++){
@@ -323,16 +326,10 @@ export default class BackendService{
                 }
             });
 
-            console.log(res.month);
-
-            // res.workingDays.forEach(workingDay=>{
-            //     console.log(workingDay.day);
-            // });
-
             return res;
 
-        }catch(err){
-            return undefined;
+        }catch(err: any){
+            throw new Error(err);
         }
     }
 

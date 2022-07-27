@@ -10,21 +10,14 @@
 
     const currentUser = currentUserStore();
     
-    const monthSchedulePromise: Promise<MonthBlock | undefined> = BackendService.getMonthSchedule(new Date(Date.now()).getMonth(), currentUser.User.id);
-    console.log(monthSchedulePromise);
+    const schedule: MonthBlock = await BackendService.getMonthSchedule(new Date(Date.now()).getMonth(), currentUser.User.id);
     
-    let monthlySchedule: MonthBlock | undefined;
-
-    monthSchedulePromise.then(result=>monthlySchedule = result);
-    
-    
-    let test = ref({} as MonthBlock);
-
-    if (monthlySchedule !== undefined){
-        test = ref<MonthBlock>(monthlySchedule);
-
-        console.log(test.value);
-    }
+    schedule.workingDays.forEach(workingday=>{
+        console.log(workingday.day);
+        workingday.hourBlocks.forEach(hour=>{
+            console.log(hour.time);
+        })
+    });
 
     
     
@@ -34,21 +27,21 @@
     <NavBar />
 
     <div>
-        <button v-if="test.month = 0">January</button>
-        <button v-if="test.month <= 1">February</button>
-        <button v-if="test.month <= 2">March</button>
-        <button v-if="test.month <= 3">April</button>
-        <button v-if="test.month <= 4">May</button>
-        <button v-if="test.month <= 5">June</button>
-        <button v-if="test.month <= 6">July</button>
-        <button v-if="test.month <= 7">August</button>
-        <button v-if="test.month <= 8">September</button>
-        <button v-if="test.month <= 9">October</button>
-        <button v-if="test.month <= 10">November</button>
-        <button v-if="test.month <= 11">December</button>
+        <button v-if="schedule.month = 0">January</button>
+        <button v-if="schedule.month <= 1">February</button>
+        <button v-if="schedule.month <= 2">March</button>
+        <button v-if="schedule.month <= 3">April</button>
+        <button v-if="schedule.month <= 4">May</button>
+        <button v-if="schedule.month <= 5">June</button>
+        <button v-if="schedule.month <= 6">July</button>
+        <button v-if="schedule.month <= 7">August</button>
+        <button v-if="schedule.month <= 8">September</button>
+        <button v-if="schedule.month <= 9">October</button>
+        <button v-if="schedule.month <= 10">November</button>
+        <button v-if="schedule.month <= 11">December</button>
     </div>
 
-    <div v-for="day in test.workingDays">
+    <div v-for="day in schedule.workingDays">
         <DayPlanComponent :dayBlock="day"
             dateTitle="new Date( new Date(Date()).GetFullYear(), test.month, day.day).toDateString()"
             />
