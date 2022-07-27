@@ -16,7 +16,7 @@ console.log(props.completed)
     <p><span class="text-md font-semibold">Customer: </span>  {{props.job.vehicle?.owner?.firstName}} {{props.job.vehicle?.owner?.lastName}}</p>
     <p><span class="text-md font-semibold">Vehicle: </span>{{props.job.vehicle?.year}} {{props.job.vehicle?.make}} {{props.job.vehicle?.model}} </p>
     <div class="card-actions justify-center mt-3">
-      <button class="btn btn-sm bg-ourYellow" @click="$router.push('/dashboard/viewjob')">View</button>
+      <button class="btn btn-sm bg-ourYellow" @click="$router.push(`/dashboard/viewjob/${props.job.jobNumber}`)">View</button>
     </div>
   </div>
   <span class="badge absolute top-8 right-4 px-4 bg-ourRed" v-if="!props.completed">{{props.job.confirmed? "Confirmed": "Pending"}}</span>
