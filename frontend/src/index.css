@@ -7,11 +7,14 @@
 /* not actually sure where this will go, but the adding custom styles thing suggests not scoping css, so--KS */
 @layer components{
     .filledBlock {
-        @apply bg-ourYellow hover:bg-yellow-500;
+        @apply bg-ourYellow;
+        @apply hover:bg-yellow-500;
     }
     
     .emptyBlock{
-        @apply bg-slate-100 border hover:bg-slate-200;
+        @apply w-20 h-20;
+        @apply bg-slate-100 border  text-slate-300;
+        @apply hover:bg-slate-200 hover:text-slate-400;
     }
 }
 

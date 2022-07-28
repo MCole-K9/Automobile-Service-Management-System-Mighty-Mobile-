@@ -22,19 +22,19 @@
 </script>
 
 <template>
-    <div class="container mx-auto w-min flex flex-row">
-                <button class="button" v-if="schedule.month == 0">January</button>
-                <button class="button" v-if="schedule.month <= 1">February</button>
-                <button class="button" v-if="schedule.month <= 2">March</button>
-                <button class="button" v-if="schedule.month <= 3">April</button>
-                <button class="button" v-if="schedule.month <= 4">May</button>
-                <button class="button" v-if="schedule.month <= 5">June</button>
-                <button class="button" v-if="schedule.month <= 6">July</button>
-                <button class="button" v-if="schedule.month <= 7">August</button>
-                <button class="button" v-if="schedule.month <= 8">September</button>
-                <button class="button" v-if="schedule.month <= 9">October</button>
-                <button class="button" v-if="schedule.month <= 10">November</button>
-                <button class="button" v-if="schedule.month <= 11">December</button>
+    <div class="container mx-auto w-max-w flex flex-row space-x-4 overscroll-x-auto overflow-x-auto lg:w-min">
+                <button class="font-semibold bg-ourYellow rounded" v-if="schedule.month == 0">January</button>
+                <button class="font-semibold bg-ourYellow rounded" v-if="schedule.month <= 1">February</button>
+                <button class="font-semibold bg-ourYellow rounded" v-if="schedule.month <= 2">March</button>
+                <button class="font-semibold bg-ourYellow rounded" v-if="schedule.month <= 3">April</button>
+                <button class="font-semibold bg-ourYellow rounded" v-if="schedule.month <= 4">May</button>
+                <button class="font-semibold bg-ourYellow rounded" v-if="schedule.month <= 5">June</button>
+                <button class="font-semibold bg-ourYellow rounded" v-if="schedule.month <= 6">July</button>
+                <button class="font-semibold bg-ourYellow rounded" v-if="schedule.month <= 7">August</button>
+                <button class="font-semibold bg-ourYellow rounded" v-if="schedule.month <= 8">September</button>
+                <button class="font-semibold bg-ourYellow rounded" v-if="schedule.month <= 9">October</button>
+                <button class="font-semibold bg-ourYellow rounded" v-if="schedule.month <= 10">November</button>
+                <button class="font-semibold bg-ourYellow rounded" v-if="schedule.month <= 11">December</button>
             </div>
 
             <div class="" v-for="day in schedule.workingDays">
