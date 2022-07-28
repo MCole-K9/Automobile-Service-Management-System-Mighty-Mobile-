@@ -103,7 +103,7 @@
     createdById?: number
     createdBy?: User
     requiredParts?:  JobPart[]
-    // completed: boolean
+    completed?: boolean
   }
   
   /**
