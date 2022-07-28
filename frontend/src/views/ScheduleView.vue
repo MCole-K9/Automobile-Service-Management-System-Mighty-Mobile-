@@ -13,6 +13,8 @@
     import ScheduleViewAsyncComponent from '../components/ScheduleViewAsyncComponent.vue';
 
     const asyncSchedule = defineAsyncComponent(() => import('../components/ScheduleViewAsyncComponent.vue'));
+
+
 </script>
 
 <template>
@@ -20,7 +22,7 @@
     
     <div class="max-w-screen px-4 overflow-hidden overscroll-x-auto lg:mx-auto lg:w-min">
         <Suspense>
-            <ScheduleViewAsyncComponent />
+            <ScheduleViewAsyncComponent/>
 
             <template #fallback>
                 <div class="w-min container mx-auto my-auto">Loading...</div>
@@ -31,11 +33,13 @@
         <Suspense>
             <!--This is probably where the modal to add a jobstage will go-->
             <!--Should be another one for viewing the information of a given job/appointment/schedule item-->
-
+            <template #fallback>
+                <div v-show="" class="modal">
+                    <!--Placeholder-->
+                </div>
+            </template>
         </Suspense>
-        <div v-show="" class="modal">
-            <!--Placeholder-->
-        </div>
+        
     </div>
     
 

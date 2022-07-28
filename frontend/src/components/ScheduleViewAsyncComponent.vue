@@ -10,8 +10,9 @@
 
     const currentUser = currentUserStore();
 
-    const schedule: MonthBlock = await BackendService.getMonthSchedule(new Date(Date.now()).getMonth(), currentUser.User.id);
+    const monthInformation: MonthBlock = await BackendService.getMonthSchedule(new Date(Date.now()).getMonth(), currentUser.User.id);
 
+    const schedule = ref(monthInformation);
     //
     // schedule.workingDays.forEach(workingday=>{
     //     console.log(workingday.day);
@@ -19,6 +20,7 @@
     //         console.log("time: " + hour.time);
     //     })
     // });
+
 </script>
 
 <template>
