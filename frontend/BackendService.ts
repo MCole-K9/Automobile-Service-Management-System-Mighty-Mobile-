@@ -332,7 +332,14 @@ export default class BackendService{
             throw new Error(err);
         }
     }
-
+    static async getUserVehicles(userId:number){
+        try{
+            let res = await axios.get(URL + `/user/vehicle/${userId}`)
+            return res;
+        }catch(err){
+            console.log(err)
+        }
+    }
 
 
 }
