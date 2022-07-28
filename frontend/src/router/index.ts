@@ -81,6 +81,12 @@ const router = createRouter({
       name: "requests",
       meta: {auth: true},
       component: ()=> import("@/views/RequestView.vue")
+    },
+    {
+      path: "/dashboard/vehicles",
+      name: "vehicles",
+      meta: {auth: true},
+      component: ()=> import("@/views/UserVehiclesView.vue")
     }
   ]
 })
