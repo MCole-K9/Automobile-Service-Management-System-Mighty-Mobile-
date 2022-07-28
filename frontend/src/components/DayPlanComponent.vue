@@ -14,22 +14,28 @@
 </script>
 
 <template>
-    <span>{{dateTitle}}</span>
-    <div class="flex-nowrap">
-        <div v-for="hourBlock in dayBlock.hourBlocks">
-            <HourBlockComponent :hourDataBlock="hourBlock" />
-        </div>
-        <div>
-            <p>&nbsp;8 AM</p>
-            <p>&nbsp;9 AM</p>
-            <p>10 AM</p>
-            <p>11 AM</p>
-            <p>12 PM</p>
-            <p>&nbsp;1 PM</p>
-            <p>&nbsp;2 PM</p>
-            <p>&nbsp;3 PM</p>
-            <p>&nbsp;4 PM</p>
-            <p>&nbsp;5 PM</p>
+    <div class="mx-auto w-min mb-6">
+        <span class="w-min">{{dateTitle}}</span>
+        <div class="flex-nowrap shadow mx-auto overflow-x-auto w-min">
+            <div class="flex flex-row flex-nowrap">
+                <div v-for="hourBlock in dayBlock.hourBlocks">
+                    <HourBlockComponent :hourDataBlock="hourBlock" />
+                </div>
+            </div>
+            
+            <div class="flex flex-row flex-nowrap">
+                <p class="text-left w-20">&nbsp;8 AM</p>
+                <p class="text-left w-20">&nbsp;9 AM</p>
+                <p class="text-left w-20">10 AM</p>
+                <p class="text-left w-20">11 AM</p>
+                <p class="text-left w-20">12 PM</p>
+                <p class="text-left w-20">&nbsp;1 PM</p>
+                <p class="text-left w-20">&nbsp;2 PM</p>
+                <p class="text-left w-20">&nbsp;3 PM</p>
+                <p class="text-left w-20">&nbsp;4 PM</p>
+                <p class="text-left w-20">&nbsp;5 PM</p>
+            </div>
         </div>
     </div>
+    
 </template>

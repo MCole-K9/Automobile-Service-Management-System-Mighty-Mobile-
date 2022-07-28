@@ -23,7 +23,7 @@
         <ScheduleViewAsyncComponent />
 
         <template #fallback>
-            <div>Loading...</div>
+            <div class="w-min container mx-auto my-auto">Loading...</div>
         </template>
     </Suspense>
 
