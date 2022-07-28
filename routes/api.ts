@@ -120,10 +120,17 @@ export default class Routes{
 
         }));
 
-        router.route("/user/:id/vehicle").get(async (req:Request, res:Response)=>{
+        router.route("/user/vehicle/:id").get(async (req:Request, res:Response)=>{
 
             //Get User Vehicles 
-            
+            console.log(req.params.id)
+            const vehicles = await prisma.vehicle.findMany({
+                where:{
+                    ownerId : 3
+                }
+            })
+            res.status(200).send(vehicles);
+
         }).post(async (req:Request, res:Response)=>{
 
             try{
