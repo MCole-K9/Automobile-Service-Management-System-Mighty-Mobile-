@@ -7,55 +7,40 @@
     import {currentUserStore, newUserStore} from "../stores/User";
     import { onMounted, ref, reactive } from 'vue';
     import BackendService from '../../BackendService';
+    import DashboardLayout from '../components/DashboardLayout.vue';
+    import { defineAsyncComponent } from 'vue';
+    // it's necessary to import the component normally into the parent apparently
+    import ScheduleViewAsyncComponent from '../components/ScheduleViewAsyncComponent.vue';
 
-    const currentUser = currentUserStore();
-    
-    const schedule: MonthBlock = await BackendService.getMonthSchedule(new Date(Date.now()).getMonth(), currentUser.User.id);
-    
-    // this works, but it breaks the page because i think it's supposed to be used in <Suspense> tags
-    schedule.workingDays.forEach(workingday=>{
-        console.log(workingday.day);
-        workingday.hourBlocks.forEach(hour=>{
-            console.log("time: " + hour.time);
-        })
-    });
+    const asyncSchedule = defineAsyncComponent(() => import('../components/ScheduleViewAsyncComponent.vue'));
+
 
 </script>
 
 <template>
     <NavBar />
     
-    <Suspense>
-        <template >
-            <div>
-                <button v-if="schedule.month = 0">January</button>
-                <button v-if="schedule.month <= 1">February</button>
-                <button v-if="schedule.month <= 2">March</button>
-                <button v-if="schedule.month <= 3">April</button>
-                <button v-if="schedule.month <= 4">May</button>
-                <button v-if="schedule.month <= 5">June</button>
-                <button v-if="schedule.month <= 6">July</button>
-                <button v-if="schedule.month <= 7">August</button>
-                <button v-if="schedule.month <= 8">September</button>
-                <button v-if="schedule.month <= 9">October</button>
-                <button v-if="schedule.month <= 10">November</button>
-                <button v-if="schedule.month <= 11">December</button>
-            </div>
+    <div class="max-w-screen px-4 overflow-hidden overscroll-x-auto lg:mx-auto lg:w-min">
+        <Suspense>
+            <ScheduleViewAsyncComponent/>
 
-            <div v-for="day in schedule.workingDays">
-                <DayPlanComponent :dayBlock="day"
-                    :dateTitle="new Date( new Date(Date()).getFullYear(), schedule.month, day.day).toDateString()"
-                    />
-            </div>
-        </template>
+            <template #fallback>
+                <div class="w-min container mx-auto my-auto">Loading...</div>
+            </template>
+        </Suspense>
 
-        <template #fallback>
-            I DON'T EVEN KNOW TBH
-        </template>
-    </Suspense>
-
-    <div v-show="" class="modal">
-        <!--Placeholder-->
+        <!-- So afaict multiple suspense tags work on one page -->
+        <Suspense>
+            <!--This is probably where the modal to add a jobstage will go-->
+            <!--Should be another one for viewing the information of a given job/appointment/schedule item-->
+            <template #fallback>
+                <div v-show="" class="modal">
+                    <!--Placeholder-->
+                </div>
+            </template>
+        </Suspense>
+        
     </div>
+    
 
 </template>

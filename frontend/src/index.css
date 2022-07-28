@@ -8,10 +8,13 @@
 @layer components{
     .filledBlock {
         @apply bg-ourYellow;
+        @apply hover:bg-yellow-500;
     }
     
     .emptyBlock{
-        @apply bg-white;
+        @apply w-20 h-20;
+        @apply bg-slate-100 border  text-slate-300;
+        @apply hover:bg-slate-200 hover:text-slate-400;
     }
 }
 
