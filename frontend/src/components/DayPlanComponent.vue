@@ -14,7 +14,7 @@
 </script>
 
 <template>
-    <div class="mx-auto lg:w-min w-max-xs mb-6 overscroll-x-auto overflow-auto">
+    <div class="mx-auto lg:w-min w-max-xs mb-6 overscroll-x-auto overflow-auto container">
         <div class="w-25 mb-2 font-semibold">{{dateTitle}}</div>
         <div class="flex-nowrap shadow-md mx-auto w-min border pt-2 pb-2 pl-1 pr-1 rounded">
             

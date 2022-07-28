@@ -22,7 +22,8 @@
 </script>
 
 <template>
-    <div class="container mx-auto w-max-w flex flex-row space-x-4 overscroll-x-auto overflow-x-auto lg:w-min">
+    <div class="w-max-w container">
+        <div class="mx-auto flex flex-row space-x-4 overflow-auto overscroll-x-auto lg:w-min lg:h-min mt-2 mb-10">
                 <button class="font-semibold bg-ourYellow rounded" v-if="schedule.month == 0">January</button>
                 <button class="font-semibold bg-ourYellow rounded" v-if="schedule.month <= 1">February</button>
                 <button class="font-semibold bg-ourYellow rounded" v-if="schedule.month <= 2">March</button>
@@ -42,6 +43,8 @@
                     :dateTitle="new Date( new Date(Date()).getFullYear(), schedule.month, day.day).toDateString()"
                     />
             </div>
+    </div>
+    
 
 </template>
 

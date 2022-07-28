@@ -17,23 +17,26 @@
 
 <template>
     <NavBar />
-    <!--<DashboardLayout></DashboardLayout>-->
-    <Suspense>
-        
-        <ScheduleViewAsyncComponent />
+    
+    <div class="max-w-screen px-4 overflow-hidden overscroll-x-auto lg:mx-auto lg:w-min">
+        <Suspense>
+            <ScheduleViewAsyncComponent />
 
-        <template #fallback>
-            <div class="w-min container mx-auto my-auto">Loading...</div>
-        </template>
-    </Suspense>
+            <template #fallback>
+                <div class="w-min container mx-auto my-auto">Loading...</div>
+            </template>
+        </Suspense>
 
-    <!-- So afaict multiple suspense tags work on one page -->
-    <Suspense>
+        <!-- So afaict multiple suspense tags work on one page -->
+        <Suspense>
+            <!--This is probably where the modal to add a jobstage will go-->
+            <!--Should be another one for viewing the information of a given job/appointment/schedule item-->
 
-
-    </Suspense>
-    <div v-show="" class="modal">
-        <!--Placeholder-->
+        </Suspense>
+        <div v-show="" class="modal">
+            <!--Placeholder-->
+        </div>
     </div>
+    
 
 </template>
