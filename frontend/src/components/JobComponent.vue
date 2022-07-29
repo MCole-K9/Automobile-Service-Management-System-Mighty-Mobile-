@@ -3,7 +3,6 @@
 
   const props = defineProps<{
       job: Job,
-      // completed: boolean // temporary prop
   }>();
 </script>
 

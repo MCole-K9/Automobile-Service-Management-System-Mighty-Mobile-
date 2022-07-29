@@ -116,7 +116,7 @@ async function onRegister(userId:number){
                 <div class="mx-auto flex flex-col space-y-4 w-full">
                     <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg" for="aptdate">Appointment Date</label>
                     <!-- <input class="input w-full input-bordered " type="date"  id="aptdate"> -->
-                    <Datepicker v-model="appointment.date" inputClassName="input w-full input-bordered" id="aptdate"></Datepicker>
+                    <Datepicker v-model="appointment.suggestedDate" inputClassName="input w-full input-bordered" id="aptdate"></Datepicker>
 
                     <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg" for="apttime">Appointment Time</label>
                     <input class="input w-full input-bordered " type="time"  id="apttime">

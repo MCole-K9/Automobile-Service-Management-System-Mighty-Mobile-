@@ -42,7 +42,7 @@
         </div>
         <section id="Jobs"  class="mt-8">
             <div class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4">
-                <component :completed="false" :jobs="jobs" :is="activeTab"/>
+                <component  :jobs="jobs" :is="activeTab"/>
             </div>  
         </section>
         <router-link to="/dashboard/createjob" class="btn bg-ourYellow flex items-center rounded-lg w-fit h-12 fixed bottom-4 right-4">
