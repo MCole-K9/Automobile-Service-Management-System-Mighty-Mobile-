@@ -1,11 +1,11 @@
 <template>
 <DashboardLayout>
 <template #content>
-<div class="lg:px-24 p-3 lg:py-10">
+<div class="lg:px-12 p-3 lg:py-10">
 <span class="flex justify-between">
     <p class="text-gray-800 text-xl sm:text-2xl lg:text-4xl font-bold">Vehicles</p>
-    <button class="btn btn-sm lg:btn-md">add a Vehicle</button>
-    
+    <label for="addVehicleModal" class="btn btn-sm lg:btn-md modal-button">add a Vehicle</label>
+
 </span>
     <div class="rounded bg-gray-200 w-1/1 my-5 p-5 flex flex-col justify-start gap-y-5 overflow-y-scroll" style="height: 40rem">
         <div class="w-1/1 flex-none h-fit bg-ourBlue rounded min-w-max flex flex-col sm:flex-row p-3 justify-between" v-for="vehicle in userVehicles">
@@ -24,7 +24,6 @@
         </div>
         </div>
     </div>
-    <!-- The button to open modal -->
     
 
     <!-- Put this part before </body> tag -->
@@ -56,6 +55,21 @@
             </div>
     </div>
     </div>
+
+    <input type="checkbox" id="addVehicleModal" class="modal-toggle" />
+    <label for="addVehicleModal" class="modal cursor-pointer">
+         <label class="modal-box rounded relative">
+            <AddVehicleComponent/>
+            <div class="modal-action">
+                <button class="btn">Add Vehicle</button>
+            </div>
+        </label>
+    </label>
+    <div class="modal">
+    <div class="modal-box">
+        
+    </div>
+    </div>
 </div>
 
 </template>
@@ -65,6 +79,7 @@
 import DashboardLayout from "../components/DashboardLayout.vue";
 import BackendService from '../../BackendService'
 import Request from "@/components/Request.vue";
+import AddVehicleComponent from "@/components/AddVehicleComponent.vue";
 import { defineComponent } from "vue";
 import type { Vehicle } from "@/classlib/Types";
 import type { Job } from "@/classlib/Types";
@@ -73,6 +88,7 @@ export default defineComponent({
     components:{
         DashboardLayout,
         Request,
+        AddVehicleComponent,
     },
     data(){
         return{
