@@ -202,17 +202,21 @@ export default class BackendService{
             
             // check for and only add the days that are workdays (not saturday or sunday) to the res object
             for (let i: number = intendedDate.getDate(); i <= daysInMonth; i++){
-                // Check for and exclude Saturdays and Sundays
-                if (intendedDate.getDay() !== 6 && intendedDate.getDay() !== 0){
-                    
-                    let workingDayBlock: DayBlock = {} as DayBlock;
-                    workingDayBlock.day = intendedDate.getDate();
-                    res.workingDays.push(workingDayBlock);
-                    
-                }
                 
-                // this lets me check the days of the week to exclude weekends
                 intendedDate.setDate(i);
+                if (intendedDate.getDay() === 6){
+                    continue;
+                }
+                else if (intendedDate.getDay() === 0){
+                    continue;
+                }
+
+                // Check for and exclude Saturdays and Sundays
+                let workingDayBlock: DayBlock = {} as DayBlock;
+                workingDayBlock.day = i === 1 ? i : intendedDate.getDate();
+                res.workingDays.push(workingDayBlock);
+
+
             }
 
             // arrays are objects in javascript, so i have to do this
