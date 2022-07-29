@@ -120,7 +120,7 @@ export default class Routes{
 
         }));
 
-        router.route("/user/vehicle/:id").get(async (req:Request, res:Response)=>{
+        router.route("/user/:id/vehicle").get(async (req:Request, res:Response)=>{
 
             //Get User Vehicles 
             console.log(req.params.id)

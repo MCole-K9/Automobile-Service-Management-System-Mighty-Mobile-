@@ -334,7 +334,7 @@ export default class BackendService{
     }
     static async getUserVehicles(userId:number){
         try{
-            let res = await axios.get(URL + `/user/vehicle/${userId}`)
+            let res = await axios.get(URL + `/user/${userId}/vehicle`)
             return res;
         }catch(err){
             console.log(err)
