@@ -1,22 +1,38 @@
 <script setup lang="ts">
+    // components
     import NavBar from '../components/NavBar.vue'
     import DayPlanComponent from '@/components/DayPlanComponent.vue';
     import HourBlockComponent from '@/components/HourBlockComponent.vue';
     import type {MonthBlock, DayBlock}  from '@/classlib/MonthlySchedule';
     import {HourDataBlock} from '@/classlib/MonthlySchedule';
+    import DashboardLayout from '../components/DashboardLayout.vue';
+    import ScheduleViewAsyncComponent from '../components/ScheduleViewAsyncComponent.vue';
+    import SchedulerModalComponent from '@/components/SchedulerModalComponent.vue';
+    import ViewerModalComponent from '@/components/ViewerModalComponent.vue';
+
+    //utilities
     import {currentUserStore, newUserStore} from "../stores/User";
     import { onMounted, ref, reactive } from 'vue';
     import BackendService from '../../BackendService';
-    import DashboardLayout from '../components/DashboardLayout.vue';
     import { defineAsyncComponent } from 'vue';
-    // it's necessary to import the component normally into the parent apparently
-    import ScheduleViewAsyncComponent from '../components/ScheduleViewAsyncComponent.vue';
 
-    defineAsyncComponent(() => import('../components/ScheduleViewAsyncComponent.vue'));
+    const scheduleView = defineAsyncComponent(
+        () => import('../components/ScheduleViewAsyncComponent.vue'));
+    const schedulerModal = defineAsyncComponent(
+        () => import('../components/SchedulerModalComponent.vue'));
+    const viewerModal = defineAsyncComponent(
+        () => import('../components/ViewerModalComponent.vue'));
+
+    // these are probably useless, i'll remove them later
+    let schedulerToggle: boolean = false;
+    let viewerToggle: boolean;
 
     function openScheduler(time: number, day: number, month: number){
-        alert(time + " " + day);
         
+        // need to get the id of the div with the modal to add "modal-open" to it
+        
+        // emits time, day, and month selected
+        alert(time + " " + day + " " + month);
         // use this to open a modal for an empty block to schedule a new jobstage
     }
 
@@ -40,13 +56,22 @@
             </template>
         </Suspense>
 
-        <!-- So afaict multiple suspense tags work on one page -->
+        <!-- Scheduler Modal -->
         <Suspense>
-            <!--This is probably where the modal to add a jobstage will go-->
-            <!--Should be another one for viewing the information of a given job/appointment/schedule item-->
+            <SchedulerModalComponent/>
             <template #fallback>
                 <div v-show="" class="modal">
-                    <!--Placeholder-->
+
+                </div>
+            </template>
+        </Suspense>
+
+        <!-- Viewer Modal -->
+        <Suspense>
+            <ViewerModalComponent />
+            <template #fallback>
+                <div v-show="" class="modal">
+
                 </div>
             </template>
         </Suspense>
