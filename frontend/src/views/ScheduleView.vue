@@ -59,6 +59,10 @@
         blockType.value = _blockType;
     }
 
+    function closeViewer(){
+        isViewerOpen.value = false;
+    }
+
 </script>
 
 <template>
