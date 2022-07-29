@@ -4,6 +4,10 @@ import  type { Job } from '../classlib/Types';
 const props = defineProps<{
     job: Job,
 }>();
+  function parseDate(rawDate:Date){
+      let parsedDate = new Date(rawDate)
+      return parsedDate.toLocaleDateString()
+    }
 </script>
 
 <template>
@@ -23,12 +27,12 @@ const props = defineProps<{
                     </div>
                     <div class="col-span-3 sm:col-span-1">
                       <label for="email-address" class="block text-sm font-medium text-gray-700">Start Date</label>
-                      <p class="h-10 flex px-3 items-center  rounded bg-gray-300 text-black font-medium">{{props.job.startDate}}</p>
+                      <p class="h-10 flex px-3 items-center  rounded bg-gray-300 text-black font-medium">{{parseDate(props.job.startDate)}}</p>
                     </div>
 
                     <div class="col-span-3 sm:col-span-1">
                       <label for="phone-number" class="block text-sm font-medium text-gray-700">End Date</label>
-                      <p class="h-10 flex px-3 items-center rounded bg-gray-300 text-black font-medium">{{props.job.endDate}}</p>
+                      <p class="h-10 flex px-3 items-center rounded bg-gray-300 text-black font-medium">{{parseDate(props.job.endDate)}}</p>
                     </div>
 
                     <div class="col-span-6 sm:col-span-6">
@@ -87,7 +91,7 @@ const props = defineProps<{
                       <p class="h-10 flex px-3 items-center border border-success bg-gray-300 rounded text-black font-medium">${{props.job.serviceFee}}</p>
                       <label for="phone-number" class="block text-sm font-medium text-gray-700">Total Cost</label>
                       <p class="h-10 flex px-3 items-center border border-success bg-gray-300 rounded text-black font-medium">${{props.job.totalCost}}</p>
-                      <p :class="`h-10 px-3 m-3 flex rounded-lg self-center items-center max-w-fit ${true ? 'bg-success':'bg-error'}`">Payment {{props.job.isPaid ?  'made' : 'not made'}}</p>
+                      <p :class="`h-10 px-3 m-3 flex rounded-lg self-center items-center max-w-fit ${props.job.isPaid ? 'bg-success':'bg-error'}`">Payment {{props.job.isPaid ?  'made' : 'not made'}}</p>
                     </div>
                   </div>
                 </div>
