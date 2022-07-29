@@ -3,13 +3,29 @@
     import type {HourDataBlock} from '../classlib/MonthlySchedule';
     import HourBlockComponent from './HourBlockComponent.vue';
 
-    defineProps<{
+    const emit = defineEmits<{
+        (e: 'openViewer', id: number, blocktype: "APPOINTMENT" | "JOBSTAGE", day: number): void,
+        (e: 'openScheduler', time: number, day: number): void
+    }>()
+
+    const props = defineProps<{
         dayBlock: {
             day: number
             hourBlocks: HourDataBlock[]
         }
         dateTitle : string
     }>()
+
+    // probably need to put method handlers for the relevant events here
+    function openViewer(id: number, blocktype: "APPOINTMENT" | "JOBSTAGE"){
+        // sends a new emit with the id, blockType, and day
+        emit('openViewer', id, blocktype, props.dayBlock.day);
+    }
+
+    function openScheduler(time: number){
+        // emits a new event with the time and day
+        emit('openScheduler', time, props.dayBlock.day);
+    }
 
 </script>
 
@@ -21,7 +37,9 @@
             <!-- each hourblock -->
             <div class="flex flex-row flex-nowrap w-min pl-8 space-x-2">
                 <div v-for="hourBlock in dayBlock.hourBlocks">
-                    <HourBlockComponent :hourDataBlock="hourBlock" />
+                    <HourBlockComponent :hourDataBlock="hourBlock" 
+                    @open-scheduler="openScheduler"
+                    @open-viewer="openViewer"/>
                 </div>
             </div>
             

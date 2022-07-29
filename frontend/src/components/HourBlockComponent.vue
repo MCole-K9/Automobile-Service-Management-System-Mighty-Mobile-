@@ -16,15 +16,18 @@ import { onMounted } from 'vue';
 </script>
 
 <template>
-    <div class="" @click="$emit('open-scheduler{{time}}')">
+    <div class="" >
         <!--shows if the id for the block isn't blank-->
-        <button v-if="hourDataBlock.id != null">
+        <button v-if="hourDataBlock.id != null"
+            @click="$emit('open-viewer', hourDataBlock.id, hourDataBlock.blocktype)">
             <span  class="truncate">{{hourDataBlock.description}}</span>
             <span >Client: {{hourDataBlock.client}}</span>
         </button>
         
         <!--shows if the id for the block Is blank-->
-        <button class="text-center text-6xl px-4 align-middle emptyBlock" v-if="hourDataBlock.id===null">+</button>
+        <button class="text-center text-6xl px-4 align-middle emptyBlock" 
+            v-if="hourDataBlock.id===null" 
+            @click="$emit('open-scheduler', hourDataBlock.time)">+</button>
     </div>
 </template>
 
