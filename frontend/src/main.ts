@@ -11,7 +11,10 @@ import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 
 const app = createApp(App)
-
+app.config.globalProperties.$parseDate = (rawDate:Date) => {
+    let parsedDate = new Date(rawDate)
+    return parsedDate.toLocaleDateString()
+}
 const pinia = createPinia()
 
 // Wasn't working. Leaving here to look over and understand why later
