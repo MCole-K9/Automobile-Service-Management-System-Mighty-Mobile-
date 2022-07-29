@@ -23,17 +23,29 @@
     const viewerModal = defineAsyncComponent(
         () => import('../components/ViewerModalComponent.vue'));
 
-    // these are probably useless, i'll remove them later
-    let schedulerToggle: boolean = false;
-    let viewerToggle: boolean;
+    let isScheduleOpen = ref(false);
+    let viewerToggle = ref(false);
 
-    function openScheduler(time: number, day: number, month: number){
+    let time = ref(0);
+    let day = ref(0);
+    let month = ref(0);
+
+
+    function openScheduler(_time: number, _day: number, _month: number){
         
         // need to get the id of the div with the modal to add "modal-open" to it
         
         // emits time, day, and month selected
-        alert(time + " " + day + " " + month);
+        time.value = _time;
+        day.value = _day;
+        month.value = _month;
+
+        isScheduleOpen.value = true;
         // use this to open a modal for an empty block to schedule a new jobstage
+    }
+
+    function closeScheduler(){
+        isScheduleOpen.value = false;
     }
 
     function openViewer(id: number, blocktype: "APPOINTMENT" | "JOBSTAGE", day: number){
@@ -58,7 +70,12 @@
 
         <!-- Scheduler Modal -->
         <Suspense>
-            <SchedulerModalComponent/>
+            <SchedulerModalComponent
+                :open="isScheduleOpen"
+                :time="time"
+                :day="day"
+                :month="month"
+                @modal-close="closeScheduler"/>
             <template #fallback>
                 <div v-show="" class="modal">
 
