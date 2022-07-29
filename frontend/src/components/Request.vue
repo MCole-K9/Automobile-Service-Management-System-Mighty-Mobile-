@@ -88,9 +88,9 @@
             <br>
             <span class="badge badge-ghost badge-sm">Job Request</span>
         </td>
-        <td>{{ props.job.startDate }}</td>
+        <td>{{ $parseDate(props.job.startDate) }}</td>
         <th>
-            <button  class="btn btn-ghost btn-xs">Details</button>
+            <button  class="btn btn-ghost bg-ourYellow btn-xs" @click="$router.push(`/dashboard/viewjob/${props.job?.jobNumber}`)">Details</button>
         </th>
     </tr>
 </template>
