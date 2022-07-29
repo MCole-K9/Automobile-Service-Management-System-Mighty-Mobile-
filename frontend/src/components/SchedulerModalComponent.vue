@@ -9,7 +9,7 @@
     }>();
 
     const emits = defineEmits<{
-        (e: 'modalClose'): void
+        (e: 'schedulerModalClose'): void
     }>();
 
 
@@ -18,12 +18,12 @@
 <template>
     <div class="modal" 
         :class="{'modal-open': open}"
-        @click="$emit('modalClose')">
+        @click="$emit('schedulerModalClose')">
         <div class="modal-box">
             <div>Schedule Job Stage for {{time}} {{day}} {{month}}</div>
             <button 
             class="btn"
-            @click="$emit('modalClose')">Close the modal</button>
+            @click="$emit('schedulerModalClose')">Close the modal</button>
 
         </div>
     </div>

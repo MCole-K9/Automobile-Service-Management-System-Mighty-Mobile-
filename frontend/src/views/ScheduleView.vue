@@ -13,6 +13,7 @@
     //utilities
     import {currentUserStore, newUserStore} from "../stores/User";
     import { onMounted, ref, reactive } from 'vue';
+    import type {Ref} from 'vue';
     import BackendService from '../../BackendService';
     import { defineAsyncComponent } from 'vue';
 
@@ -24,18 +25,22 @@
         () => import('../components/ViewerModalComponent.vue'));
 
     let isScheduleOpen = ref(false);
-    let viewerToggle = ref(false);
+    let isViewerOpen = ref(false);
 
-    let time = ref(0);
-    let day = ref(0);
-    let month = ref(0);
+    // schedule-specific values
+    let time: Ref<number> = ref(0);
+    let day: Ref<number> = ref(0);
+    let month: Ref<number> = ref(0);
 
+    // viewer-specific values
+    let id: Ref<number> = ref(0);
+    let blockType: Ref<"APPOINTMENT" | "JOBSTAGE"> = ref("APPOINTMENT");
 
     function openScheduler(_time: number, _day: number, _month: number){
         
         // need to get the id of the div with the modal to add "modal-open" to it
         
-        // emits time, day, and month selected
+        // gives time, day, and month to the modal
         time.value = _time;
         day.value = _day;
         month.value = _month;
@@ -48,8 +53,10 @@
         isScheduleOpen.value = false;
     }
 
-    function openViewer(id: number, blocktype: "APPOINTMENT" | "JOBSTAGE", day: number){
-        // use this to open a modal to view a filled block's details
+    function openViewer(_id: number, _blockType: "APPOINTMENT" | "JOBSTAGE", _day: number){
+        
+        id.value = _id;
+        blockType.value = _blockType;
     }
 
 </script>
@@ -75,7 +82,7 @@
                 :time="time"
                 :day="day"
                 :month="month"
-                @modal-close="closeScheduler"/>
+                @scheduler-modal-close="closeScheduler"/>
             <template #fallback>
                 <div v-show="" class="modal">
 
@@ -85,7 +92,10 @@
 
         <!-- Viewer Modal -->
         <Suspense>
-            <ViewerModalComponent />
+            <ViewerModalComponent 
+            :open="isViewerOpen"
+            :id="id"
+            :block-type="blockType"/>
             <template #fallback>
                 <div v-show="" class="modal">
 

@@ -1,9 +1,23 @@
 <script setup lang="ts">
 
+    const props = defineProps<{
+        open: boolean,
+        id: number,
+        blockType: "APPOINTMENT" | "JOBSTAGE"
+    }>();
+
+    const emits = defineEmits<{
+        (e: 'viewerModalClose') : void
+    }>();
+
 </script>
 
 <template>
-    <div class="modal">
-        yeah does this, though?
+    <div class="modal"
+        :class="{'modal-open': open}"
+        @click="$emit('viewerModalClose')">
+        <div class="modal-box">
+            <button @click="$emit('viewerModalClose')">CLOSE</button>
+        </div>
     </div>
 </template>
