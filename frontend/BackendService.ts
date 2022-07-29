@@ -106,6 +106,19 @@ export default class BackendService{
             
         }
     }
+    static async updateJob(job:Job) {
+
+        try{
+            const res = await axios.put(URL + `/job/${job.jobNumber}`, {
+                job
+            });
+            
+            return res;
+
+        }catch(err){
+            
+        }
+    }
     static async getAppointments() {
 
         try{

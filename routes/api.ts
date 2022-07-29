@@ -3,6 +3,7 @@ import { Job, JobPart, PrismaClient } from "@prisma/client"; //Db Connection
 import bcrypt, {genSalt, hash} from "bcrypt"
 
 
+
 enum UserRole{
     ADMIN = 1,
     Manager,
@@ -306,6 +307,44 @@ export default class Routes{
             });
 
             res.status(200).send(job);
+
+        }).put(async (req:Request, res:Response) =>{
+
+            try{
+                console.log("update hit")
+
+                
+                
+                const job = await prisma.job.update({
+                    where: {
+                        jobNumber: req.body.job.jobNumber as number
+                    },
+                    data: {
+                        assignedMechanicId: req.body.job.assignedMechanicId ? req.body.job.assignedMechanicId as number: null,
+                        completed: req.body.job.completed ? req.body.job.completed as boolean: false,
+                        isPaid:  req.body.job.isPaid ?  req.body.job.isPaid as boolean : false,
+                        streetAddress: req.body.job.streetAddress ? req.body.job.streetAddress : null ,
+                        town: req.body.job.town ? req.body.job.town : null ,
+                        parish: req.body.job.parish ? req.body.job.parish : null ,
+                        confirmed: req.body.job.confirmed ? req.body.job.confirmed : false,
+                        createdById: req.body.job.createdById ? req.body.job.createdById : null,
+                        endDate: req.body.job.endDate,
+                        startDate: req.body.job.startDate,
+                        serviceFee: req.body.job.serviceFee,
+                        serviceType: req.body.job.serviceType as string,
+                        summary: req.body.job.summary as string,
+                        totalCost: req.body.job.totalCost ,
+                        vehicleId: req.body.job.vehicle.id as number
+                    }
+                })
+    
+                res.status(200).send(job)
+
+            }catch(err){
+                console.log(err)
+            }
+
+            
         })
 
         router.get("/jobs/upcoming", async (req:Request, res:Response)=>{
@@ -319,7 +358,7 @@ export default class Routes{
                     assignedMechanic: true
                 }
             })
-            console.log(jobs)
+            //console.log(jobs)
 
             res.status(200).send(jobs)
         });
