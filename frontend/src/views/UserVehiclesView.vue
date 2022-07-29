@@ -88,6 +88,7 @@ export default defineComponent({
     },
     methods:{
         async getJobsDoneOnVehicle(vehicleId:number|undefined){
+            this.jobsDoneOnVehicle = []
             let res = await BackendService.getUpcomingJobs()
             this.allJobs = res?.data
             this.allJobs.forEach((e)=>{
