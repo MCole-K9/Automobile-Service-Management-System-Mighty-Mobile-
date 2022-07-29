@@ -90,7 +90,7 @@
         </td>
         <td>{{ props.job.startDate }}</td>
         <th>
-            <button  class="btn btn-ghost btn-xs">Details</button>
+            <button @click="$router.push(`/dashboard/viewjob/${props.job?.jobNumber}`)"  class="btn btn-ghost btn-xs">Details</button>
         </th>
     </tr>
 </template>
