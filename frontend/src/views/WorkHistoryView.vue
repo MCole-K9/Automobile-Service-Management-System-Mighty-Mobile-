@@ -3,7 +3,7 @@
         <DashboardLayout>
             <template #content>
                     <p class="text-4xl font-bold text-center my-5">Work history</p>
-                    <div class="flex flex-col justify-start md:grid md:grid-cols-3 md:grid-flow-row gap-5 overflow-y-auto">
+                    <div class="flex flex-col justify-start md:grid md:grid-cols-3  gap-5 overflow-y-auto">
                         <JobComponent :completed="true" :job="job" v-for="job in upcomingJobs" :key="job.jobNumber"/>
                     </div>
                 </template>
