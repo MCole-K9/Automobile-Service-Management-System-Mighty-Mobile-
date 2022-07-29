@@ -3,9 +3,8 @@
 
   const props = defineProps<{
       job: Job,
-      completed: boolean // temporary prop
   }>();
-console.log(props.completed)
+
 </script>
 
 <template>
@@ -19,8 +18,8 @@ console.log(props.completed)
       <button class="btn btn-sm bg-ourYellow" @click="$router.push(`/dashboard/viewjob/${props.job.jobNumber}`)">View</button>
     </div>
   </div>
-  <span class="badge absolute top-8 right-4 px-4 bg-ourRed" v-if="!props.completed">{{props.job.confirmed? "Confirmed": "Pending"}}</span>
-  <span class="badge absolute top-8 right-4 text-black px-4 bg-success" v-else-if="props.completed">completed</span>
+  <span class="badge absolute top-8 right-4 px-4 bg-ourRed" v-if="!props.job.completed">{{props.job.confirmed? "Confirmed": "Pending"}}</span>
+  <span class="badge absolute top-8 right-4 text-black px-4 bg-success" v-else-if="props.job.completed">completed</span>
 </div>
 </template>
 
