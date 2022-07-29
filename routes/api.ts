@@ -4,6 +4,7 @@ import bcrypt, {genSalt, hash} from "bcrypt"
 
 
 
+
 enum UserRole{
     ADMIN = 1,
     Manager,
@@ -335,6 +336,11 @@ export default class Routes{
                         summary: req.body.job.summary as string,
                         totalCost: req.body.job.totalCost ,
                         vehicleId: req.body.job.vehicle.id as number
+                    },
+                    include:{
+                        vehicle: true,
+                        assignedMechanic: true,
+                        createdBy: true,
                     }
                 })
     
