@@ -26,6 +26,8 @@
     async function changeTargetMonth(month: number){
         targetMonth = month;
         schedule.value = await BackendService.getMonthSchedule(targetMonth, currentUser.User.id);
+
+        console.log(`month: ${schedule.value.month}, days: ${schedule.value.workingDays.length}`)
     }
 
     function openScheduler(time: number, day: number){

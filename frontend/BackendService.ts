@@ -205,13 +205,14 @@ export default class BackendService{
                 // Check for and exclude Saturdays and Sundays
                 if (intendedDate.getDay() !== 6 && intendedDate.getDay() !== 0){
                     
-                    const workingDayBlock: DayBlock = {} as DayBlock;
-                    workingDayBlock.day = i;
+                    let workingDayBlock: DayBlock = {} as DayBlock;
+                    workingDayBlock.day = intendedDate.getDate();
                     res.workingDays.push(workingDayBlock);
-    
-                    // i don't even remember why i did this.
-                    // intendedDate.setDate(i);
+                    
                 }
+                
+                // this lets me check the days of the week to exclude weekends
+                intendedDate.setDate(i);
             }
 
             // arrays are objects in javascript, so i have to do this
