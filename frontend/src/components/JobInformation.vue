@@ -4,10 +4,6 @@ import  type { Job } from '../classlib/Types';
 const props = defineProps<{
     job: Job,
 }>();
-  function parseDate(rawDate:Date){
-      let parsedDate = new Date(rawDate)
-      return parsedDate.toLocaleDateString()
-    }
 </script>
 
 <template>
@@ -27,12 +23,12 @@ const props = defineProps<{
                     </div>
                     <div class="col-span-3 sm:col-span-1">
                       <label for="email-address" class="block text-sm font-medium text-gray-700">Start Date</label>
-                      <p class="h-10 flex px-3 items-center  rounded bg-gray-300 text-black font-medium">{{parseDate(props.job.startDate)}}</p>
+                      <p class="h-10 flex px-3 items-center  rounded bg-gray-300 text-black font-medium">{{$parseDate(props.job.startDate)}}</p>
                     </div>
 
                     <div class="col-span-3 sm:col-span-1">
                       <label for="phone-number" class="block text-sm font-medium text-gray-700">End Date</label>
-                      <p class="h-10 flex px-3 items-center rounded bg-gray-300 text-black font-medium">{{parseDate(props.job.endDate)}}</p>
+                      <p class="h-10 flex px-3 items-center rounded bg-gray-300 text-black font-medium">{{$parseDate(props.job.endDate)}}</p>
                     </div>
 
                     <div class="col-span-6 sm:col-span-6">
@@ -73,8 +69,8 @@ const props = defineProps<{
                       <label for="parts" class="block text-sm font-medium text-gray-700">Parts</label>
                       <thead >
                         <tr class="text-center ">
-                          <th class="bg-gray-300">Name</th>
-                          <th class="bg-gray-300">Price</th>
+                          <td class="bg-gray-300">Name</td>
+                          <td class="bg-gray-300">Price</td>
                         </tr>
                       </thead>
                       <tbody class="text-center">
