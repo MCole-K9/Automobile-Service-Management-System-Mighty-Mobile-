@@ -8,21 +8,32 @@
     import BackendService from '../../BackendService';
     import { defineAsyncComponent } from 'vue';
 
+    const emit = defineEmits<{
+        (e: 'openScheduler', time: number, day: number, month: number): void,
+        (e: 'openViewer', id: number, blocktype: "APPOINTMENT" | "JOBSTAGE", day: number): void
+    }>();
+
+
     const currentUser = currentUserStore();
 
-    const monthInformation: MonthBlock = await BackendService.getMonthSchedule(new Date(Date.now()).getMonth(), currentUser.User.id);
+    // both serves as the initial value to generate the schedule, and also gets passed to the modal upon event triggering
+    let targetMonth: number = new Date(Date.now()).getMonth();
 
+    const monthInformation: MonthBlock = await BackendService.getMonthSchedule(targetMonth, currentUser.User.id);
     const schedule = ref(monthInformation);
     
     async function changeTargetMonth(month: number){
-        schedule.value = await BackendService.getMonthSchedule(month, currentUser.User.id);
+        targetMonth = month;
+        schedule.value = await BackendService.getMonthSchedule(targetMonth, currentUser.User.id);
     }
 
     function openScheduler(time: number, day: number){
+        // emits time, day, and month selected
         alert(time + " " + day);
     }
 
     function openViewer(id: number, blocktype: "APPOINTMENT" | "JOBSTAGE", day: number){
+        // emits the id, blocktype, and day, though the last part is not necessary
         alert(id + " " + blocktype + " " + day);
     }
 

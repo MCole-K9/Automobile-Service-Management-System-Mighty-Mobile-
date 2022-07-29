@@ -14,7 +14,7 @@
 
     defineAsyncComponent(() => import('../components/ScheduleViewAsyncComponent.vue'));
 
-    function openScheduler(time: number, day: number){
+    function openScheduler(time: number, day: number, month: number){
         alert(time + " " + day);
         
         // use this to open a modal for an empty block to schedule a new jobstage
