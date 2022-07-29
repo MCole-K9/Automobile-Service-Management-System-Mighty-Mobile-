@@ -15,10 +15,7 @@
     const schedule = ref(monthInformation);
     
     async function changeTargetMonth(month: number){
-        console.log(month);
-
-        // need to change the value of schedule(?) such that the thing will re-gen the right dates
-        //const monthInformation: MonthBlock = await BackendService.getMonthSchedule(month, currentUser.User.id);
+        schedule.value = await BackendService.getMonthSchedule(month, currentUser.User.id);
     }
 
     function openScheduler(time: number, day: number){
