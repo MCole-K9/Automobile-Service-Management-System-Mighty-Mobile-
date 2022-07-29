@@ -77,7 +77,7 @@ function changeAddress(event: any) {
               }`">
                 {{ props.job.town }}
               </p>
-              <input :class="`input input-bordered w-full ${!editableAddress ? 'hidden' : ''
+              <input @input="changeAddress" :class="`input input-bordered w-full ${!editableAddress ? 'hidden' : ''
               }`" name="town" type="text" />
             </div>
 
@@ -87,9 +87,10 @@ function changeAddress(event: any) {
               }`">
                 {{ props.job.parish }}
               </p>
-              <input :class="`input input-bordered w-full ${!editableAddress ? 'hidden' : ''
+              <input @input="changeAddress" :class="`input input-bordered w-full ${!editableAddress ? 'hidden' : ''
               }`" name="parish" type="text" />
-              <div :class="`flex justify-end ${!isCustomer ? 'hidden' : ''}`">
+              <div :class="`flex justify-end space-x-3 ${!isCustomer ? 'hidden' : ''}`">
+              <button class="btn btn-sm my-2">Save</button>
                 <button @click="editableAddress = !editableAddress" class="btn btn-sm my-2">
                   {{ editableAddress ? "Disable" : "Edit Address" }}
                 </button>
