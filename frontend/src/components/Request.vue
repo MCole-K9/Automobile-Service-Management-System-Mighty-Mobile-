@@ -46,7 +46,7 @@
             <br>
             <span class="badge badge-ghost badge-sm">Appointment</span>
         </td>
-        <td>{{ props.appointment.suggestedDate }}</td>
+        <td>{{ $parseDate(props.appointment.suggestedDate) }}</td>
         <th>
             <button class="btn btn-ghost btn-xs">Details</button>
         </th>
