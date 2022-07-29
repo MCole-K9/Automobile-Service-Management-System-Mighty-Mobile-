@@ -12,8 +12,17 @@
     // it's necessary to import the component normally into the parent apparently
     import ScheduleViewAsyncComponent from '../components/ScheduleViewAsyncComponent.vue';
 
-    const asyncSchedule = defineAsyncComponent(() => import('../components/ScheduleViewAsyncComponent.vue'));
+    defineAsyncComponent(() => import('../components/ScheduleViewAsyncComponent.vue'));
 
+    function openScheduler(time: number, day: number){
+        alert(time + " " + day);
+        
+        // use this to open a modal for an empty block to schedule a new jobstage
+    }
+
+    function openViewer(id: number, blocktype: "APPOINTMENT" | "JOBSTAGE", day: number){
+        // use this to open a modal to view a filled block's details
+    }
 
 </script>
 
@@ -22,7 +31,9 @@
     
     <div class="max-w-screen px-4 overflow-hidden overscroll-x-auto lg:mx-auto lg:w-min">
         <Suspense>
-            <ScheduleViewAsyncComponent/>
+            <ScheduleViewAsyncComponent
+            @open-scheduler="openScheduler"
+            @open-viewer="openViewer"/>
 
             <template #fallback>
                 <div class="w-min container mx-auto my-auto">Loading...</div>

@@ -13,35 +13,70 @@
     const monthInformation: MonthBlock = await BackendService.getMonthSchedule(new Date(Date.now()).getMonth(), currentUser.User.id);
 
     const schedule = ref(monthInformation);
-    //
-    // schedule.workingDays.forEach(workingday=>{
-    //     console.log(workingday.day);
-    //     workingday.hourBlocks.forEach(hour=>{
-    //         console.log("time: " + hour.time);
-    //     })
-    // });
+    
+    async function changeTargetMonth(month: number){
+        console.log(month);
+
+        // need to change the value of schedule(?) such that the thing will re-gen the right dates
+        //const monthInformation: MonthBlock = await BackendService.getMonthSchedule(month, currentUser.User.id);
+    }
+
+    function openScheduler(time: number, day: number){
+        alert(time + " " + day);
+    }
+
+    function openViewer(id: number, blocktype: "APPOINTMENT" | "JOBSTAGE", day: number){
+        alert(id + " " + blocktype + " " + day);
+    }
 
 </script>
 
 <template>
     <div class="w-max-w container">
         <div class="mx-auto flex flex-row space-x-4 overflow-auto overscroll-x-auto lg:w-min lg:h-min mt-2 mb-10">
-                <button class="font-semibold bg-ourYellow rounded" v-if="schedule.month == 0">January</button>
-                <button class="font-semibold bg-ourYellow rounded" v-if="schedule.month <= 1">February</button>
-                <button class="font-semibold bg-ourYellow rounded" v-if="schedule.month <= 2">March</button>
-                <button class="font-semibold bg-ourYellow rounded" v-if="schedule.month <= 3">April</button>
-                <button class="font-semibold bg-ourYellow rounded" v-if="schedule.month <= 4">May</button>
-                <button class="font-semibold bg-ourYellow rounded" v-if="schedule.month <= 5">June</button>
-                <button class="font-semibold bg-ourYellow rounded" v-if="schedule.month <= 6">July</button>
-                <button class="font-semibold bg-ourYellow rounded" v-if="schedule.month <= 7">August</button>
-                <button class="font-semibold bg-ourYellow rounded" v-if="schedule.month <= 8">September</button>
-                <button class="font-semibold bg-ourYellow rounded" v-if="schedule.month <= 9">October</button>
-                <button class="font-semibold bg-ourYellow rounded" v-if="schedule.month <= 10">November</button>
-                <button class="font-semibold bg-ourYellow rounded" v-if="schedule.month <= 11">December</button>
+                <button class="font-semibold bg-ourYellow rounded" 
+                    @click="changeTargetMonth(0)"
+                    v-if="schedule.month == 0">January</button>
+                <button class="font-semibold bg-ourYellow rounded" 
+                    @click="changeTargetMonth(1)"
+                    v-if="schedule.month <= 1">February</button>
+                <button class="font-semibold bg-ourYellow rounded" 
+                    @click="changeTargetMonth(2)"
+                    v-if="schedule.month <= 2">March</button>
+                <button class="font-semibold bg-ourYellow rounded" 
+                    @click="changeTargetMonth(3)"
+                    v-if="schedule.month <= 3">April</button>
+                <button class="font-semibold bg-ourYellow rounded" 
+                    @click="changeTargetMonth(4)"
+                    v-if="schedule.month <= 4">May</button>
+                <button class="font-semibold bg-ourYellow rounded" 
+                    @click="changeTargetMonth(5)"
+                    v-if="schedule.month <= 5">June</button>
+                <button class="font-semibold bg-ourYellow rounded" 
+                    @click="changeTargetMonth(6)"
+                    v-if="schedule.month <= 6">July</button>
+                <button class="font-semibold bg-ourYellow rounded" 
+                    @click="changeTargetMonth(7)"
+                    v-if="schedule.month <= 7">August</button>
+                <button class="font-semibold bg-ourYellow rounded" 
+                    @click="changeTargetMonth(8)"
+                    v-if="schedule.month <= 8">September</button>
+                <button class="font-semibold bg-ourYellow rounded" 
+                    @click="changeTargetMonth(9)"
+                    v-if="schedule.month <= 9">October</button>
+                <button class="font-semibold bg-ourYellow rounded" 
+                    @click="changeTargetMonth(10)"
+                    v-if="schedule.month <= 10">November</button>
+                <button class="font-semibold bg-ourYellow rounded" 
+                    @click="changeTargetMonth(11)"
+                    v-if="schedule.month <= 11">December</button>
             </div>
 
             <div class="" v-for="day in schedule.workingDays">
-                <DayPlanComponent :dayBlock="day"
+                <DayPlanComponent 
+                    @open-viewer="openViewer"
+                    @open-scheduler="openScheduler"
+                    :dayBlock="day"
                     :dateTitle="new Date( new Date(Date()).getFullYear(), schedule.month, day.day).toDateString()"
                     />
             </div>
