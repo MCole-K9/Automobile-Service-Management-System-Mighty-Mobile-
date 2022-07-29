@@ -8,7 +8,7 @@
     
 </span>
     <div class="rounded bg-gray-200 w-1/1 my-5 p-5 flex flex-col justify-start gap-y-5 overflow-y-scroll" style="height: 40rem">
-        <div class="w-1/1 flex-none h-fit bg-red-400 rounded min-w-max flex flex-col sm:flex-row p-3 justify-between" v-for="vehicle in userVehicles">
+        <div class="w-1/1 flex-none h-fit bg-ourBlue rounded min-w-max flex flex-col sm:flex-row p-3 justify-between" v-for="vehicle in userVehicles">
         <div class="w-48 h-44 bg-white self-center">
             <img src="" alt="">
         </div>
@@ -20,7 +20,7 @@
         <div class="flex flex-row sm:flex-col gap-x-3 justify-evenly">
             <button class="btn btn-sm">view/edit</button>
             <button class="btn btn-sm">work history</button>
-            <button class="btn btn-sm">delete</button>
+            <button class="btn btn-sm btn-error">delete</button>
         </div>
         </div>
     </div>
@@ -45,7 +45,7 @@ export default defineComponent({
         }
     },
     async created(){
-        let res = await BackendService.getUserVehicles(3)
+        let res = await BackendService.getUserVehicles(2)
         console.log(res?.data);
         this.userVehicles = res?.data;
     }
