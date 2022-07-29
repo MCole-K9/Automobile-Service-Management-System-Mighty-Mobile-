@@ -19,7 +19,7 @@
         </div>
         <div class="flex flex-row sm:flex-col gap-x-3 justify-evenly">
             <button class="btn btn-sm">view/edit</button>
-            <label for="my-modal-3" class="btn btn-sm modal-button">work history</label>
+            <label for="my-modal-3" class="btn btn-sm modal-button" @click="getJobsDoneOnVehicle(vehicle.id)">work history</label>
             <button class="btn btn-sm btn-error">delete</button>
         </div>
         </div>
@@ -32,7 +32,7 @@
     <div class="modal">
     <div class="modal-box relative">
         <label for="my-modal-3" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
-        <div class="overflow-x-auto w-full">
+        <div class="overflow-x-auto w-full pt-8">
                 <table class="table w-full">
                     <!-- head -->
                     <thead>
@@ -64,6 +64,7 @@
 <script lang="ts">
 import DashboardLayout from "../components/DashboardLayout.vue";
 import BackendService from '../../BackendService'
+import Request from "@/components/Request.vue";
 import { defineComponent } from "vue";
 import type { Vehicle } from "@/classlib/Types";
 import type { Job } from "@/classlib/Types";
@@ -71,11 +72,13 @@ export default defineComponent({
     name:'UserVehiclesVeiw.vue',
     components:{
         DashboardLayout,
+        Request,
     },
     data(){
         return{
             userVehicles : <Vehicle[]>({}),
-            jobsDoneOnVehicle : <Job[]>({})
+            allJobs: <Job[]>([]),
+            jobsDoneOnVehicle : <Job[]>([]),
         }
     },
     async created(){
@@ -84,9 +87,18 @@ export default defineComponent({
         this.userVehicles = res?.data;
     },
     methods:{
-        async getJobsDoneOnVehicle(vehicleId:number){
+        async getJobsDoneOnVehicle(vehicleId:number|undefined){
             let res = await BackendService.getUpcomingJobs()
-            // res?.data
+            this.allJobs = res?.data
+            this.allJobs.forEach((e)=>{
+                if(e.vehicleId == vehicleId){
+                    this.jobsDoneOnVehicle.push(e)
+                    console.log(e);
+                }
+            })
+            console.log(this.jobsDoneOnVehicle);
+
+            
         }
     }
 })
