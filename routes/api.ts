@@ -342,6 +342,7 @@ export default class Routes{
                         vehicle: true,
                         assignedMechanic: true,
                         createdBy: true,
+                        requiredParts: true
                     }
                 })
     
