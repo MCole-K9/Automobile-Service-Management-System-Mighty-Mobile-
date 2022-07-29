@@ -4,11 +4,10 @@
   const props = defineProps<{
       job: Job,
   }>();
-
 </script>
 
 <template>
-  <div class="card  bg-gray-200 shadow-xl relative">
+  <div class="card flex-none bg-gray-200 shadow-xl min-w-64 relative">
   <div class="card-body">
     <h2 class="card-title">Job #: {{props.job.jobNumber}}</h2>
     <p><span class="text-md font-semibold">Service Type: </span> {{props.job.serviceType}}</p>

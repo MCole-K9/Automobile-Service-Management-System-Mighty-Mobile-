@@ -126,9 +126,10 @@ export default class Routes{
 
             //Get User Vehicles 
             console.log(req.params.id)
+            let id = Number(req.params.id)
             const vehicles = await prisma.vehicle.findMany({
                 where:{
-                    ownerId : 3
+                    ownerId : id
                 }
             })
             res.status(200).send(vehicles);
