@@ -6,7 +6,7 @@
         blockType: "APPOINTMENT" | "JOBSTAGE"
     }>();
 
-    const emits = defineEmits<{
+    const emit = defineEmits<{
         (e: 'viewerModalClose') : void
     }>();
 
