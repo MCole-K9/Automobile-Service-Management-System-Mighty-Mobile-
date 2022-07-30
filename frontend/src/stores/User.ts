@@ -1,6 +1,6 @@
 import {defineStore} from "pinia";
 import type {User} from "../classlib/Types";
-
+import {UserRole} from "../classlib/Types"
 
 
 
@@ -19,7 +19,7 @@ let User: User  =  {
 export const currentUserStore = defineStore("currentUser", {
     state: ()=>({
         User: User,
-        loggedIn: false,
+        loggedIn: false, 
     }),
     actions:{
         
@@ -38,6 +38,21 @@ export const currentUserStore = defineStore("currentUser", {
 
             return hasRole;
         }
+    },
+    getters: {
+        isCustomer():boolean{
+            return currentUserStore().hasRole(UserRole.Customer)
+        },
+        isManager():boolean{
+            return currentUserStore().hasRole(UserRole.Manager)
+        },
+        isMechanic():boolean{
+            return currentUserStore().hasRole(UserRole.Mechanic)
+        },
+        isAdmin():boolean{
+            return currentUserStore().hasRole(UserRole.ADMIN)
+        },
+        
     },
     persist: true
 })
