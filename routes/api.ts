@@ -371,6 +371,7 @@ export default class Routes{
             res.status(200).send(jobs)
         });
 
+        // Gets the schedule for a given mechanic using the Current Date and the Desired Month
         router.get("/user/:id/schedule/:currentDate-:givenMonth", async (req:Request, res: Response)=>{
             
             // console.log(req.params.id + " " + req.query.currentDate + " " + req.query.givenMonth);
@@ -380,7 +381,7 @@ export default class Routes{
             const givenMonth: number = parseInt(req.params.givenMonth, 10);
             const userId: number = parseInt(req.params.id, 10);
 
-            console.log(currentDate.toString() + " " + givenMonth + " " + userId);
+            // console.log(currentDate.toString() + " " + givenMonth + " " + userId);
 
             // determining the days of the week and the current month
             let daysInMonth: number = 0;
@@ -492,8 +493,6 @@ export default class Routes{
                     AND: [
                         {
                             date: {
-                                // this may be a point of failure, because i'm not sure that this is how you do this for dates
-                                // might need to turn these into date objects, not sure.
                                 gte: new Date(selectedMonth.getFullYear(), selectedMonth.getMonth(), 1),
                                 lte: new Date(selectedMonth.getFullYear(), selectedMonth.getMonth(), daysInMonth)
                             }
@@ -527,6 +526,44 @@ export default class Routes{
         
         });
 
+        // gets a list the jobNumbers, Customers, and of all active jobs that a mechanic is assigned to
+        router.get("/user/:id/activejobs", async(req: Request, res: Response) => {
+
+            const mechanicId: number = parseInt(req.params.id);
+
+            const activeJobs = await prisma.job.findMany({
+                orderBy: {
+                    startDate: 'asc'
+                },
+                select: {
+                    jobNumber: true,
+                    vehicle: {
+                        select: {
+                            owner: {
+                                select: {
+                                    firstName: true,
+                                    lastName: true,
+                                    id: true
+                                }
+                            }
+                        }
+                    }
+                },
+                where: {
+                    assignedMechanicId: mechanicId,
+                    completed: false
+                }
+
+            })
+
+            if (activeJobs !== undefined){
+                res.status(200).send(activeJobs);
+            }
+            else{
+                // need to re-read http errors
+                res.status(400);
+            }
+        })
 
 
         return router;
