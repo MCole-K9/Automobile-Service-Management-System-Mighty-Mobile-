@@ -359,5 +359,15 @@ export default class BackendService{
         }
     }
 
+    static async getActiveJobsForMechanic(mechanicId: number){
+        try{
+            let res = await axios.get(URL + `/user/${mechanicId}/activejobs`);
+            return res;
+        }
+        catch(err){
+            console.log(err);
+        }
+    }
+
 
 }
