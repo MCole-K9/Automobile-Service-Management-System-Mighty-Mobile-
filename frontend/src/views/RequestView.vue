@@ -2,7 +2,6 @@
 import DashboardLayout from '@/components/DashboardLayout.vue';
 import BackendService from "../../BackendService"
 import type { Appointment, Job } from "@/classlib/Types"
-import { UserRole } from '@/classlib/Types';
 import Request from '@/components/Request.vue';
 import { onMounted, ref } from 'vue';
 import {currentUserStore} from "@/stores/User"
@@ -14,7 +13,7 @@ let jobs = ref<Job[]>([])
 
 onMounted(async () => {
 
-    if(currentUser.hasRole(UserRole.Customer) ){
+    if(currentUser.isCustomer){
 
         const jobRes = await BackendService.getUpcomingJobs();
         jobs.value = [...jobRes?.data]

@@ -15,7 +15,6 @@
     import BackendService from "../../BackendService";
     import { defineComponent } from "vue";
     import type { Job } from "@/classlib/Types";
-    import  { UserRole } from "@/classlib/Types";
     import { currentUserStore } from "@/stores/User";
 
     const currentUser = currentUserStore();
@@ -30,7 +29,7 @@
             return {
                 jobNumber: 0,
                 job:  <Job>({}),
-                isCustomer: currentUser.hasRole(UserRole.Customer)
+                isCustomer: currentUser.isCustomer
 
             }
         },
