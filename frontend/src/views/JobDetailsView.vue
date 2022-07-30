@@ -4,7 +4,7 @@
                 <section class="flex justify-center space-x-3">
                     <button @click="acceptJob" :class="`btn btn-sm ${isCustomer  && !job.confirmed? '' : 'hidden' } `">Accept Request</button>
                 </section>
-                <JobInformation @address-change="handleAddressChange" :job="job"/>
+                <JobInformation @address-change="handleAddressChange" @update-address="updateJob" :job="job"/>
                 
             </template>
         </DashboardLayout>
@@ -38,12 +38,16 @@
             handleAddressChange(attrName:string, value:string){
                 this.job = {...this.job, [attrName]: value}
             },
-            async acceptJob(){
-                this.job.confirmed =  true;
+            async updateJob(){
                 const res = await BackendService.updateJob(this.job);
                 this.job = res?.data;
                 console.log(res)
-            }
+            },
+            async acceptJob(){
+                this.job.confirmed =  true;
+                this.updateJob()
+            },
+            
         },
         
         async mounted(){
