@@ -16,8 +16,11 @@
     const emit = defineEmits<{
         (e: 'schedulerModalClose'): void
     }>();
-
+    
     const currentUser = currentUserStore();
+
+    let isVehicleInformationOpen: Ref<Boolean> = ref(false);
+    let isJobInformationOpen: Ref<Boolean> = ref(false);
 
     const dbJobs = await BackendService.getActiveJobsForMechanic(currentUser.User.id);
     const jobs: MinimumJobInfoList = {items: []};
@@ -33,20 +36,13 @@
     });
 
     const activeJobs = ref(jobs);
-    let selectedJob: Job;
+    let selectedJob: Ref<Job> = ref({}) as Ref<Job>;
 
     async function getFullJobInformation(option: number | ""){
         if (option !== ""){
             const jobId: number = option;
-            const fullJobInformation = BackendService.getJob(jobId).then(result => {
-                if (result !== undefined){
-                    selectedJob = result;
-                }
-            });
-            
-        }
-        else{
-            return;
+            const fullJobInformation = await BackendService.getJob(jobId);
+            selectedJob.value = fullJobInformation?.data;
         }
     }
 
@@ -55,8 +51,9 @@
 <template>
     <div class="modal" 
         :class="{'modal-open': open}">
+
         <div class="modal-box">
-            <div>Schedule Job Stage for {{time}} {{day}} {{month}}</div>
+            <div>Schedule New Job-Stage</div>
             
             <label class="form-control">
                 <label class="label">
@@ -72,9 +69,60 @@
                         </option>
                     </select>
                 </label>
-                
             </label>
             
+            <!--This should stay hidden until the user picks an active job-->
+            <div tabindex="0" class="collapse collapse-arrow">
+                <input type="checkbox" />
+                <div class="collapse-title">Job Information</div>
+                <div class="collapse-content">
+                    <div>Job Number</div>
+                    <div>Start Date</div>
+                    <div>Summary</div>
+                    <div>Total Cost</div>
+                    <div>Service Type</div>
+                    <div>
+                        <div>Address</div>
+                        <div>Street</div>
+                        <div>Town</div>
+                        <div>Parish</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!--This should also stay hidden-->
+            <div tabindex="0" class="collapse collapse-arrow" >
+                <input type="checkbox" />
+                <div class="collapse-title">Vehicle Information</div>
+                <div class="collapse-content">
+                    <div>Whatever the Vehicle information is</div>
+                    <div>Required Parts</div>
+                </div>
+            </div>
+            
+            <!--This should maybe also be hidden, not sure yet-->
+            <div>
+                <div>Job-Stage Information</div>
+                <label class="form-control">
+                    <label class="label">Description:</label>
+                    <input type="textarea" class="flex justify-between text-xs px-2"/>
+                </label>
+
+                <label class="form-control">
+                    <label class="label">Duration (Hours):</label>
+                    <input type="range" min="0" max="3" value=1 steps="1" class="range"/>
+                    <div class="w-full flex justify-between text-xs px-2">
+                        <span>0</span>
+                        <span>1</span>
+                        <span>2</span>
+                        <span>3</span>
+                    </div>
+                </label>
+
+                <button class="btn">Add images</button>
+                <div></div>
+            </div>
+
             <button 
             class="btn"
             @click="$emit('schedulerModalClose')">Close</button>

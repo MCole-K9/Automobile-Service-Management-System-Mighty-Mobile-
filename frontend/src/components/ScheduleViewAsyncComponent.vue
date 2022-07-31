@@ -90,6 +90,11 @@
                     :dateTitle="new Date( new Date(Date()).getFullYear(), schedule.month, day.day).toDateString()"
                     />
             </div>
+
+            <div class="text text-center" 
+            v-if="schedule.workingDays.length === 0">
+            No Remaining Work-days for this month!
+            </div>
     </div>
     
 
