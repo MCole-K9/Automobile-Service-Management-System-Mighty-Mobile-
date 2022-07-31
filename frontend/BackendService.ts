@@ -1,4 +1,4 @@
-import type { User, Appointment, Vehicle, Job } from "./src/classlib/Types";
+import type { User, Appointment, Vehicle, Job, JobStage } from "./src/classlib/Types";
 import axios from "axios";
 import  type { MonthBlock, DayBlock } from "./src/classlib/MonthlySchedule";
 import {HourDataBlock} from "./src/classlib/MonthlySchedule";
@@ -363,6 +363,15 @@ export default class BackendService{
         try{
             let res = await axios.get(URL + `/user/${mechanicId}/activejobs`);
             return res;
+        }
+        catch(err){
+            console.log(err);
+        }
+    }
+
+    static async writeJobStageToDatabase(jobStage: JobStage){
+        try{
+
         }
         catch(err){
             console.log(err);

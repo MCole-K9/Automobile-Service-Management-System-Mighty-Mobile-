@@ -2,7 +2,9 @@
     import { currentUserStore } from '@/stores/User';
     import {ref} from 'vue';
     import BackendService from '../../BackendService';
-    import type {MinimumJobInfoItem, MinimumJobInfoList} from '../classlib/MinimalJobInfo'
+    import type {MinimumJobInfoItem, MinimumJobInfoList} from '../classlib/MinimalJobInfo';
+    import type {Job} from '../classlib/Types';
+    import type {Ref} from 'vue';
 
     const props = defineProps<{
         open: boolean
@@ -18,7 +20,7 @@
     const currentUser = currentUserStore();
 
     const dbJobs = await BackendService.getActiveJobsForMechanic(currentUser.User.id);
-    const activeJobs: MinimumJobInfoList = {items: []};
+    const jobs: MinimumJobInfoList = {items: []};
 
     dbJobs?.data.forEach((job: any) => {
         let jobListItem: MinimumJobInfoItem = {jobNumber: 0, clientFirstName: "", clientLastName: "", clientId: 0};
@@ -27,9 +29,26 @@
         jobListItem.clientLastName = job.vehicle.owner.lastName;
         jobListItem.clientId = job.vehicle.owner.id;
 
-        activeJobs.items.push(jobListItem);
+        jobs.items.push(jobListItem);
     });
 
+    const activeJobs = ref(jobs);
+    let selectedJob: Job;
+
+    async function getFullJobInformation(option: number | ""){
+        if (option !== ""){
+            const jobId: number = option;
+            const fullJobInformation = BackendService.getJob(jobId).then(result => {
+                if (result !== undefined){
+                    selectedJob = result;
+                }
+            });
+            
+        }
+        else{
+            return;
+        }
+    }
 
 </script>
 
@@ -45,9 +64,12 @@
                 </label>
                 <label class="input-group">
                     <span class="label-text bg-ourYellow">Job</span>
-                    <select>
-                        <option v-for="item in activeJobs.items"
-                        :key="item.jobNumber" :value="`{{item.jobNumber}} | {{item.clientFirstName}} {{item.clientLastName}} (ID: {{item.clientId}})`"></option>
+                    <select @change="getFullJobInformation($options.selected.value)">
+                        <option disabled value="" selected>Select a Job</option>
+                        <option v-for="item in jobs.items"
+                        :key="item.jobNumber" :value="item.jobNumber">
+                            {{item.jobNumber}} | {{item.clientFirstName}} {{item.clientLastName}} (ID: {{item.clientId}})
+                        </option>
                     </select>
                 </label>
                 
@@ -55,7 +77,7 @@
             
             <button 
             class="btn"
-            @click="$emit('schedulerModalClose')">Close the modal</button>
+            @click="$emit('schedulerModalClose')">Close</button>
 
         </div>
     </div>

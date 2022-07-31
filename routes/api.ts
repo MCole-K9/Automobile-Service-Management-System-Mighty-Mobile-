@@ -565,7 +565,10 @@ export default class Routes{
             }
         })
 
+        // posts a JobStage to the database
+        router.post('/user/:id/jobstage', async (req: Request, res: Response)=>{
 
+        })
         return router;
 
     }
