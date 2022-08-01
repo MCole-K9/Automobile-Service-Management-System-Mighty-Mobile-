@@ -52,6 +52,10 @@ export const currentUserStore = defineStore("currentUser", {
         isAdmin():boolean{
             return currentUserStore().hasRole(UserRole.ADMIN)
         },
+        fullName():string{
+            
+            return this.User.firstName + " " + this.User.lastName;
+        }
         
     },
     persist: true
