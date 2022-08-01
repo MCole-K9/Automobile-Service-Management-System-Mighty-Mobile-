@@ -551,7 +551,8 @@ export default class Routes{
                 },
                 where: {
                     assignedMechanicId: mechanicId,
-                    completed: false
+                    completed: false,
+                    confirmed: true
                 }
 
             })
