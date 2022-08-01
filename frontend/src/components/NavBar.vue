@@ -34,7 +34,7 @@
       </div>
 
       <router-link class="flex items-center space-x-2" to="/">
-        <img class="h-20" src="../assets/Mighty Mobile Logo(PS)-Sm.png" alt="Logo">
+        <img class="h-20" src="../assets/Logo.png" alt="Logo">
         <h4 class="text-xl hidden md:block">Mighty Mobile Auto Service & Repair</h4>
       </router-link>
     </div>
