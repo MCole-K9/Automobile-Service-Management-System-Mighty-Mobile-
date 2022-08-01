@@ -134,7 +134,9 @@ export default class BackendService{
         const res: MonthBlock = {month: selectedMonth, workingDays: []} as MonthBlock;
 
         try {
-            const schedule: any = await axios.get(URL + `/user/${userId}/schedule/${Date.now()}-${selectedMonth}`);
+            const schedule = await axios.get(URL + `/user/${userId}/schedule/${Date.now()}-${selectedMonth}`);
+
+            schedule.data.forEach(value => console.log(value));
             
             // generating the amount of days in the month for calculations later
             let daysInMonth: number = 0;
@@ -228,26 +230,26 @@ export default class BackendService{
 
             // Put the scheduled items into their corresponding hour blocks of every working day
             res.workingDays.forEach((workingDay)=>{
-                if (!Array.isArray(schedule)){
+                if (!Array.isArray(schedule.data)){
                     return;
                 }
 
                 // not sure that this is correct, do not want to truth-table it
                 do {
-                    if(workingDay.day == schedule[incrementor].date.getDate()){
+                    if(workingDay.day == schedule.data[incrementor].date.getDate()){
                         // this means that it's a jobStage
-                        if (schedule[incrementor].jobStage !== null){
+                        if (schedule.data[incrementor].jobStage !== null){
                             let hourBlock = new HourDataBlock();
 
                             hourBlock.blocktype = "JOBSTAGE";
-                            hourBlock.id = schedule[incrementor].id;
+                            hourBlock.id = schedule.data[incrementor].id;
 
-                            hourBlock.client = schedule[incrementor].jobStage.job.vehicle.owner.firstName + " " +
-                                schedule[incrementor].jobStage.job.vehicle.owner.lastName;
+                            hourBlock.client = schedule.data[incrementor].jobStage.job.vehicle.owner.firstName + " " +
+                                schedule.data[incrementor].jobStage.job.vehicle.owner.lastName;
 
-                            hourBlock.duration = schedule[incrementor].jobStage.duration;
-                            hourBlock.time = schedule[incrementor].date.getHours();
-                            hourBlock.description = schedule[incrementor].jobStage.description;
+                            hourBlock.duration = schedule.data[incrementor].jobStage.duration;
+                            hourBlock.time = schedule.data[incrementor].date.getHours();
+                            hourBlock.description = schedule.data[incrementor].jobStage.description;
 
                             // leaving out the address on purpose, since i might choose to leave it out on the UI
 
@@ -257,14 +259,14 @@ export default class BackendService{
                             let hourBlock = new HourDataBlock();
 
                             hourBlock.blocktype = "APPOINTMENT";
-                            hourBlock.id = schedule[incrementor].id;
+                            hourBlock.id = schedule.data[incrementor].id;
 
-                            hourBlock.client = schedule[incrementor].appointment.customer.firstName + " " +
-                                schedule[incrementor].appointment.customer.lastName;
+                            hourBlock.client = schedule.data[incrementor].appointment.customer.firstName + " " +
+                                schedule.data[incrementor].appointment.customer.lastName;
 
                             hourBlock.duration = 1;
-                            hourBlock.time = schedule[incrementor].date.getHours();
-                            hourBlock.description = schedule[incrementor].appointment.problemDescription;
+                            hourBlock.time = schedule.data[incrementor].date.getHours();
+                            hourBlock.description = schedule.data[incrementor].appointment.problemDescription;
 
                             // leaving out the address on purpose, since i might choose to leave it out on the UI
                         }
