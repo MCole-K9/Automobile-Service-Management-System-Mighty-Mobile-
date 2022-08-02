@@ -136,6 +136,10 @@ export default class BackendService{
         try {
             const schedule = await axios.get(URL + `/user/${userId}/schedule/${Date.now()}-${selectedMonth}`);
             
+            schedule.data.forEach(element =>{
+                console.log(element.date);
+            })
+
             // generating the amount of days in the month for calculations later
             let daysInMonth: number = 0;
             switch (selectedMonth){
@@ -229,13 +233,16 @@ export default class BackendService{
             // Put the scheduled items into their corresponding hour blocks of every working day
             res.workingDays.forEach((workingDay)=>{
                 // the second i remove this the entire page will freeze. no idea why, yet
-                if (!Array.isArray(schedule)){
-                    return;
-                }
 
                 // not sure that this is correct, do not want to truth-table it
                 do {
-                    const checkDate: Date = new Date(schedule.data[incrementor].date)
+                    const checkDate: Date = new Date(Date.parse(schedule.data[incrementor].date));
+                    
+                    // if i don't do this, it returns July as the date because of some kind of ISO 8601 fuckery. deeven know
+                    checkDate.setMonth(checkDate.getMonth()+1);
+
+                    console.log(checkDate.toString());
+
                     if(workingDay.day == checkDate.getDate()){
                         // this means that it's a jobStage
                         if (schedule.data[incrementor].jobStage !== null){
@@ -251,7 +258,15 @@ export default class BackendService{
                             hourBlock.time = checkDate.getHours();
                             hourBlock.description = schedule.data[incrementor].jobStage.description;
 
-                            // leaving out the address on purpose, since i might choose to leave it out on the UI
+                            // all the times are returned as datetimes with no UTC offset, i.e. they're all GMT
+                            // javascript converts them to local times by adding the offset for us (-05:00), which makes
+                            // all of the times 5 hours behind. solutions are either:
+                            
+                            // * do some mangled bullshit to fix it in the frontend (less preferable)
+                            // * change the utc offset of the mysql db (google, probably a good mix between minimized-disruption and non-fuckyness)
+                            // * replace instance of db.Datetime with db.Timestamp, which stores all times as GMT and accounts for UTC offset
+                            // (unsure if this requires any front-end fixes. will require re-migration and lost values)
+                            console.log(hourBlock)
 
                         }
                         // this means that it's an appointment
@@ -268,6 +283,7 @@ export default class BackendService{
                             hourBlock.time = checkDate.getHours();
                             hourBlock.description = schedule.data[incrementor].appointment.problemDescription;
 
+                            console.log(hourBlock)
                             // leaving out the address on purpose, since i might choose to leave it out on the UI
                         }
 
@@ -288,7 +304,7 @@ export default class BackendService{
             // this stores the difference between the hourIndex of a schedule item's time and the time the algorithm checks for next 
             let timeDifference: number = 0;
 
-            // recursive function that adds in the missing blocks between others. i literally don't know if this will work
+            // this function WILL crash the page if the datetimes aren't adjusted for the time difference
             function checkBlockDifferenceAddMissing(workingDay: DayBlock){
                 // this should break the recursion (intentionally)
                 if (timeToCheck >= 17 || workingDay.hourBlocks.length > 9){
