@@ -134,8 +134,12 @@ export default class BackendService{
         const res: MonthBlock = {month: selectedMonth, workingDays: []} as MonthBlock;
 
         try {
-            const schedule: any = await axios.get(URL + `/user/${userId}/schedule/${Date.now()}-${selectedMonth}`);
+            const schedule = await axios.get(URL + `/user/${userId}/schedule/${Date.now()}-${selectedMonth}`);
             
+            schedule.data.forEach(element =>{
+                console.log(element.date);
+            })
+
             // generating the amount of days in the month for calculations later
             let daysInMonth: number = 0;
             switch (selectedMonth){
@@ -228,28 +232,41 @@ export default class BackendService{
 
             // Put the scheduled items into their corresponding hour blocks of every working day
             res.workingDays.forEach((workingDay)=>{
-                if (!Array.isArray(schedule)){
-                    return;
-                }
+                // the second i remove this the entire page will freeze. no idea why, yet
 
                 // not sure that this is correct, do not want to truth-table it
                 do {
-                    if(workingDay.day == schedule[incrementor].date.getDate()){
+                    const checkDate: Date = new Date(Date.parse(schedule.data[incrementor].date));
+                    
+                    // if i don't do this, it returns July as the date because of some kind of ISO 8601 fuckery. deeven know
+                    checkDate.setMonth(checkDate.getMonth()+1);
+
+                    console.log(checkDate.toString());
+
+                    if(workingDay.day == checkDate.getDate()){
                         // this means that it's a jobStage
-                        if (schedule[incrementor].jobStage !== null){
+                        if (schedule.data[incrementor].jobStage !== null){
                             let hourBlock = new HourDataBlock();
 
                             hourBlock.blocktype = "JOBSTAGE";
-                            hourBlock.id = schedule[incrementor].id;
+                            hourBlock.id = schedule.data[incrementor].id;
 
-                            hourBlock.client = schedule[incrementor].jobStage.job.vehicle.owner.firstName + " " +
-                                schedule[incrementor].jobStage.job.vehicle.owner.lastName;
+                            hourBlock.client = schedule.data[incrementor].jobStage.job.vehicle.owner.firstName + " " +
+                                schedule.data[incrementor].jobStage.job.vehicle.owner.lastName;
 
-                            hourBlock.duration = schedule[incrementor].jobStage.duration;
-                            hourBlock.time = schedule[incrementor].date.getHours();
-                            hourBlock.description = schedule[incrementor].jobStage.description;
+                            hourBlock.duration = schedule.data[incrementor].jobStage.duration;
+                            hourBlock.time = checkDate.getHours();
+                            hourBlock.description = schedule.data[incrementor].jobStage.description;
 
-                            // leaving out the address on purpose, since i might choose to leave it out on the UI
+                            // all the times are returned as datetimes with no UTC offset, i.e. they're all GMT
+                            // javascript converts them to local times by adding the offset for us (-05:00), which makes
+                            // all of the times 5 hours behind. solutions are either:
+                            
+                            // * do some mangled bullshit to fix it in the frontend (less preferable)
+                            // * change the utc offset of the mysql db (google, probably a good mix between minimized-disruption and non-fuckyness)
+                            // * replace instance of db.Datetime with db.Timestamp, which stores all times as GMT and accounts for UTC offset
+                            // (unsure if this requires any front-end fixes. will require re-migration and lost values)
+                            console.log(hourBlock)
 
                         }
                         // this means that it's an appointment
@@ -257,15 +274,16 @@ export default class BackendService{
                             let hourBlock = new HourDataBlock();
 
                             hourBlock.blocktype = "APPOINTMENT";
-                            hourBlock.id = schedule[incrementor].id;
+                            hourBlock.id = schedule.data[incrementor].id;
 
-                            hourBlock.client = schedule[incrementor].appointment.customer.firstName + " " +
-                                schedule[incrementor].appointment.customer.lastName;
+                            hourBlock.client = schedule.data[incrementor].appointment.customer.firstName + " " +
+                                schedule.data[incrementor].appointment.customer.lastName;
 
                             hourBlock.duration = 1;
-                            hourBlock.time = schedule[incrementor].date.getHours();
-                            hourBlock.description = schedule[incrementor].appointment.problemDescription;
+                            hourBlock.time = checkDate.getHours();
+                            hourBlock.description = schedule.data[incrementor].appointment.problemDescription;
 
+                            console.log(hourBlock)
                             // leaving out the address on purpose, since i might choose to leave it out on the UI
                         }
 
@@ -286,7 +304,7 @@ export default class BackendService{
             // this stores the difference between the hourIndex of a schedule item's time and the time the algorithm checks for next 
             let timeDifference: number = 0;
 
-            // recursive function that adds in the missing blocks between others. i literally don't know if this will work
+            // this function WILL crash the page if the datetimes aren't adjusted for the time difference
             function checkBlockDifferenceAddMissing(workingDay: DayBlock){
                 // this should break the recursion (intentionally)
                 if (timeToCheck >= 17 || workingDay.hourBlocks.length > 9){
