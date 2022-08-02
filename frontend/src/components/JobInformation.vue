@@ -168,4 +168,9 @@ function changeAddress(event: any) {
 export default {
   name: "Job",
 };
+declare module '@vue/runtime-core' {
+  interface ComponentCustomProperties {
+    $parseDate(date:Date) : Date
+  }
+}
 </script>
