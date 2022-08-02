@@ -374,20 +374,20 @@ export default class Routes{
         // Gets the schedule for a given mechanic using the Current Date and the Desired Month
         router.get("/user/:id/schedule/:currentDate-:givenMonth", async (req:Request, res: Response)=>{
             
-            console.log(req.params.id + " " + req.query.currentDate + " " + req.query.givenMonth);
+            // console.log(req.params.id + " " + req.query.currentDate + " " + req.query.givenMonth);
 
             // route parameters transformed
             const currentDate: Date = new Date(parseInt(req.params.currentDate, 10));
             const givenMonth: number = parseInt(req.params.givenMonth);
             const userId: number = parseInt(req.params.id, 10);
 
-            console.log(currentDate.toString() + " " + givenMonth + " " + userId);
+            // console.log(currentDate.toString() + " " + givenMonth + " " + userId);
 
             // determining the days of the week and the current month
             let daysInMonth: number = 0;
             const selectedMonth: Date = new Date(currentDate.getFullYear(), givenMonth);
 
-            console.log(selectedMonth.toString())
+            // console.log(selectedMonth.toString())
 
             switch (givenMonth){
                 case 0:
@@ -446,50 +446,50 @@ export default class Routes{
                 orderBy: {
                     date: 'asc'
                 },
-                // select: {
-                //     id: true,
-                //     date: true,
-                //     appointment: {
-                //         select: {
-                //             problemDescription: true,
-                //             customer: {
-                //                 select: {
-                //                     id: true,
-                //                     firstName: true,
-                //                     lastName: true
-                //                 }
-                //             },
-                //             streetAddress: true,
-                //             town: true,
-                //             parish: true
-                //         }
-                //     },
-                //     jobStage: {
-                //         select: {
-                //             description: true,
-                //             duration: true,
-                //             job: {
-                //                 select: {
-                //                     jobNumber: true,
-                //                     streetAddress: true,
-                //                     town: true,
-                //                     parish: true,
-                //                     vehicle: {
-                //                         select: {
-                //                             owner: {
-                //                                 select: {
-                //                                     id: true,
-                //                                     firstName: true,
-                //                                     lastName: true
-                //                                 }
-                //                             }
-                //                         }
-                //                     }
-                //                 }
-                //             }
-                //         }
-                //     }
-                // },        
+                select: {
+                    id: true,
+                    date: true,
+                    appointment: {
+                        select: {
+                            problemDescription: true,
+                            customer: {
+                                select: {
+                                    id: true,
+                                    firstName: true,
+                                    lastName: true
+                                }
+                            },
+                            streetAddress: true,
+                            town: true,
+                            parish: true
+                        }
+                    },
+                    jobStage: {
+                        select: {
+                            description: true,
+                            duration: true,
+                            job: {
+                                select: {
+                                    jobNumber: true,
+                                    streetAddress: true,
+                                    town: true,
+                                    parish: true,
+                                    vehicle: {
+                                        select: {
+                                            owner: {
+                                                select: {
+                                                    id: true,
+                                                    firstName: true,
+                                                    lastName: true
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },        
                 where: {
                     AND: [
                         {
@@ -517,8 +517,8 @@ export default class Routes{
                                 },
         
                                 {
-                                    // problem seems to be with specifying the jobStage and job, if i do NOT: {jobStage: null}
-                                    // it returns the jobs
+                                    // problem is fixed, issues was just the or conditon was wrong
+                                    // (the other problem was that the stages were attached to the wrong job. time taken to realise: 2 hours)
                                     jobStage: {
                                             job: {
                                                 is: {
