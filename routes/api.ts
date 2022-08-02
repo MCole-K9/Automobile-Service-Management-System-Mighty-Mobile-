@@ -116,7 +116,7 @@ export default class Routes{
 
 
             }catch(err){
-
+                console.log(err)
                 res.status(400).send(err)
             }
 
@@ -201,7 +201,7 @@ export default class Routes{
                 let appointment = await prisma.appointment.create({
                     data: {
                         problemDescription: req.body.appointment.problemDescription as string,
-                        suggestedDate: req.body.appointment.date,
+                        suggestedDate: req.body.appointment.suggestedDate,
                         streetAddress: req.body.appointment.streetAddress as string,
                         town: req.body.appointment.town as string,
                         parish: req.body.appointment.parish as string,
@@ -211,20 +211,40 @@ export default class Routes{
                             }
                         },
                         vehicle:{
-                            connect: {
-                                id: Number.parseInt(req.body.appointment.vehicleId)
+                            connectOrCreate: {
+                                where:{
+                                    id: req.body.appointment.vehicle.id ? req.body.appointment.vehicle.id : 0
+                                },
+                                create: {
+                                    make: req.body.appointment.vehicle.make as string,
+                                    model: req.body.appointment.vehicle.model as string,
+                                    year: Number.parseInt(req.body.appointment.vehicle.year) , //Getting it as string in the json for some reason
+                                    owner: {
+                                        connect: {
+                                            id: userId
+                                        }
+                                       
+                                    }
+
+                                }
+                                
                             }
                         }
+                        
+
+                    },
+                    include: {
+                        customer: true
                     }
                 })
-
+                console.log(appointment)
                 res.status(200).send(appointment)
 
 
             }catch(err){
 
-                
-                res.send(err)
+                console.log(err)
+                res.status(400).send(err)
             }
             
 

@@ -44,7 +44,7 @@
     make: string
     model: string
     year: number
-    ownerId: number
+    ownerId?: number
     owner?: User
     image?: string | null
   }
@@ -65,7 +65,7 @@
     fulfilled?: boolean
     assignedMechId?: number | null
     assignedMech?: User
-    vehicleId: number
+    vehicleId?: number
     vehicle?: Vehicle
   }
   
