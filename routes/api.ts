@@ -374,18 +374,20 @@ export default class Routes{
         // Gets the schedule for a given mechanic using the Current Date and the Desired Month
         router.get("/user/:id/schedule/:currentDate-:givenMonth", async (req:Request, res: Response)=>{
             
-            // console.log(req.params.id + " " + req.query.currentDate + " " + req.query.givenMonth);
+            console.log(req.params.id + " " + req.query.currentDate + " " + req.query.givenMonth);
 
             // route parameters transformed
             const currentDate: Date = new Date(parseInt(req.params.currentDate, 10));
-            const givenMonth: number = parseInt(req.params.givenMonth, 10);
+            const givenMonth: number = parseInt(req.params.givenMonth);
             const userId: number = parseInt(req.params.id, 10);
 
-            // console.log(currentDate.toString() + " " + givenMonth + " " + userId);
+            console.log(currentDate.toString() + " " + givenMonth + " " + userId);
 
             // determining the days of the week and the current month
             let daysInMonth: number = 0;
             const selectedMonth: Date = new Date(currentDate.getFullYear(), givenMonth);
+
+            console.log(selectedMonth.toString())
 
             switch (givenMonth){
                 case 0:
@@ -444,80 +446,98 @@ export default class Routes{
                 orderBy: {
                     date: 'asc'
                 },
-                //  but since a schedule only has appt OR jobstage, kinda wondering what happens when i try to pull for both
-                select: {
-                    id: true,
-                    date: true,
-                    appointment: {
-                        select: {
-                            problemDescription: true,
-                            customer: {
-                                select: {
-                                    id: true,
-                                    firstName: true,
-                                    lastName: true
-                                }
-                            },
-                            streetAddress: true,
-                            town: true,
-                            parish: true
-                        }
-                    },
-                    jobStage: {
-                        select: {
-                            description: true,
-                            duration: true,
-                            job: {
-                                select: {
-                                    jobNumber: true,
-                                    streetAddress: true,
-                                    town: true,
-                                    parish: true,
-                                    vehicle: {
-                                        select: {
-                                            owner: {
-                                                select: {
-                                                    id: true,
-                                                    firstName: true,
-                                                    lastName: true
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },        
+                // select: {
+                //     id: true,
+                //     date: true,
+                //     appointment: {
+                //         select: {
+                //             problemDescription: true,
+                //             customer: {
+                //                 select: {
+                //                     id: true,
+                //                     firstName: true,
+                //                     lastName: true
+                //                 }
+                //             },
+                //             streetAddress: true,
+                //             town: true,
+                //             parish: true
+                //         }
+                //     },
+                //     jobStage: {
+                //         select: {
+                //             description: true,
+                //             duration: true,
+                //             job: {
+                //                 select: {
+                //                     jobNumber: true,
+                //                     streetAddress: true,
+                //                     town: true,
+                //                     parish: true,
+                //                     vehicle: {
+                //                         select: {
+                //                             owner: {
+                //                                 select: {
+                //                                     id: true,
+                //                                     firstName: true,
+                //                                     lastName: true
+                //                                 }
+                //                             }
+                //                         }
+                //                     }
+                //                 }
+                //             }
+                //         }
+                //     }
+                // },        
                 where: {
                     AND: [
                         {
                             date: {
-                                gte: new Date(selectedMonth.getFullYear(), selectedMonth.getMonth(), 1),
-                                lte: new Date(selectedMonth.getFullYear(), selectedMonth.getMonth(), daysInMonth)
-                            }
+                                /*  Weird bug(?): Dates are stored as MySQL datetime fields, where the month goes from 1-12 (Jan-Dec),
+                                    but the date object here is a JS date, which stores months as zero-indexed (0-11). getMonth() is
+                                    supposed to output 7 for August (it does), but prisma seems to convert the value for datetime here
+                                    in some way that it returns records for the next month over (so it returns for Sept./8 instead of Aug./7).
+        
+                                    happens even if you use .toISOString(). Solution is to put -1 after getMonth(). idk why.
+                                */
+                                gte: new Date(selectedMonth.getFullYear(), selectedMonth.getMonth()-1),
+                                lte: new Date(selectedMonth.getFullYear(), selectedMonth.getMonth()-1, daysInMonth)
+                            },
                         },
                         {
                             OR: [
                                 {
-                                    appointment: {
-                                        assignedMechId: userId
-                                    }
+                                    appointment: { 
+                                        is: {
+                                            assignedMechId: userId,
+                                            fulfilled: false
+                                        },
+                                    },
                                 },
-    
+        
                                 {
+                                    // problem seems to be with specifying the jobStage and job, if i do NOT: {jobStage: null}
+                                    // it returns the jobs
                                     jobStage: {
-                                        job: {
-                                            assignedMechanicId: userId
-                                        }
-                                    }
+                                            job: {
+                                                is: {
+                                                    assignedMechanicId: userId,
+                                                    confirmed: true,
+                                                    completed: false
+                                                }
+                                            }
+                                    },
                                 }
-                            ] 
+                            ]
                         }
                     ]
+                    
+                    
+                    
                 }
             })
-        
+            
             schedule.forEach(schedule =>{
                 console.log(schedule);
             });
