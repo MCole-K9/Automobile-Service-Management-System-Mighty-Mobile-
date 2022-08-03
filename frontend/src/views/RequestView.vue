@@ -32,6 +32,9 @@ onMounted(async () => {
 <template>
     <DashboardLayout>
         <template #content>
+            <div class="flex justify-start my-4">
+                <router-link to="/dashboard/appointmentbooking" class="btn ">Book Appointment</router-link>
+            </div>
             <div class="overflow-x-auto w-full">
                 <table class="table w-full">
                     <!-- head -->
