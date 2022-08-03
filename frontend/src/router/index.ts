@@ -87,6 +87,12 @@ const router = createRouter({
       name: "vehicles",
       meta: {auth: true},
       component: ()=> import("@/views/UserVehiclesView.vue")
+    },
+    {
+      path: "/dashboard/appointmentbooking",
+      name: "euAppointmentBooking",
+      meta: {auth: true},
+      component: ()=> import("@/views/EUAppointmentBookingView.vue")
     }
   ]
 })
