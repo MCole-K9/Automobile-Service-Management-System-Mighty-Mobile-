@@ -19,15 +19,15 @@ defineComponent({
       </svg>
     </label>
  </AppBar>
-<div class="drawer drawer-mobile">
+<div class="drawer drawer-mobile" style="height:calc(100vh - 6rem)">
   <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
   <div class="drawer-content px-6 py-4">
     <slot name="content"></slot>
   
   </div> 
-  <div class="drawer-side ">
-    <label for="my-drawer-2" class="drawer-overlay"></label> 
-    <ul class="menu p-4 overflow-y-auto w-60  text-base-content bg-ourYellow">
+  <div class="drawer-side">
+    <label for="my-drawer-2" class="drawer-overlay" ></label> 
+    <ul class="menu p-4 overflow-y-auto w-60 sticky text-base-content bg-ourYellow" style="height:calc(100vh - 6rem)">
       <!-- Sidebar content here -->
       <li><router-link to="/dashboard">Dashboard</router-link></li>
       <li><router-link to="/dashboard/requests">Requests</router-link></li>
