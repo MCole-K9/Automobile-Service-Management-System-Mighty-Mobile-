@@ -91,6 +91,10 @@ import AddVehicleComponent from "@/components/AddVehicleComponent.vue";
 import { defineComponent } from "vue";
 import type { Vehicle } from "@/classlib/Types";
 import type { Job } from "@/classlib/Types";
+import { currentUserStore } from "@/stores/User";
+
+const currentUser = currentUserStore();
+
 export default defineComponent({
     name:'UserVehiclesView.vue',
     components:{
@@ -111,7 +115,7 @@ export default defineComponent({
         }
     },
     async created(){
-        let res = await BackendService.getUserVehicles(2)
+        let res = await BackendService.getUserVehicles(currentUser.User.id)
         console.log(res?.data);
         this.userVehicles = res?.data;
     },
