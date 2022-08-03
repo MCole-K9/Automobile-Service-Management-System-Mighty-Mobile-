@@ -36,8 +36,8 @@
 
     <!-- Put this part before </body> tag -->
     <input type="checkbox" id="vehicleWorkHistory" class="modal-toggle" />
-    <div class="modal modal-bottom sm:modal-middle">
-    <div class="modal-box relative sm:w-11/12 sm:max-w-5xl">
+    <div class="modal lg:pl-60 modal-bottom sm:modal-middle">
+    <div class="modal-box relative sm:w-11/12 sm:max-w-5xl" style="max-height: 30rem;">
         <label for="vehicleWorkHistory" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
         <h3 class="font-bold text-xl text-center">Work History</h3>
         <div class="overflow-x-auto w-full pt-8">
@@ -67,7 +67,7 @@
     </div>
     <input type="checkbox" id="addVehicleModal" class="modal-toggle" />
     <div class="modal lg:pl-60 modal-bottom sm:modal-middle">
-    <div class="modal-box z-50 relative rounded sm:rounded-box sm:w-11/12 sm:max-w-5xl">
+    <div class="modal-box relative rounded sm:rounded-box sm:w-11/12 sm:max-w-5xl">
         <label for="addVehicleModal" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
         <h3 class="font-bold text-xl text-center my-5">Add new vehicle</h3>
          <AddVehicleComponent :vehicle="vehicleObject"/>
