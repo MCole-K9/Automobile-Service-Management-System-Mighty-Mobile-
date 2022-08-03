@@ -57,6 +57,8 @@
         
         id.value = _id;
         blockType.value = _blockType;
+
+        isViewerOpen.value = true;
     }
 
     function closeViewer(){
@@ -99,7 +101,8 @@
             <ViewerModalComponent 
             :open="isViewerOpen"
             :id="id"
-            :block-type="blockType"/>
+            :block-type="blockType"
+            @viewer-modal-close="closeViewer"/>
             <template #fallback>
                 <div v-show="" class="modal">
 
