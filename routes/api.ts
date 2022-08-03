@@ -606,7 +606,7 @@ export default class Routes{
 
         })
 
-        // gets the appointment corresponding to a schedule item's id
+        // gets the minimum necessary appointment corresponding to a schedule item's id
         router.get('/appointments/short/:appointmentscheduleid', async (req: Request, res: Response)=>{
             const appointmentId = parseInt(req.params.appointmentscheduleid);
             
