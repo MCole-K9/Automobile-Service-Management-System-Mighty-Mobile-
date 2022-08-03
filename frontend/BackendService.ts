@@ -5,7 +5,8 @@ import {HourDataBlock} from "./src/classlib/MonthlySchedule";
 
 
 
-const URL = "http://localhost:5000/api"
+// const URL = "http://localhost:5000/api"
+const URL = "/api"
 
 export default class BackendService{
 
