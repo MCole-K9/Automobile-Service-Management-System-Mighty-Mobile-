@@ -652,6 +652,7 @@ export default class Routes{
                 console.log(err)
             }
 
+            // uses the schedule id to return a basic minimum amount of information relevant to a jobstage
             router.get('/jobstage/short/:jobstagescheduleid', async (req: Request, res: Response) => {
                 const stageScheduleId = parseInt(req.params.jobstagescheduleid)
                 
@@ -706,6 +707,33 @@ export default class Routes{
                     console.log(err);
                 }
                 
+            })
+
+            // gets all of the information for a specific job. every stage, the vehicle, and the owner entirely
+            router.get('/jobs/fulljob/:jobnumber', async (req: Request, res: Response) => {
+                const jobId = parseInt(req.params.jobnumber);
+
+                try{
+                    const fullJobInformation = await prisma.job.findUnique({
+                        where: {
+                            jobNumber: jobId
+                        },
+
+                        include: {
+                            stages: true,
+                            vehicle:{
+                                include: {
+                                    owner: true
+                                }
+                            }
+                        }
+                    });
+
+                    res.status(200).send(fullJobInformation);
+                }
+                catch(err){
+                    console.log(err);
+                }
             })
             
         })
