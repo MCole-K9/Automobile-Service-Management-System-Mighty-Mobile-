@@ -610,6 +610,48 @@ export default class Routes{
         router.post('/user/:id/jobstage', async (req: Request, res: Response)=>{
 
         })
+
+        router.get('/appointments/short/:appointmentid', async (req: Request, res: Response)=>{
+            const appointmentId = parseInt(req.params.appointmentid);
+            
+            try{
+                const shortAppointment = await prisma.appointment.findUnique({
+                    where: {
+                        id: appointmentId
+                    },
+
+                    select: {
+                        streetAddress: true,
+                        town: true,
+                        parish: true,
+                        problemDescription: true,
+                        customer: {
+                            select: {
+                                id: true,
+                                firstName: true,
+                                lastName: true
+                            }
+                        },
+                        vehicle: {
+                            select: {
+                                id: true,
+                                make: true,
+                                model: true,
+                                year: true,
+                            }
+                        }
+                        
+                    }
+                });
+
+                res.status(200).send(shortAppointment);
+            }
+            catch (err){
+                console.log(err)
+            }
+
+            
+        })
         return router;
 
     }
