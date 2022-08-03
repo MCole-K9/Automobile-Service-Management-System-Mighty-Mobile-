@@ -15,6 +15,8 @@ export default defineConfig({
     proxy: {
       "^/api": {
         target: `http://localhost:${port}/api`,
+        // target: `http://192.168.1.3:${port}/api`, 
+        // target: `https://83a2-72-252-230-37.ngrok.io/api`,
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
         secure: false,
