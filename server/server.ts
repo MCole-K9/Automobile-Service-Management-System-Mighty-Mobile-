@@ -24,13 +24,16 @@ app.use(express.static(path.join(__dirname, "/public/")))
 
 const port = process.env.PORT || 5000;
 
+// app.get(/.*/, (req:Request, res:Response)=>{
+//     res.sendFile(__dirname+"/public/index.html");
+// })
 if(process.env.NODE_ENV === 'production'){
     
     console.log('production');
     app.use(history())
     app.use(express.static(path.join(__dirname, '/public/')));
     
-    app.get("/", (req:Request, res:Response)=>{
+    app.get(/.*/, (req:Request, res:Response)=>{
         res.sendFile(__dirname+"/public/index.html");
     })
 }
