@@ -2,7 +2,7 @@ import { fileURLToPath, URL } from 'url'
 
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-
+let port = process.env.PORT || 5000
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue()],
@@ -14,7 +14,7 @@ export default defineConfig({
   server: {
     proxy: {
       "^/api": {
-        target: "http://localhost:5000/api",
+        target: `http://localhost:${port}/api`,
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
         secure: false,
