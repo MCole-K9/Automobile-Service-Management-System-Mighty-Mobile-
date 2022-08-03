@@ -15,6 +15,9 @@ app.config.globalProperties.$parseDate = (rawDate:Date) => {
     let parsedDate = new Date(rawDate)
     return parsedDate.toLocaleDateString()
 }
+app.config.globalProperties.$log = (anything:any) => {
+    console.log(anything)
+}
 const pinia = createPinia()
 
 // Wasn't working. Leaving here to look over and understand why later
