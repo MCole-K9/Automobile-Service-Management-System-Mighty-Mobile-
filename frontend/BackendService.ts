@@ -136,9 +136,9 @@ export default class BackendService{
         try {
             const schedule = await axios.get(URL + `/user/${userId}/schedule/${Date.now()}-${selectedMonth}`);
             
-            schedule.data.forEach(element =>{
-                console.log(element.date);
-            })
+            // schedule.data.forEach(element =>{
+            //     console.log(element.date);
+            // })
 
             // generating the amount of days in the month for calculations later
             let daysInMonth: number = 0;
@@ -241,7 +241,7 @@ export default class BackendService{
                     }
                     const checkDate: Date = new Date(Date.parse(schedule.data[incrementor].date));
                     
-                    // if i don't do this, it returns July as the date because of some kind of ISO 8601 fuckery. deeven know
+                    // if i don't do this, it returns July (in August) as the date because of some kind of ISO 8601 fuckery. deeven know
                     checkDate.setMonth(checkDate.getMonth()+1);
                     
                     // Without this check, if someone (in this case: me) fucks up and schedules something for
@@ -251,7 +251,7 @@ export default class BackendService{
                         continue;
                     }
 
-                    console.log(checkDate.toString());
+                    // console.log(checkDate.toString());
 
                     if(workingDay.day == checkDate.getDate()){
                         // this means that it's a jobStage
@@ -268,7 +268,9 @@ export default class BackendService{
                             hourBlock.time = checkDate.getHours();
                             hourBlock.description = schedule.data[incrementor].jobStage.description;
 
-                            console.log(hourBlock)
+                            // console.log(hourBlock)
+
+                            workingDay.hourBlocks.push(hourBlock);
 
                         }
                         // this means that it's an appointment
@@ -285,7 +287,9 @@ export default class BackendService{
                             hourBlock.time = checkDate.getHours();
                             hourBlock.description = schedule.data[incrementor].appointment.problemDescription;
 
-                            console.log(hourBlock)
+                            workingDay.hourBlocks.push(hourBlock);
+
+                            // console.log(hourBlock);
                             // leaving out the address on purpose, since i might choose to leave it out on the UI
                         }
 
@@ -310,6 +314,15 @@ export default class BackendService{
             function checkBlockDifferenceAddMissing(workingDay: DayBlock){
                 // this should break the recursion (intentionally)
                 if (timeToCheck >= 17 || workingDay.hourBlocks.length > 9){
+                    
+                    // resetting these so that they work for the next day
+                    hourIndex = 0;
+                    timeToCheck = 8;
+                    timeDifference = 0;                   
+                    
+                    return;
+                }
+                else if (workingDay.hourBlocks[hourIndex] === undefined){
                     return;
                 }
 
@@ -344,9 +357,10 @@ export default class BackendService{
                 // this starts when the business starts, i.e. 8AM
                 
                 // for days with literally no scheduled items, it just generates 9 empty items
-                if (workingDay.hourBlocks.length == 0){
+                if (workingDay.hourBlocks.length === 0){
+                    
                     // i.e 8AM to 5PM
-                    for (let i = timeToCheck; i < 17; i++){
+                    for (let i = 8; i < 17; i++){
                         let newHourBlock: HourDataBlock = new HourDataBlock();
                         newHourBlock.time = i;
                         newHourBlock.duration = 1;
@@ -364,7 +378,7 @@ export default class BackendService{
                 }
             });
 
-            console.log(res);
+            // console.log(res);
             return res;
 
         }catch(err: any){
