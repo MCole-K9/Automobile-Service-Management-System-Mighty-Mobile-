@@ -19,15 +19,19 @@
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
-import type { Vehicle } from "@/classlib/Types";
+// import type { Vehicle } from "@/classlib/Types";
 export default defineComponent({
     name:'AddVehicle',
+    props:['vehicle'],
     data(){
         return{
-            vehicle : <Vehicle>({})
         }
     },
     components:{},
-    methods:{}
+    methods:{
+    },
+    created(){
+        
+    }
 })
 </script>
