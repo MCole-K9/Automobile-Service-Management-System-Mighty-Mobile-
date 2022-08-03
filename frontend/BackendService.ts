@@ -303,53 +303,69 @@ export default class BackendService{
                 }while(true);
             });
 
-            // this tracks the position of each schedule item as a list of all of the ones in the array
-            let hourIndex: number = 0;
-            // this tracks the hour to ask about, and starts at 8AM. duration of items are added to it to advance which time to check
-            let timeToCheck: number = 8;
-            // this stores the difference between the hourIndex of a schedule item's time and the time the algorithm checks for next 
-            let timeDifference: number = 0;
-
             // this function WILL crash the page if the datetimes aren't adjusted for the time difference
-            function checkBlockDifferenceAddMissing(workingDay: DayBlock){
+            function checkBlockDifferenceAddMissing(workingDay: DayBlock, 
+                _hourIndex: number, _timeToCheck: number, _timeDifference: number){
                 // this should break the recursion (intentionally)
-                if (timeToCheck >= 17 || workingDay.hourBlocks.length > 9){
+                // if (timeToCheck >= 17 || workingDay.hourBlocks.length > 9){
                     
-                    // resetting these so that they work for the next day
-                    hourIndex = 0;
-                    timeToCheck = 8;
-                    timeDifference = 0;                   
+                //     // resetting these so that they work for the next day                 
                     
-                    return;
-                }
-                else if (workingDay.hourBlocks[hourIndex] === undefined){
-                    return;
-                }
-
-                if (workingDay.hourBlocks[hourIndex].time == timeToCheck){
-                        
-                    timeToCheck = workingDay.hourBlocks[hourIndex].time + workingDay.hourBlocks[hourIndex].duration;
-                    hourIndex++;
-
-                    checkBlockDifferenceAddMissing(workingDay);
-
-                }
-                else{
-                    timeDifference = workingDay.hourBlocks[hourIndex].time - timeToCheck;
-
-                    for (let i: number = 0; i < timeDifference; i++){
+                //     return;
+                // }
+                // else 
+                if (workingDay.hourBlocks[_hourIndex] === undefined){
+                    // this needs to add in the remaining hour blocks
+                    for (let i: number = _timeToCheck; i < 17; i++){
                         let newHourBlock: HourDataBlock = new HourDataBlock();
                         newHourBlock.time = i;
                         newHourBlock.duration = 1;
 
                         // need to rework this to account for splice
-                        workingDay.hourBlocks.splice( hourIndex++, 0, newHourBlock);
+                        workingDay.hourBlocks.splice( _hourIndex++, 0, newHourBlock);
                     }
 
-                    timeToCheck = workingDay.hourBlocks[hourIndex].time + workingDay.hourBlocks[hourIndex].duration;
+
+                    return;
+                }
+
+                console.log(`Prior to action: hourIndex: ${_hourIndex}, ${_timeToCheck}, ${_timeDifference}`);
+
+                // this confirms that there's a schedule item at this increment of timeToCheck
+                if (workingDay.hourBlocks[_hourIndex].time === _timeToCheck){
+                    
+                    // move the next time to check to the end of this schedule item block (i.e. time+duration)
+                    _timeToCheck = workingDay.hourBlocks[_hourIndex].time + workingDay.hourBlocks[_hourIndex].duration;
+                    // increment the hour index so that it checks the next hourblock
+                    _hourIndex++;
+
+                    checkBlockDifferenceAddMissing(workingDay, _hourIndex, _timeToCheck, _timeDifference);
+
+                }
+                // this indicates that for a given time, there is no schedule item
+                else{
+                    // work out the difference between the time you checked and the value of the next hourBlock
+                    // in the list of scheduled items
+                    _timeDifference = workingDay.hourBlocks[_hourIndex].time - _timeToCheck;
+
+
+                    for (let i: number = _timeToCheck; i < workingDay.hourBlocks[_hourIndex].time; i++){
+                        let newHourBlock: HourDataBlock = new HourDataBlock();
+                        newHourBlock.time = i;
+                        newHourBlock.duration = 1;
+
+                        // need to rework this to account for splice
+                        workingDay.hourBlocks.splice( _hourIndex++, 0, newHourBlock);
+                    }
+
+                    _timeToCheck = workingDay.hourBlocks[_hourIndex].time + workingDay.hourBlocks[_hourIndex].duration;
+
+                    console.log(_timeToCheck)
                     // ASSUMING the postfix in the splice works, the following SHOULDN'T be necessary
                     //hourIndex += timeDifference;
                 }
+
+                
             }
 
             // forEach to pad the remaining empty spaces of each day with empty hourBlocks
@@ -374,7 +390,15 @@ export default class BackendService{
                     // also: almost certainly going to break, not sure when and how yet
                     workingDay.hourBlocks.sort((a, b)=> a.time != null ? (b.time != null ? a.time-b.time : -1) : -1);
                     
-                    checkBlockDifferenceAddMissing(workingDay);
+                    // this tracks the position of each schedule item as a list of all of the ones in the array
+                    let hourIndex: number = 0;
+                    // this tracks the hour to ask about, and starts at 8AM. duration of items are added to it to advance which time to check
+                    let timeToCheck: number = 8;
+                    // this stores the difference between the hourIndex of a schedule item's time and the time the algorithm checks for next 
+                    let timeDifference: number = 0;
+
+                    checkBlockDifferenceAddMissing(workingDay, hourIndex, timeToCheck, timeDifference);
+                    console.log(workingDay);
                 }
             });
 

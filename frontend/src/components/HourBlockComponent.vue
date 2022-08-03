@@ -19,9 +19,10 @@ import { onMounted } from 'vue';
     <div class="" >
         <!--shows if the id for the block isn't blank-->
         <button v-if="hourDataBlock.id != null"
+            class="filledBlock w-20 h-20"
             @click="$emit('open-viewer', hourDataBlock.id, hourDataBlock.blocktype)">
-            <span  class="truncate">{{hourDataBlock.description}}</span>
-            <span >Client: {{hourDataBlock.client}}</span>
+            <div  class="truncate ">{{hourDataBlock.description}}</div>
+            <div >Client: {{hourDataBlock.client}}</div>
         </button>
         
         <!--shows if the id for the block Is blank-->
