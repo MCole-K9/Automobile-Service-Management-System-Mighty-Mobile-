@@ -1,6 +1,7 @@
 import { Response, Request, Router} from "express";
 import { Job, JobPart, PrismaClient } from "@prisma/client"; //Db Connection
 import bcrypt, {genSalt, hash} from "bcrypt"
+import { transformDocument } from "@prisma/client/runtime";
 
 
 
@@ -605,13 +606,14 @@ export default class Routes{
 
         })
 
-        router.get('/appointments/short/:appointmentid', async (req: Request, res: Response)=>{
-            const appointmentId = parseInt(req.params.appointmentid);
+        // gets the appointment corresponding to a schedule item's id
+        router.get('/appointments/short/:appointmentscheduleid', async (req: Request, res: Response)=>{
+            const appointmentId = parseInt(req.params.appointmentscheduleid);
             
             try{
                 const shortAppointment = await prisma.appointment.findUnique({
                     where: {
-                        id: appointmentId
+                        scheduledItemId: appointmentId
                     },
 
                     select: {
@@ -636,7 +638,8 @@ export default class Routes{
                         },
                         scheduledItem: {
                             select: {
-                                date: true
+                                date: true,
+                                id: true
                             }
                         }
                         
@@ -649,6 +652,61 @@ export default class Routes{
                 console.log(err)
             }
 
+            router.get('/jobstage/short/:jobstagescheduleid', async (req: Request, res: Response) => {
+                const stageScheduleId = parseInt(req.params.jobstagescheduleid)
+                
+                try{
+                    const shortJobStage = await prisma.jobStage.findUnique({
+                        where: {
+                            scheduledItemId: stageScheduleId
+                        },
+
+                        select: {
+                            description: true,
+                            duration: true,
+                            stageNumber: true,
+                            job: {
+                                select: {
+                                    streetAddress: true,
+                                    town: true,
+                                    parish: true,
+                                    jobNumber: true,
+                                    summary: true,
+                                    vehicle: {
+                                        select: {
+                                            make: true,
+                                            model: true,
+                                            year: true,
+                                            id: true,
+                                            owner: {
+                                                select: {
+                                                    id: true,
+                                                    lastName: true,
+                                                    firstName: true
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            scheduledItem: {
+                                select: {
+                                    id: true,
+                                    date: true
+                                }
+                            }
+
+                        }
+    
+                    })
+
+                    res.status(200).send(shortJobStage);
+                }
+                catch(err){
+                    console.log(err);
+                }
+                
+            })
             
         })
         return router;
