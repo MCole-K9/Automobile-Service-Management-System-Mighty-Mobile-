@@ -2,6 +2,7 @@ import express, {Application, Response, Request, query} from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import path from 'path';
+const history = require('connect-history-api-fallback');
 
 import Routes from "../routes/api"
 
@@ -26,7 +27,7 @@ const port = process.env.PORT || 5000;
 if(process.env.NODE_ENV === 'production'){
     
     console.log('production');
-    //app.use(history())
+    app.use(history())
     app.use(express.static(path.join(__dirname, '/public/')));
     
     app.get("/", (req:Request, res:Response)=>{
