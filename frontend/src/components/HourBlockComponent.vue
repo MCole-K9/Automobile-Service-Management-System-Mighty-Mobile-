@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { HourDataBlock } from '@/classlib/MonthlySchedule.js';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
     
     const props = defineProps<{
@@ -14,8 +14,10 @@ import { ref } from 'vue';
         }
     }>()
 
-    const filledBlockSize = ref(props.hourDataBlock.duration === 1 ? "w-20" : 
-        props.hourDataBlock.duration === 2 ? "w-40" : props.hourDataBlock.duration === 3 ? "w-60" : "w-20")
+    const filledBlockSize = computed(()=>{
+        return props.hourDataBlock.duration === 1 ? "w-20" : 
+        props.hourDataBlock.duration === 2 ? "w-40" : props.hourDataBlock.duration === 3 ? "w-60" : "w-20"
+    });
 
 </script>
 
