@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { HourDataBlock } from '@/classlib/MonthlySchedule.js';
+import { ref } from 'vue';
 
     
-    defineProps<{
+    const props = defineProps<{
         hourDataBlock: {
             time: number,
             description: string,
@@ -13,13 +14,17 @@ import { onMounted } from 'vue';
         }
     }>()
 
+    const filledBlockSize = ref(props.hourDataBlock.duration === 1 ? "w-20" : 
+        props.hourDataBlock.duration === 2 ? "w-40" : props.hourDataBlock.duration === 3 ? "w-60" : "w-20")
+
 </script>
 
 <template>
     <div class="" >
         <!--shows if the id for the block isn't blank-->
         <button v-if="hourDataBlock.id != null"
-            class="filledBlock w-20 h-20"
+            class="filledBlock h-20"
+            :class="filledBlockSize"
             @click="$emit('open-viewer', hourDataBlock.id, hourDataBlock.blocktype)">
             <div  class="truncate ">{{hourDataBlock.description}}</div>
             <div >Client: {{hourDataBlock.client}}</div>
