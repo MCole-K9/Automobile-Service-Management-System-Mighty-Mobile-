@@ -5,8 +5,8 @@ import {HourDataBlock} from "./src/classlib/MonthlySchedule";
 
 
 
-// const URL = "http://localhost:5000/api"
-const URL = "/api"
+const URL = "http://localhost:5000/api"
+// const URL = "/api"
 
 export default class BackendService{
 
@@ -137,9 +137,9 @@ export default class BackendService{
         try {
             const schedule = await axios.get(URL + `/user/${userId}/schedule/${Date.now()}-${selectedMonth}`);
             
-            // schedule.data.forEach(element =>{
-            //     console.log(element.date);
-            // })
+            schedule.data.forEach(element =>{
+                console.log(element.date);
+            })
 
             // generating the amount of days in the month for calculations later
             let daysInMonth: number = 0;
@@ -229,6 +229,7 @@ export default class BackendService{
                 workingDay.hourBlocks = [];
             });
 
+            // res.workingDays.forEach(day => console.log(day));
             let incrementor: number = 0;
 
             // Put the scheduled items into their corresponding hour blocks of every working day
@@ -252,7 +253,7 @@ export default class BackendService{
                         continue;
                     }
 
-                    // console.log(checkDate.toString());
+                    console.log(checkDate.toString());
 
                     if(workingDay.day == checkDate.getDate()){
                         // this means that it's a jobStage
@@ -269,7 +270,7 @@ export default class BackendService{
                             hourBlock.time = checkDate.getHours();
                             hourBlock.description = schedule.data[incrementor].jobStage.description;
 
-                            // console.log(hourBlock)
+                            console.log(hourBlock)
 
                             workingDay.hourBlocks.push(hourBlock);
 
@@ -290,7 +291,7 @@ export default class BackendService{
 
                             workingDay.hourBlocks.push(hourBlock);
 
-                            // console.log(hourBlock);
+                            console.log(hourBlock);
                             // leaving out the address on purpose, since i might choose to leave it out on the UI
                         }
 
@@ -306,15 +307,15 @@ export default class BackendService{
 
             // this function WILL crash the page if the datetimes aren't adjusted for the time difference
             function checkBlockDifferenceAddMissing(workingDay: DayBlock, 
-                _hourIndex: number, _timeToCheck: number, _timeDifference: number){
+                _hourIndex: number, _timeToCheck: number){
                 // this should break the recursion (intentionally)
-                // if (timeToCheck >= 17 || workingDay.hourBlocks.length > 9){
+                if (_timeToCheck >= 17 || workingDay.hourBlocks.length > 9){
                     
-                //     // resetting these so that they work for the next day                 
+                    // resetting these so that they work for the next day                 
                     
-                //     return;
-                // }
-                // else 
+                    return;
+                }
+                
                 if (workingDay.hourBlocks[_hourIndex] === undefined){
                     // this needs to add in the remaining hour blocks
                     for (let i: number = _timeToCheck; i < 17; i++){
@@ -330,7 +331,7 @@ export default class BackendService{
                     return;
                 }
 
-                console.log(`Prior to action: hourIndex: ${_hourIndex}, ${_timeToCheck}, ${_timeDifference}`);
+                console.log(`Prior to action: hourIndex: ${_hourIndex}, ${_timeToCheck}`);
 
                 // this confirms that there's a schedule item at this increment of timeToCheck
                 if (workingDay.hourBlocks[_hourIndex].time === _timeToCheck){
@@ -339,16 +340,14 @@ export default class BackendService{
                     _timeToCheck = workingDay.hourBlocks[_hourIndex].time + workingDay.hourBlocks[_hourIndex].duration;
                     // increment the hour index so that it checks the next hourblock
                     _hourIndex++;
-
-                    checkBlockDifferenceAddMissing(workingDay, _hourIndex, _timeToCheck, _timeDifference);
+                    
+                    console.log("time = " + workingDay.hourBlocks[_hourIndex].time);
 
                 }
                 // this indicates that for a given time, there is no schedule item
                 else{
                     // work out the difference between the time you checked and the value of the next hourBlock
                     // in the list of scheduled items
-                    _timeDifference = workingDay.hourBlocks[_hourIndex].time - _timeToCheck;
-
 
                     for (let i: number = _timeToCheck; i < workingDay.hourBlocks[_hourIndex].time; i++){
                         let newHourBlock: HourDataBlock = new HourDataBlock();
@@ -363,10 +362,10 @@ export default class BackendService{
 
                     console.log(_timeToCheck)
                     // ASSUMING the postfix in the splice works, the following SHOULDN'T be necessary
-                    //hourIndex += timeDifference;
+                    _hourIndex++;
                 }
 
-                
+                checkBlockDifferenceAddMissing(workingDay, _hourIndex, _timeToCheck);
             }
 
             // forEach to pad the remaining empty spaces of each day with empty hourBlocks
@@ -395,10 +394,8 @@ export default class BackendService{
                     let hourIndex: number = 0;
                     // this tracks the hour to ask about, and starts at 8AM. duration of items are added to it to advance which time to check
                     let timeToCheck: number = 8;
-                    // this stores the difference between the hourIndex of a schedule item's time and the time the algorithm checks for next 
-                    let timeDifference: number = 0;
 
-                    checkBlockDifferenceAddMissing(workingDay, hourIndex, timeToCheck, timeDifference);
+                    checkBlockDifferenceAddMissing(workingDay, hourIndex, timeToCheck);
                     console.log(workingDay);
                 }
             });
