@@ -236,10 +236,20 @@ export default class BackendService{
 
                 // not sure that this is correct, do not want to truth-table it
                 do {
+                    if (schedule.data[incrementor] === undefined){
+                        break;
+                    }
                     const checkDate: Date = new Date(Date.parse(schedule.data[incrementor].date));
                     
                     // if i don't do this, it returns July as the date because of some kind of ISO 8601 fuckery. deeven know
                     checkDate.setMonth(checkDate.getMonth()+1);
+                    
+                    // Without this check, if someone (in this case: me) fucks up and schedules something for
+                    // a weekend, then the do-while will loop forever and crash the page. might still happen, not sure yet
+                    if (checkDate.getDay() === 0 || checkDate.getDay() === 6){
+                     incrementor++;   
+                        continue;
+                    }
 
                     console.log(checkDate.toString());
 
@@ -258,14 +268,6 @@ export default class BackendService{
                             hourBlock.time = checkDate.getHours();
                             hourBlock.description = schedule.data[incrementor].jobStage.description;
 
-                            // all the times are returned as datetimes with no UTC offset, i.e. they're all GMT
-                            // javascript converts them to local times by adding the offset for us (-05:00), which makes
-                            // all of the times 5 hours behind. solutions are either:
-                            
-                            // * do some mangled bullshit to fix it in the frontend (less preferable)
-                            // * change the utc offset of the mysql db (google, probably a good mix between minimized-disruption and non-fuckyness)
-                            // * replace instance of db.Datetime with db.Timestamp, which stores all times as GMT and accounts for UTC offset
-                            // (unsure if this requires any front-end fixes. will require re-migration and lost values)
                             console.log(hourBlock)
 
                         }
@@ -362,6 +364,7 @@ export default class BackendService{
                 }
             });
 
+            console.log(res);
             return res;
 
         }catch(err: any){
