@@ -393,21 +393,15 @@ export default class Routes{
 
         // Gets the schedule for a given mechanic using the Current Date and the Desired Month
         router.get("/user/:id/schedule/:currentDate-:givenMonth", async (req:Request, res: Response)=>{
-            
-            // console.log(req.params.id + " " + req.query.currentDate + " " + req.query.givenMonth);
 
             // route parameters transformed
             const currentDate: Date = new Date(parseInt(req.params.currentDate, 10));
             const givenMonth: number = parseInt(req.params.givenMonth);
             const userId: number = parseInt(req.params.id, 10);
 
-            // console.log(currentDate.toString() + " " + givenMonth + " " + userId);
-
             // determining the days of the week and the current month
             let daysInMonth: number = 0;
             const selectedMonth: Date = new Date(currentDate.getFullYear(), givenMonth);
-
-            // console.log(selectedMonth.toString())
 
             switch (givenMonth){
                 case 0:
@@ -638,6 +632,11 @@ export default class Routes{
                                 make: true,
                                 model: true,
                                 year: true,
+                            }
+                        },
+                        scheduledItem: {
+                            select: {
+                                date: true
                             }
                         }
                         
