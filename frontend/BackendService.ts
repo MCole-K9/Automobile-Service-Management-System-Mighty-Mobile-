@@ -7,6 +7,7 @@ import {HourDataBlock} from "./src/classlib/MonthlySchedule";
 
 const URL = "http://localhost:5000/api"
 // const URL = 'http://192.168.1.3:5000/api'
+// const URL = "/api"
 
 export default class BackendService{
 
@@ -229,6 +230,7 @@ export default class BackendService{
                 workingDay.hourBlocks = [];
             });
 
+            // res.workingDays.forEach(day => console.log(day));
             let incrementor: number = 0;
 
             // Put the scheduled items into their corresponding hour blocks of every working day
@@ -237,10 +239,20 @@ export default class BackendService{
 
                 // not sure that this is correct, do not want to truth-table it
                 do {
+                    if (schedule.data[incrementor] === undefined){
+                        break;
+                    }
                     const checkDate: Date = new Date(Date.parse(schedule.data[incrementor].date));
                     
-                    // if i don't do this, it returns July as the date because of some kind of ISO 8601 fuckery. deeven know
+                    // if i don't do this, it returns July (in August) as the date because of some kind of ISO 8601 fuckery. deeven know
                     checkDate.setMonth(checkDate.getMonth()+1);
+                    
+                    // Without this check, if someone (in this case: me) fucks up and schedules something for
+                    // a weekend, then the do-while will loop forever and crash the page. might still happen, not sure yet
+                    if (checkDate.getDay() === 0 || checkDate.getDay() === 6){
+                     incrementor++;   
+                        continue;
+                    }
 
                     console.log(checkDate.toString());
 
@@ -259,15 +271,9 @@ export default class BackendService{
                             hourBlock.time = checkDate.getHours();
                             hourBlock.description = schedule.data[incrementor].jobStage.description;
 
-                            // all the times are returned as datetimes with no UTC offset, i.e. they're all GMT
-                            // javascript converts them to local times by adding the offset for us (-05:00), which makes
-                            // all of the times 5 hours behind. solutions are either:
-                            
-                            // * do some mangled bullshit to fix it in the frontend (less preferable)
-                            // * change the utc offset of the mysql db (google, probably a good mix between minimized-disruption and non-fuckyness)
-                            // * replace instance of db.Datetime with db.Timestamp, which stores all times as GMT and accounts for UTC offset
-                            // (unsure if this requires any front-end fixes. will require re-migration and lost values)
                             console.log(hourBlock)
+
+                            workingDay.hourBlocks.push(hourBlock);
 
                         }
                         // this means that it's an appointment
@@ -284,7 +290,9 @@ export default class BackendService{
                             hourBlock.time = checkDate.getHours();
                             hourBlock.description = schedule.data[incrementor].appointment.problemDescription;
 
-                            console.log(hourBlock)
+                            workingDay.hourBlocks.push(hourBlock);
+
+                            console.log(hourBlock);
                             // leaving out the address on purpose, since i might choose to leave it out on the UI
                         }
 
@@ -298,44 +306,67 @@ export default class BackendService{
                 }while(true);
             });
 
-            // this tracks the position of each schedule item as a list of all of the ones in the array
-            let hourIndex: number = 0;
-            // this tracks the hour to ask about, and starts at 8AM. duration of items are added to it to advance which time to check
-            let timeToCheck: number = 8;
-            // this stores the difference between the hourIndex of a schedule item's time and the time the algorithm checks for next 
-            let timeDifference: number = 0;
-
             // this function WILL crash the page if the datetimes aren't adjusted for the time difference
-            function checkBlockDifferenceAddMissing(workingDay: DayBlock){
+            function checkBlockDifferenceAddMissing(workingDay: DayBlock, 
+                _hourIndex: number, _timeToCheck: number){
                 // this should break the recursion (intentionally)
-                if (timeToCheck >= 17 || workingDay.hourBlocks.length > 9){
+                if (_timeToCheck >= 17 || workingDay.hourBlocks.length > 9){
+                    
+                    // resetting these so that they work for the next day                 
+                    
                     return;
                 }
-
-                if (workingDay.hourBlocks[hourIndex].time == timeToCheck){
-                        
-                    timeToCheck = workingDay.hourBlocks[hourIndex].time + workingDay.hourBlocks[hourIndex].duration;
-                    hourIndex++;
-
-                    checkBlockDifferenceAddMissing(workingDay);
-
-                }
-                else{
-                    timeDifference = workingDay.hourBlocks[hourIndex].time - timeToCheck;
-
-                    for (let i: number = 0; i < timeDifference; i++){
+                
+                if (workingDay.hourBlocks[_hourIndex] === undefined){
+                    // this needs to add in the remaining hour blocks
+                    for (let i: number = _timeToCheck; i < 17; i++){
                         let newHourBlock: HourDataBlock = new HourDataBlock();
                         newHourBlock.time = i;
                         newHourBlock.duration = 1;
 
                         // need to rework this to account for splice
-                        workingDay.hourBlocks.splice( hourIndex++, 0, newHourBlock);
+                        workingDay.hourBlocks.splice( _hourIndex++, 0, newHourBlock);
                     }
 
-                    timeToCheck = workingDay.hourBlocks[hourIndex].time + workingDay.hourBlocks[hourIndex].duration;
-                    // ASSUMING the postfix in the splice works, the following SHOULDN'T be necessary
-                    //hourIndex += timeDifference;
+
+                    return;
                 }
+
+                console.log(`Prior to action: hourIndex: ${_hourIndex}, ${_timeToCheck}`);
+
+                // this confirms that there's a schedule item at this increment of timeToCheck
+                if (workingDay.hourBlocks[_hourIndex].time === _timeToCheck){
+                    
+                    // move the next time to check to the end of this schedule item block (i.e. time+duration)
+                    _timeToCheck = workingDay.hourBlocks[_hourIndex].time + workingDay.hourBlocks[_hourIndex].duration;
+                    // increment the hour index so that it checks the next hourblock
+                    _hourIndex++;
+                    
+                    console.log("time = " + workingDay.hourBlocks[_hourIndex].time);
+
+                }
+                // this indicates that for a given time, there is no schedule item
+                else{
+                    // work out the difference between the time you checked and the value of the next hourBlock
+                    // in the list of scheduled items
+
+                    for (let i: number = _timeToCheck; i < workingDay.hourBlocks[_hourIndex].time; i++){
+                        let newHourBlock: HourDataBlock = new HourDataBlock();
+                        newHourBlock.time = i;
+                        newHourBlock.duration = 1;
+
+                        // need to rework this to account for splice
+                        workingDay.hourBlocks.splice( _hourIndex++, 0, newHourBlock);
+                    }
+
+                    _timeToCheck = workingDay.hourBlocks[_hourIndex].time + workingDay.hourBlocks[_hourIndex].duration;
+
+                    console.log(_timeToCheck)
+                    // ASSUMING the postfix in the splice works, the following SHOULDN'T be necessary
+                    _hourIndex++;
+                }
+
+                checkBlockDifferenceAddMissing(workingDay, _hourIndex, _timeToCheck);
             }
 
             // forEach to pad the remaining empty spaces of each day with empty hourBlocks
@@ -343,9 +374,10 @@ export default class BackendService{
                 // this starts when the business starts, i.e. 8AM
                 
                 // for days with literally no scheduled items, it just generates 9 empty items
-                if (workingDay.hourBlocks.length == 0){
+                if (workingDay.hourBlocks.length === 0){
+                    
                     // i.e 8AM to 5PM
-                    for (let i = timeToCheck; i < 17; i++){
+                    for (let i = 8; i < 17; i++){
                         let newHourBlock: HourDataBlock = new HourDataBlock();
                         newHourBlock.time = i;
                         newHourBlock.duration = 1;
@@ -359,10 +391,17 @@ export default class BackendService{
                     // also: almost certainly going to break, not sure when and how yet
                     workingDay.hourBlocks.sort((a, b)=> a.time != null ? (b.time != null ? a.time-b.time : -1) : -1);
                     
-                    checkBlockDifferenceAddMissing(workingDay);
+                    // this tracks the position of each schedule item as a list of all of the ones in the array
+                    let hourIndex: number = 0;
+                    // this tracks the hour to ask about, and starts at 8AM. duration of items are added to it to advance which time to check
+                    let timeToCheck: number = 8;
+
+                    checkBlockDifferenceAddMissing(workingDay, hourIndex, timeToCheck);
+                    console.log(workingDay);
                 }
             });
 
+            // console.log(res);
             return res;
 
         }catch(err: any){

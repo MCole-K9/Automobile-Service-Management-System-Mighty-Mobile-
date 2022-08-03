@@ -393,21 +393,15 @@ export default class Routes{
 
         // Gets the schedule for a given mechanic using the Current Date and the Desired Month
         router.get("/user/:id/schedule/:currentDate-:givenMonth", async (req:Request, res: Response)=>{
-            
-            // console.log(req.params.id + " " + req.query.currentDate + " " + req.query.givenMonth);
 
             // route parameters transformed
             const currentDate: Date = new Date(parseInt(req.params.currentDate, 10));
             const givenMonth: number = parseInt(req.params.givenMonth);
             const userId: number = parseInt(req.params.id, 10);
 
-            // console.log(currentDate.toString() + " " + givenMonth + " " + userId);
-
             // determining the days of the week and the current month
             let daysInMonth: number = 0;
             const selectedMonth: Date = new Date(currentDate.getFullYear(), givenMonth);
-
-            // console.log(selectedMonth.toString())
 
             switch (givenMonth){
                 case 0:
@@ -609,6 +603,53 @@ export default class Routes{
         // posts a JobStage to the database
         router.post('/user/:id/jobstage', async (req: Request, res: Response)=>{
 
+        })
+
+        router.get('/appointments/short/:appointmentid', async (req: Request, res: Response)=>{
+            const appointmentId = parseInt(req.params.appointmentid);
+            
+            try{
+                const shortAppointment = await prisma.appointment.findUnique({
+                    where: {
+                        id: appointmentId
+                    },
+
+                    select: {
+                        streetAddress: true,
+                        town: true,
+                        parish: true,
+                        problemDescription: true,
+                        customer: {
+                            select: {
+                                id: true,
+                                firstName: true,
+                                lastName: true
+                            }
+                        },
+                        vehicle: {
+                            select: {
+                                id: true,
+                                make: true,
+                                model: true,
+                                year: true,
+                            }
+                        },
+                        scheduledItem: {
+                            select: {
+                                date: true
+                            }
+                        }
+                        
+                    }
+                });
+
+                res.status(200).send(shortAppointment);
+            }
+            catch (err){
+                console.log(err)
+            }
+
+            
         })
         return router;
 

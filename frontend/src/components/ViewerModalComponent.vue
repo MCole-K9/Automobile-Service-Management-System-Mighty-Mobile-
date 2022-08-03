@@ -17,7 +17,7 @@
         :class="{'modal-open': open}"
         @click="$emit('viewerModalClose')">
         <div class="modal-box">
-            <button @click="$emit('viewerModalClose')">CLOSE</button>
+            <button @click="$emit('viewerModalClose')">{{id}} {{blockType}}</button>
         </div>
     </div>
 </template>
