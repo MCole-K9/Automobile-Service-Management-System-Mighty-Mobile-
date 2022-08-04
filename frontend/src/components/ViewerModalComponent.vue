@@ -59,7 +59,6 @@
                 shortAppointmentInformation.value.customerId = fullDetails?.data.customer.id;
                 shortAppointmentInformation.value.customerLastName = fullDetails?.data.customer.lastName;
                 shortAppointmentInformation.value.customerFirstName = fullDetails?.data.customer.firstName;
-                shortAppointmentInformation.value.appointmentId = fullDetails?.data.id;
                 shortAppointmentInformation.value.street = fullDetails?.data.streetAddress;
                 shortAppointmentInformation.value.town = fullDetails?.data.town;
                 shortAppointmentInformation.value.parish = fullDetails?.data.parish;
@@ -109,12 +108,22 @@
         <div class="modal-box">
             <div v-if="blockType === 'JOBSTAGE'">
             <div>Stage {{shortJobInformation.stageNumber}} of Job #{{shortJobInformation.jobNumber}}</div>
+            <div>Client: {{shortJobInformation.ownerFirstName}} {{shortJobInformation.ownerLastName}} (ID: {{shortJobInformation.ownerId}}) </div>
+            <div>Date: {{shortJobInformation.scheduleDate}}</div>
+            <div>Vehicle Information: {{shortJobInformation.vehicleMake}} {{shortJobInformation.vehicleModel}} {{shortJobInformation.vehicleYear}}</div>
+            <div>Job Summary: {{shortJobInformation.jobSummary}}</div>
+            <div>Address: {{shortJobInformation.streetAddress}},  {{shortJobInformation.town}}, {{shortJobInformation.parish}}</div>
+            <div>Stage Duration: {{shortJobInformation.duration}}</div>
+            <div>Stage Description: {{shortJobInformation.description}}</div>
             <button>See All Jobs</button>
         </div>
         <div v-if="blockType === 'APPOINTMENT'">
             <div>Appointment for {{shortAppointmentInformation.customerFirstName}} 
             {{shortAppointmentInformation.customerLastName}} (ID: {{shortAppointmentInformation.customerId}})</div>
-            <div>Rest of details go here</div>
+            <div>Vehicle Information: {{shortAppointmentInformation.vehicleMake}} {{shortAppointmentInformation.vehicleModel}} {{shortAppointmentInformation.vehicleYear}}</div>
+            <div>Date: {{shortAppointmentInformation.scheduleDate}}</div>
+            <div>Address: {{shortAppointmentInformation.street}},  {{shortAppointmentInformation.town}}, {{shortJobInformation.parish}}</div>
+            <div>Problem Description: {{shortAppointmentInformation.problemDescription}}</div>
             <button>See All Appointments</button>
         </div>
             <button @click="$emit('viewerModalClose')"></button>
