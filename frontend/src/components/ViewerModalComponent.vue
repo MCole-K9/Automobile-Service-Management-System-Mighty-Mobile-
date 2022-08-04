@@ -78,7 +78,21 @@
             try{
                 fullDetails = await BackendService.getShortJobStageInformation(prop.id);
 
-                
+                shortJobInformation.value.description = fullDetails?.data.description;
+                shortJobInformation.value.duration = fullDetails?.data.duration;
+                shortJobInformation.value.stageNumber = fullDetails?.data.stageNumber;
+                shortJobInformation.value.jobNumber = fullDetails?.data.job.jobNumber;
+                shortJobInformation.value.streetAddress = fullDetails?.data.job.streetAddress;
+                shortJobInformation.value.town = fullDetails?.data.job.town;
+                shortJobInformation.value.parish = fullDetails?.data.job.parish;
+                shortJobInformation.value.jobSummary = fullDetails?.data.job.summary;
+                shortJobInformation.value.vehicleMake = fullDetails?.data.job.vehicle.make;
+                shortJobInformation.value.vehicleModel = fullDetails?.data.job.vehicle.model;
+                shortJobInformation.value.vehicleYear = fullDetails?.data.job.vehicle.year;
+                shortJobInformation.value.ownerId = fullDetails?.data.job.vehicle.owner.id;
+                shortJobInformation.value.ownerFirstName = fullDetails?.data.job.vehicle.owner.firstName;
+                shortJobInformation.value.ownerLastName = fullDetails?.data.job.vehicle.owner.lastName;
+                shortJobInformation.value.scheduleDate = fullDetails?.data.scheduledItem.date;
             }
             catch(err){
                 console.log(err);
@@ -94,8 +108,7 @@
         @click="$emit('viewerModalClose')">
         <div class="modal-box">
             <div v-if="blockType === 'JOBSTAGE'">
-            <div>THIS IS A JOBSTAGE</div>
-            {{id}} {{blockType}}
+            <div>Stage {{shortJobInformation.stageNumber}} of Job #{{shortJobInformation.jobNumber}}</div>
             <button>See All Jobs</button>
         </div>
         <div v-if="blockType === 'APPOINTMENT'">
