@@ -617,6 +617,7 @@ export default class Routes{
                     },
 
                     select: {
+                        id: true,
                         streetAddress: true,
                         town: true,
                         parish: true,

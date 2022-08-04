@@ -2,6 +2,7 @@
     import BackendService from '../../BackendService';
     import {ref, watch, watchEffect} from 'vue';   
     import type {Ref} from 'vue';
+    import type {ShortJobInfo, ShortAppointmentInfo} from '../classlib/shortScheduleInfo';
 
     const props = defineProps<{
         open: boolean,
@@ -15,28 +16,24 @@
 
     let fullDetails;
 
+    const shortJobInformation: Ref<ShortJobInfo> = ref({
+        description: "",
+        duration: 0,
+        stageNumber: 0,
+        jobNumber: 0,
+        streetAddress: "",
+        town: "",
+        parish: "",
+        jobSummary: "",
+        vehicleMake: "",
+        vehicleModel: "",
+        vehicleYear: 0,
+        ownerId: 0,
+        ownerFirstName: "",
+        ownerLastName: "",
+        scheduleDate: new Date(Date.now()),
+    });
 
-    type ShortJobInfo = {
-        
-
-    }
-
-    type ShortAppointmentInfo = {
-        customerId: number,
-        customerLastName: string,
-        customerFirstName: string,
-        appointmentId: number,
-        street: string,
-        town: string,
-        parish: string,
-        problemDescription: string,
-        vehicleMake: string,
-        vehicleModel: string,
-        vehicleYear: number,
-        vehicleId: number,
-        scheduleDate: Date,
-    }
-    const shortJobInformation: Ref<ShortJobInfo> = ({}) as Ref<ShortJobInfo>;
     const shortAppointmentInformation: Ref<ShortAppointmentInfo> = ref({
         customerId: 0,
         customerLastName: "",
@@ -58,7 +55,7 @@
             try{
                 fullDetails = await BackendService.getShortAppointmentInformation(prop.id);
 
-                
+                shortAppointmentInformation.value.appointmentId = fullDetails?.data.id;
                 shortAppointmentInformation.value.customerId = fullDetails?.data.customer.id;
                 shortAppointmentInformation.value.customerLastName = fullDetails?.data.customer.lastName;
                 shortAppointmentInformation.value.customerFirstName = fullDetails?.data.customer.firstName;
@@ -75,14 +72,17 @@
             }
             catch(err){
                 console.log(err);
-            }
-            
-            
+            }    
         }
         else if (props.blockType === 'JOBSTAGE'){
-            fullDetails = await BackendService.getShortJobStageInformation(prop.id);
+            try{
+                fullDetails = await BackendService.getShortJobStageInformation(prop.id);
 
-            // put the full details into the shortAppointmentInformation
+                
+            }
+            catch(err){
+                console.log(err);
+            }
         }
     })
 
@@ -96,11 +96,13 @@
             <div v-if="blockType === 'JOBSTAGE'">
             <div>THIS IS A JOBSTAGE</div>
             {{id}} {{blockType}}
+            <button>See All Jobs</button>
         </div>
         <div v-if="blockType === 'APPOINTMENT'">
-            <div>Appointment {{shortAppointmentInformation.customerFirstName}} 
+            <div>Appointment for {{shortAppointmentInformation.customerFirstName}} 
             {{shortAppointmentInformation.customerLastName}} (ID: {{shortAppointmentInformation.customerId}})</div>
             <div>Rest of details go here</div>
+            <button>See All Appointments</button>
         </div>
             <button @click="$emit('viewerModalClose')"></button>
         </div>
