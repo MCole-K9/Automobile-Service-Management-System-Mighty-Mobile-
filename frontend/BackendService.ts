@@ -436,5 +436,35 @@ export default class BackendService{
         }
     }
 
+    static async getShortAppointmentInformation(scheduleId: number){
+        try{
+            let res = await axios.get(URL + `/appointments/short/${scheduleId}`);
+            return res;
+        }
+        catch(err){
+            console.log(err);
+        }
+    }
+
+    static async getShortJobStageInformation(scheduleId: number){
+        try {
+            let res = await axios.get(URL + `/jobstage/short/${scheduleId}`);
+            return res;
+        }
+        catch(err){
+            console.log(err);
+        }
+    }
+
+    static async getFullJobInformation(jobNumber: number){
+        try{
+            let res = await axios.get(URL + `/jobs/fulljob/${jobNumber}`);
+            return res;
+        }
+        catch(err){
+            console.log(err);
+        }
+    }
+
 
 }
