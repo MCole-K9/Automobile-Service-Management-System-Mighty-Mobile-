@@ -84,7 +84,7 @@
 </template>
 <script lang="ts">
 import DashboardLayout from "../components/DashboardLayout.vue";
-import loadingAnimation from "@/components/loadingAnimation.vue";
+import loadingAnimation from "../components/LoadingAnimation.vue";
 import BackendService from '../../BackendService'
 import Request from "@/components/Request.vue";
 import AddVehicleComponent from "@/components/AddVehicleComponent.vue";
