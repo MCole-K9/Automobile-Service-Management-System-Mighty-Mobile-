@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { currentUserStore } from '@/stores/User';
-    import {ref} from 'vue';
+    import {ref, watch} from 'vue';
     import BackendService from '../../BackendService';
     import type {MinimumJobInfoItem, MinimumJobInfoList} from '../classlib/MinimalJobInfo';
     import type {Job} from '../classlib/Types';
@@ -38,7 +38,18 @@
     });
 
     const activeJobs = ref(jobs);
+    const optionSelectJob = ref();
     let selectedJob: Ref<Job> = ref({}) as Ref<Job>;
+
+    watch(optionSelectJob, async(optionselect)=>{
+        const jobId = optionSelectJob.value;
+
+        if (jobId !== ""){
+            const fullJobInformation = await BackendService.getFullJobInformation(jobId);
+            console.log(fullJobInformation);
+            selectedJob.value = fullJobInformation?.data;
+        }
+    })
 
     async function getFullJobInformation(option: number | ""){
         if (option !== ""){
@@ -64,7 +75,7 @@
                 </label>
                 <label class="input-group">
                     <span class="label-text bg-ourYellow">Job</span>
-                    <select @change="getFullJobInformation($options.selected.value)">
+                    <select v-model="optionSelectJob">
                         <option disabled value="" selected>Select a Job</option>
                         <option v-for="item in jobs.items"
                         :key="item.jobNumber" :value="item.jobNumber">
