@@ -85,6 +85,16 @@ export default class BackendService{
             
         }
     }
+    static async getJobRequests(userId: number) {
+
+        try{
+            const res = await axios.get(URL + `/user/${userId}/jobrequests`);
+            return res;
+
+        }catch(err){
+            
+        }
+    }
     
     static async getCustomers() {
 
@@ -458,7 +468,7 @@ export default class BackendService{
 
     static async getFullJobInformation(jobNumber: number){
         try{
-            let res = await axios.get(URL + `/jobs/fulljob/${jobNumber}`);
+            let res = await axios.get(URL + `/jobs/${jobNumber}/fulljob`);
             return res;
         }
         catch(err){

@@ -15,7 +15,7 @@ onMounted(async () => {
 
     if(currentUser.isCustomer){
 
-        const jobRes = await BackendService.getUpcomingJobs();
+        const jobRes = await BackendService.getJobRequests(currentUser.User.id);
         jobs.value = [...jobRes?.data]
     }else{
 

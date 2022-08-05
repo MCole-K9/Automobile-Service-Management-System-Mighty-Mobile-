@@ -189,6 +189,40 @@ export default class Routes{
 
            
         });
+        router.get("/user/:id/jobrequests", async (req:Request, res:Response)=>{
+
+            try{
+                console.log("User job requests");
+                const userId: number = Number.parseInt(req.params.id) ;
+
+                const jobs = await prisma.job.findMany({
+                    where: {
+                    
+                        vehicle: {
+                            ownerId: userId,
+                        },
+                        startDate: {
+                            gte: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())
+                        }
+                
+                        
+                    },
+                    include: {
+                        vehicle: true,
+                        assignedMechanic: true,
+                        createdBy: true
+                    }
+
+                })
+
+                res.status(200).send(jobs)
+            }catch(err){
+                console.log(err)
+                res.send(err)
+            }
+
+            
+        });
 
         router.route("/user/:id/appointmentbooking").post(async (req:Request, res:Response)=>{
 
@@ -377,13 +411,23 @@ export default class Routes{
 
         router.get("/jobs/upcoming", async (req:Request, res:Response)=>{
             const jobs = await prisma.job.findMany({
+                where: {
+                    startDate: {
+                        gte: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())
+                    }
+                },
                 include: {
                     vehicle: {
                         include: {
                             owner: true
                         }
                     },
-                    assignedMechanic: true
+                    assignedMechanic: true,
+
+
+                },
+                orderBy: {
+                    startDate: "desc"
                 }
             })
             //console.log(jobs)
@@ -616,6 +660,7 @@ export default class Routes{
                     },
 
                     select: {
+                        id: true,
                         streetAddress: true,
                         town: true,
                         parish: true,
@@ -709,11 +754,11 @@ export default class Routes{
             })
 
             // gets all of the information for a specific job. every stage, the vehicle, and the owner entirely
-            router.get('/jobs/fulljob/:jobnumber', async (req: Request, res: Response) => {
+            router.get('/jobs/:jobnumber/fulljob', async (req: Request, res: Response) => {
                 const jobId = parseInt(req.params.jobnumber);
 
                 try{
-                    const fullJobInformation = await prisma.job.findUnique({
+                    const fullJobInformation = await prisma.job.findUniqueOrThrow({
                         where: {
                             jobNumber: jobId
                         },

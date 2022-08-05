@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { currentUserStore } from '@/stores/User';
-    import {ref} from 'vue';
+    import {ref, watch} from 'vue';
     import BackendService from '../../BackendService';
     import type {MinimumJobInfoItem, MinimumJobInfoList} from '../classlib/MinimalJobInfo';
     import type {Job} from '../classlib/Types';
@@ -22,6 +22,8 @@
     let isVehicleInformationOpen: Ref<Boolean> = ref(false);
     let isJobInformationOpen: Ref<Boolean> = ref(false);
 
+
+    // Getting and populating the list of open jobs assigned to this user
     const dbJobs = await BackendService.getActiveJobsForMechanic(currentUser.User.id);
     const jobs: MinimumJobInfoList = {items: []};
 
@@ -35,16 +37,20 @@
         jobs.items.push(jobListItem);
     });
 
+    // filling job information based on the selection of the dropdown
     const activeJobs = ref(jobs);
+    const optionSelectJob = ref();
     let selectedJob: Ref<Job> = ref({}) as Ref<Job>;
 
-    async function getFullJobInformation(option: number | ""){
-        if (option !== ""){
-            const jobId: number = option;
-            const fullJobInformation = await BackendService.getJob(jobId);
+    watch(optionSelectJob, async(optionSelect)=>{
+        const jobId = optionSelect;
+
+        if (jobId !== ""){
+            const fullJobInformation = await BackendService.getFullJobInformation(jobId);
+            console.log(fullJobInformation);
             selectedJob.value = fullJobInformation?.data;
         }
-    }
+    })
 
 </script>
 
@@ -61,7 +67,7 @@
                 </label>
                 <label class="input-group">
                     <span class="label-text bg-ourYellow">Job</span>
-                    <select @change="getFullJobInformation($options.selected.value)">
+                    <select v-model="optionSelectJob">
                         <option disabled value="" selected>Select a Job</option>
                         <option v-for="item in jobs.items"
                         :key="item.jobNumber" :value="item.jobNumber">
@@ -72,26 +78,30 @@
             </label>
             
             <!--This should stay hidden until the user picks an active job-->
-            <div tabindex="0" class="collapse collapse-arrow">
+            <div tabindex="0" class="collapse collapse-arrow" v-if="selectedJob.jobNumber !== undefined">
                 <input type="checkbox" />
                 <div class="collapse-title">Job Information</div>
                 <div class="collapse-content">
-                    <div>Job Number</div>
-                    <div>Start Date</div>
-                    <div>Summary</div>
-                    <div>Total Cost</div>
-                    <div>Service Type</div>
+                    <div>Job Number: {{selectedJob.jobNumber}}</div>
+                    <div>Start Date: {{selectedJob.startDate}}</div>
+                    <div>Summary: {{selectedJob.summary}}</div>
+                    <div>Total Cost: {{selectedJob.totalCost}}</div>
+                    <div>Service Type: {{selectedJob.serviceType}}</div>
                     <div>
-                        <div>Address</div>
-                        <div>Street</div>
-                        <div>Town</div>
-                        <div>Parish</div>
+                        <div>Address: </div>
+                        <div>{{selectedJob.streetAddress}}</div>
+                        <div>{{selectedJob.town}}</div>
+                        <div>{{selectedJob.parish}}</div>
                     </div>
                 </div>
             </div>
-            
+
+            <div>
+
+            </div>
+
             <!--This should also stay hidden-->
-            <div tabindex="0" class="collapse collapse-arrow" >
+            <div tabindex="0" class="collapse collapse-arrow" v-if="selectedJob.jobNumber !== undefined">
                 <input type="checkbox" />
                 <div class="collapse-title">Vehicle Information</div>
                 <div class="collapse-content">
@@ -101,7 +111,7 @@
             </div>
             
             <!--This should maybe also be hidden, not sure yet-->
-            <div>
+            <div v-if="selectedJob.jobNumber !== undefined">
                 <div>Job-Stage Information</div>
                 <label class="form-control">
                     <label class="label">Description:</label>
