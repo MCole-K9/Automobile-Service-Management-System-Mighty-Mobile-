@@ -2,7 +2,7 @@
     import BackendService from '../../BackendService';
     import {ref, watch, watchEffect} from 'vue';   
     import type {Ref} from 'vue';
-    import type {ShortJobInfo, ShortAppointmentInfo} from '../classlib/shortScheduleInfo';
+    import type {ShortJobInfo, ShortAppointmentInfo} from '../classlib/ShortScheduleInfo';
 
     const props = defineProps<{
         open: boolean,
