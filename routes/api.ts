@@ -755,11 +755,11 @@ export default class Routes{
             })
 
             // gets all of the information for a specific job. every stage, the vehicle, and the owner entirely
-            router.get('/jobs/fulljob/:jobnumber', async (req: Request, res: Response) => {
+            router.get('/jobs/:jobnumber/fulljob', async (req: Request, res: Response) => {
                 const jobId = parseInt(req.params.jobnumber);
 
                 try{
-                    const fullJobInformation = await prisma.job.findUnique({
+                    const fullJobInformation = await prisma.job.findUniqueOrThrow({
                         where: {
                             jobNumber: jobId
                         },

@@ -468,7 +468,7 @@ export default class BackendService{
 
     static async getFullJobInformation(jobNumber: number){
         try{
-            let res = await axios.get(URL + `/jobs/fulljob/${jobNumber}`);
+            let res = await axios.get(URL + `/jobs/${jobNumber}/fulljob`);
             return res;
         }
         catch(err){

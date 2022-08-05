@@ -22,6 +22,8 @@
     let isVehicleInformationOpen: Ref<Boolean> = ref(false);
     let isJobInformationOpen: Ref<Boolean> = ref(false);
 
+
+    // Getting and populating the list of open jobs assigned to this user
     const dbJobs = await BackendService.getActiveJobsForMechanic(currentUser.User.id);
     const jobs: MinimumJobInfoList = {items: []};
 
@@ -41,8 +43,9 @@
     async function getFullJobInformation(option: number | ""){
         if (option !== ""){
             const jobId: number = option;
-            const fullJobInformation = await BackendService.getJob(jobId);
-            selectedJob.value = fullJobInformation?.data;
+            const fullJobInformation = await BackendService.getFullJobInformation(jobId);
+            console.log(fullJobInformation);
+            selectedJob.value = fullJobInformation?.data[0];
         }
     }
 
@@ -76,19 +79,24 @@
                 <input type="checkbox" />
                 <div class="collapse-title">Job Information</div>
                 <div class="collapse-content">
-                    <div>Job Number</div>
-                    <div>Start Date</div>
-                    <div>Summary</div>
-                    <div>Total Cost</div>
-                    <div>Service Type</div>
+                    <div>Job Number: {{selectedJob.jobNumber}}</div>
+                    <div>Start Date: {{selectedJob.startDate}}</div>
+                    <div>Summary: {{selectedJob.summary}}</div>
+                    <div>Total Cost: {{selectedJob.totalCost}}</div>
+                    <div>Service Type: {{selectedJob.serviceType}}</div>
                     <div>
-                        <div>Address</div>
-                        <div>Street</div>
-                        <div>Town</div>
-                        <div>Parish</div>
+                        <div>Address: </div>
+                        <div>{{selectedJob.streetAddress}}</div>
+                        <div>{{selectedJob.town}}</div>
+                        <div>{{selectedJob.parish}}</div>
                     </div>
                 </div>
             </div>
+
+            <div>
+
+            </div>
+
             
             <!--This should also stay hidden-->
             <div tabindex="0" class="collapse collapse-arrow" >
