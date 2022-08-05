@@ -6,15 +6,20 @@
     import ConfirmedJobs from "../components/ConfirmedJobs.vue"
     import type {Job} from "../classlib/Types";
     import BackendService from '../../BackendService';
+    import {currentUserStore} from "@/stores/User";
 
-    let activeTab = ref("Jobs")
+    const currentUser = currentUserStore();
+
+    let activeTab = ref("Jobs");
+
+    let jobs = ref<Job[]>([]);
 
     function changeActiveTab(tab: string){
 
         activeTab.value = tab;
     }
 
-    let jobs = ref<Job[]>([]);
+    
 
     onMounted(async ()=>{
 
@@ -45,7 +50,7 @@
                 <component  :jobs="jobs" :is="activeTab"/>
             </div>  
         </section>
-        <router-link to="/dashboard/createjob" class="btn bg-ourYellow flex items-center rounded-lg w-fit h-12 fixed bottom-4 right-4">
+        <router-link v-if="currentUser.isManager || currentUser.isMechanic" to="/dashboard/createjob" class="btn bg-ourYellow flex items-center rounded-lg w-fit h-12 fixed bottom-4 right-4">
             Add Job
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
         </router-link>

@@ -1,13 +1,9 @@
 <script setup lang="ts">
 import { defineComponent } from '@vue/runtime-core';
 import AppBar from './AppBar.vue';
+import {currentUserStore} from "@/stores/User";
 
-defineComponent({
-  name: "DashboardLayout",
-  components: {
-    AppBar
-  }
-})
+const currentUser = currentUserStore();
 </script>
 
 <template>
@@ -31,10 +27,10 @@ defineComponent({
       <!-- Sidebar content here -->
       <li><router-link to="/dashboard">Dashboard</router-link></li>
       <li><router-link to="/dashboard/requests">Requests</router-link></li>
-      <li><router-link to="/dashboard/jobboard">Job Board</router-link></li>
-      <li><router-link to="/yourschedule">Schedule</router-link></li>
-      <li><router-link to="/dashboard/vehicles">Vehicles</router-link></li>
-      <li><router-link to="/dashboard/workhistory">Work History</router-link></li>
+      <li v-if="!currentUser.isCustomer"><router-link to="/dashboard/jobboard">Job Board</router-link></li>
+      <li v-if="!currentUser.isCustomer"><router-link to="/yourschedule">Schedule</router-link></li>
+      <li v-if="currentUser.isCustomer"><router-link to="/dashboard/vehicles">Vehicles</router-link></li>
+      <li v-if="!currentUser.isCustomer"><router-link to="/dashboard/workhistory">Work History</router-link></li>
     </ul>
   
   </div>
@@ -50,5 +46,10 @@ defineComponent({
 
 </style>
 <script lang="ts">
-export default {};
+  export default {
+    name: "DashboardLayout",
+    components: {
+      AppBar
+    }
+  };
 </script>
