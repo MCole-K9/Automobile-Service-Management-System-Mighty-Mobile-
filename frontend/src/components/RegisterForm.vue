@@ -28,9 +28,9 @@ let passwordIsMatch = computed(()=>{
 })
 
 
-function handleInputChange(event: any){
+function handleInputChange(event: Event){
 
-    const {name, value} = event.target
+    const {name, value} = event.target as HTMLInputElement;
     let attrName: string = name;
     //Store
     newUser.changeAttr(attrName, value)

@@ -15,8 +15,8 @@ let isCustomer = ref<boolean>(currentUser.hasRole(UserRole.Customer));
 
 let editableAddress = ref(false);
 
-function changeAddress(event: any) {
-  const { name, value } = event.target;
+function changeAddress(event:Event) {
+  const { name, value } = event.target as HTMLInputElement ;
   emits("addressChange", name, value);
 }
 </script>
