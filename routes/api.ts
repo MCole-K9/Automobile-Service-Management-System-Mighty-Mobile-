@@ -126,7 +126,6 @@ export default class Routes{
         router.route("/user/:id/vehicle").get(async (req:Request, res:Response)=>{
 
             //Get User Vehicles 
-            console.log(req.params.id)
             let id = Number(req.params.id)
             const vehicles = await prisma.vehicle.findMany({
                 where:{

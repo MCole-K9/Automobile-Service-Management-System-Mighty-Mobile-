@@ -15,11 +15,21 @@
                     <input class="input w-full input-bordered" type="number" id="vyear" v-model="vehicle.year">
                 </div>
             </div>
+            <div class="mx-auto flex flex-col space-y-4 w-full min-w-52">
+                <label class="text-center w-full  p-2 bg-ourGrey shadow-lg" for="vplate">License Plate</label>
+                <input class="input w-full input-bordered " type="text" v-model="vehicle.licensePlate" id="vplate">    
+            </div>
+             <div class="mx-auto flex flex-col space-y-4 w-full min-w-52">
+                <label class="text-center w-full  p-2 bg-ourGrey shadow-lg" for="vimage">Upload Image</label>
+                <input class="input w-full input-bordered " type="file" @change="uploadImage" id="vimage">
+            </div>
         </div>
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
+
 // import type { Vehicle } from "@/classlib/Types";
+
 export default defineComponent({
     name:'AddVehicle',
     props:['vehicle'],
@@ -29,6 +39,21 @@ export default defineComponent({
     },
     components:{},
     methods:{
+        uploadImage(e: any){
+            let reader = new FileReader()
+            reader.addEventListener("load", async (e)=>{
+                console.log(e);
+                // console.log(reader.result);
+                let red = this.getBase64StringFromDataURL(e.target?.result)
+                console.log(red);
+                
+                
+            })
+            reader.readAsDataURL(e.target.files[0]);
+        },
+        getBase64StringFromDataURL(dataURL:any){
+            return dataURL.replace('data:', '').replace(/^.+,/, '');
+        }
     },
     created(){
         
