@@ -37,12 +37,13 @@
         jobs.items.push(jobListItem);
     });
 
+    // filling job information based on the selection of the dropdown
     const activeJobs = ref(jobs);
     const optionSelectJob = ref();
     let selectedJob: Ref<Job> = ref({}) as Ref<Job>;
 
-    watch(optionSelectJob, async(optionselect)=>{
-        const jobId = optionSelectJob.value;
+    watch(optionSelectJob, async(optionSelect)=>{
+        const jobId = optionSelect;
 
         if (jobId !== ""){
             const fullJobInformation = await BackendService.getFullJobInformation(jobId);
@@ -50,15 +51,6 @@
             selectedJob.value = fullJobInformation?.data;
         }
     })
-
-    async function getFullJobInformation(option: number | ""){
-        if (option !== ""){
-            const jobId: number = option;
-            const fullJobInformation = await BackendService.getFullJobInformation(jobId);
-            console.log(fullJobInformation);
-            selectedJob.value = fullJobInformation?.data[0];
-        }
-    }
 
 </script>
 
@@ -86,7 +78,7 @@
             </label>
             
             <!--This should stay hidden until the user picks an active job-->
-            <div tabindex="0" class="collapse collapse-arrow">
+            <div tabindex="0" class="collapse collapse-arrow" v-if="selectedJob.jobNumber !== undefined">
                 <input type="checkbox" />
                 <div class="collapse-title">Job Information</div>
                 <div class="collapse-content">
@@ -108,9 +100,8 @@
 
             </div>
 
-            
             <!--This should also stay hidden-->
-            <div tabindex="0" class="collapse collapse-arrow" >
+            <div tabindex="0" class="collapse collapse-arrow" v-if="selectedJob.jobNumber !== undefined">
                 <input type="checkbox" />
                 <div class="collapse-title">Vehicle Information</div>
                 <div class="collapse-content">
@@ -120,7 +111,7 @@
             </div>
             
             <!--This should maybe also be hidden, not sure yet-->
-            <div>
+            <div v-if="selectedJob.jobNumber !== undefined">
                 <div>Job-Stage Information</div>
                 <label class="form-control">
                     <label class="label">Description:</label>
