@@ -190,6 +190,40 @@ export default class Routes{
 
            
         });
+        router.get("/user/:id/jobrequests", async (req:Request, res:Response)=>{
+
+            try{
+                console.log("User job requests");
+                const userId: number = Number.parseInt(req.params.id) ;
+
+                const jobs = await prisma.job.findMany({
+                    where: {
+                    
+                        vehicle: {
+                            ownerId: userId,
+                        },
+                        startDate: {
+                            gte: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())
+                        }
+                
+                        
+                    },
+                    include: {
+                        vehicle: true,
+                        assignedMechanic: true,
+                        createdBy: true
+                    }
+
+                })
+
+                res.status(200).send(jobs)
+            }catch(err){
+                console.log(err)
+                res.send(err)
+            }
+
+            
+        });
 
         router.route("/user/:id/appointmentbooking").post(async (req:Request, res:Response)=>{
 
