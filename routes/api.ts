@@ -378,13 +378,23 @@ export default class Routes{
 
         router.get("/jobs/upcoming", async (req:Request, res:Response)=>{
             const jobs = await prisma.job.findMany({
+                where: {
+                    startDate: {
+                        gte: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())
+                    }
+                },
                 include: {
                     vehicle: {
                         include: {
                             owner: true
                         }
                     },
-                    assignedMechanic: true
+                    assignedMechanic: true,
+
+
+                },
+                orderBy: {
+                    startDate: "desc"
                 }
             })
             //console.log(jobs)
