@@ -3,7 +3,7 @@
     import {ref, watch} from 'vue';
     import BackendService from '../../BackendService';
     import type {MinimumJobInfoItem, MinimumJobInfoList} from '../classlib/MinimalJobInfo';
-    import type {Job} from '../classlib/Types';
+    import type {FullJobInformation} from '../classlib/PrismaDerivedTypes';
     import type {Ref} from 'vue';
 
     const props = defineProps<{
@@ -40,7 +40,7 @@
     // filling job information based on the selection of the dropdown
     const activeJobs = ref(jobs);
     const optionSelectJob = ref();
-    let selectedJob: Ref<Job> = ref({}) as Ref<Job>;
+    let selectedJob: Ref<FullJobInformation> = ref({}) as Ref<FullJobInformation>;
 
     watch(optionSelectJob, async(optionSelect)=>{
         const jobId = optionSelect;
