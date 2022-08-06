@@ -3,7 +3,7 @@
     import {ref, watch} from 'vue';
     import BackendService from '../../BackendService';
     import type {MinimumJobInfoItem, MinimumJobInfoList} from '../classlib/MinimalJobInfo';
-    import type {FullJobInformation} from '../classlib/PrismaDerivedTypes';
+    import type {FullJobInformation, JobStageWithSchedule} from '../classlib/PrismaDerivedTypes';
     import type {Ref} from 'vue';
 
     const props = defineProps<{
@@ -21,6 +21,14 @@
 
     let isVehicleInformationOpen: Ref<Boolean> = ref(false);
     let isJobInformationOpen: Ref<Boolean> = ref(false);
+
+    const newJobStage: Ref<JobStageWithSchedule> = ref({}) as Ref<JobStageWithSchedule>;
+    if (newJobStage.value.scheduledItem != undefined){
+        newJobStage!.value.scheduledItem.date = new Date(Date.now());
+        newJobStage.value.scheduledItem.date.setMonth(props.month);
+        newJobStage.value.scheduledItem.date.setDate(props.day);
+        newJobStage.value.scheduledItem.date.setHours(props.time);
+    }
 
 
     // Getting and populating the list of open jobs assigned to this user
@@ -49,6 +57,8 @@
             const fullJobInformation = await BackendService.getFullJobInformation(jobId);
             console.log(fullJobInformation);
             selectedJob.value = fullJobInformation?.data;
+
+            newJobStage.value.jobNumber = selectedJob.value.jobNumber;
         }
     })
 
@@ -59,7 +69,7 @@
         :class="{'modal-open': open}">
         <input type="checkbox" @change="$emit('schedulerModalClose')" id="close-modal-test"/>
         <div class="modal-box">
-            <div>Schedule New Job-Stage</div>
+            <div>Schedule New Job-Stage for {{newJobStage.scheduledItem?.date.toDateString()}}</div>
             
             <label class="form-control">
                 <label for="close-modal-test" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
@@ -125,12 +135,12 @@
                 <div>New Stage</div>
                 <label class="form-control">
                     <label class="label">Description:</label>
-                    <input type="textarea" class="flex justify-between text-xs px-2"/>
+                    <input v-model="newJobStage.description" type="textarea" class="flex justify-between text-xs px-2"/>
                 </label>
 
                 <label class="form-control">
                     <label class="label">Duration (Hours):</label>
-                    <input type="range" min="1" max="3" value=1 steps="1" class="range"/>
+                    <input v-model="newJobStage.duration" type="range" min="1" max="3" steps="1" class="range"/>
                     <div class="w-full flex justify-between text-xs px-2">
                         <span>1</span>
                         <span>2</span>
