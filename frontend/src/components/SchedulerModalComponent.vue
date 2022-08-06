@@ -58,21 +58,26 @@
             console.log(fullJobInformation);
             selectedJob.value = fullJobInformation?.data;
 
-            newJobStage.value.jobNumber = selectedJob.value.jobNumber;
+            // newJobStage.value.jobNumber = selectedJob.value?.jobNumber;
         }
-    })
+    });
+
+    // method to validate new Job stage information
+    function validateJobStage(){
+        
+    }
 
 </script>
 
 <template>
     <div class="modal" 
         :class="{'modal-open': open}">
-        <input type="checkbox" @change="$emit('schedulerModalClose')" id="close-modal-test"/>
+        <!-- <input type="checkbox" @change="$emit('schedulerModalClose')" id="close-modal-test"/> -->
         <div class="modal-box">
             <div>Schedule New Job-Stage for {{newJobStage.scheduledItem?.date.toDateString()}}</div>
             
             <label class="form-control">
-                <label for="close-modal-test" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+                <label for="close-modal-test" @click.stop="$emit('schedulerModalClose')" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
                 <label class="label">
                     <span>Select the Job:</span>
                 </label>

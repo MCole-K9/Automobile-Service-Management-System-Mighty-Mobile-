@@ -39,6 +39,17 @@
         emit('openViewer', id, blocktype, day);
     }
 
+    function checkForScheduleConflict(duration: number, time: number, day: number){
+        let isClash: boolean = false;
+        
+        for (let i: number = time; i<=time+duration; i++){
+            // need to actually figure out how to access the specific hours i need
+            if (monthInformation.workingDays[day-1] !== null){
+                isClash = true;
+            }
+        }
+    }
+
 </script>
 
 <template>
