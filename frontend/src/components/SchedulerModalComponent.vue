@@ -57,11 +57,12 @@
 <template>
     <div class="modal" 
         :class="{'modal-open': open}">
-
+        <input type="checkbox" @change="$emit('schedulerModalClose')" id="close-modal-test"/>
         <div class="modal-box">
             <div>Schedule New Job-Stage</div>
             
             <label class="form-control">
+                <label for="close-modal-test" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
                 <label class="label">
                     <span>Select the Job:</span>
                 </label>
@@ -112,7 +113,9 @@
                     <input type="checkbox" />
                     <div class="collapse-title">Stage {{stage.stageNumber}}</div>
                     <div class="collapse-content">
-                        <div>{{stage.stageNumber}}</div>
+                        <div>Description: {{stage.description}}</div>
+                        <div>Duration: {{stage.duration}}</div>
+                        <div>Date: </div>
                     </div>
                 </div>
             </div>
@@ -127,22 +130,21 @@
 
                 <label class="form-control">
                     <label class="label">Duration (Hours):</label>
-                    <input type="range" min="0" max="3" value=1 steps="1" class="range"/>
+                    <input type="range" min="1" max="3" value=1 steps="1" class="range"/>
                     <div class="w-full flex justify-between text-xs px-2">
-                        <span>0</span>
                         <span>1</span>
                         <span>2</span>
                         <span>3</span>
                     </div>
+                    <label>ERROR TEXT</label>
                 </label>
-
                 <!-- <button class="btn">Add images</button> -->
                 <div></div>
             </div>
 
             <button 
             class="btn"
-            @click="$emit('schedulerModalClose')">Close</button>
+            @click="">Confirm New Job Stage</button>
 
         </div>
     </div>
