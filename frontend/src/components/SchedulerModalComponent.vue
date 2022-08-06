@@ -97,10 +97,6 @@
                 </div>
             </div>
 
-            <div>
-
-            </div>
-
             <!--This should also stay hidden-->
             <div tabindex="0" class="collapse collapse-arrow" v-if="selectedJob.jobNumber !== undefined">
                 <input type="checkbox" />
@@ -111,9 +107,19 @@
                 </div>
             </div>
             
+            <div v-if="selectedJob !== undefined">
+                <div tabindex="0" class="collapse collapse-arrow" v-for="stage in selectedJob.stages">
+                    <input type="checkbox" />
+                    <div class="collapse-title">Stage {{stage.stageNumber}}</div>
+                    <div class="collapse-content">
+                        <div>{{stage.stageNumber}}</div>
+                    </div>
+                </div>
+            </div>
+
             <!--This should maybe also be hidden, not sure yet-->
             <div v-if="selectedJob.jobNumber !== undefined">
-                <div>Job-Stage Information</div>
+                <div>New Stage</div>
                 <label class="form-control">
                     <label class="label">Description:</label>
                     <input type="textarea" class="flex justify-between text-xs px-2"/>
@@ -130,7 +136,7 @@
                     </div>
                 </label>
 
-                <button class="btn">Add images</button>
+                <!-- <button class="btn">Add images</button> -->
                 <div></div>
             </div>
 
