@@ -2,6 +2,7 @@ import { Response, Request, Router} from "express";
 import { Job, JobPart, PrismaClient } from "@prisma/client"; //Db Connection
 import bcrypt, {genSalt, hash} from "bcrypt"
 import { transformDocument } from "@prisma/client/runtime";
+import {JobStageWithSchedule} from "../frontend/src/classlib/PrismaDerivedTypes"
 
 
 
@@ -645,8 +646,32 @@ export default class Routes{
         })
 
         // posts a JobStage to the database
-        router.post('/user/:id/jobstage', async (req: Request, res: Response)=>{
+        router.post('/user/jobstage/create', async (req: Request, res: Response)=>{
 
+            try{
+                const newJobStage = prisma.jobStage.create({
+                    data: {
+                        description: req.body.jobstage.description as string,
+                        duration: parseInt(req.body.jobstage.duration),
+                        stageNumber: parseInt(req.body.jobstage.stageNumber),
+                        job: {
+                            connect: {
+                                jobNumber: req.body.jobstage.jobNumber
+                            }
+                        },
+                        scheduledItem: {
+                            create: {
+                                date: req.body.jobstage.schedule.date as Date
+                            }
+                        }
+                    }
+                });
+
+                res.status(200).send(newJobStage);
+            }
+            catch(err){
+                console.log(err);
+            }
         })
 
         // gets the minimum necessary appointment corresponding to a schedule item's id

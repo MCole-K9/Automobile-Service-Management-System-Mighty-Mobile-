@@ -2,6 +2,7 @@ import type { User, Appointment, Vehicle, Job, JobStage } from "./src/classlib/T
 import axios from "axios";
 import  type { MonthBlock, DayBlock } from "./src/classlib/MonthlySchedule";
 import {HourDataBlock} from "./src/classlib/MonthlySchedule";
+import type { JobStageWithSchedule } from "@/classlib/PrismaDerivedTypes";
 
 
 
@@ -148,9 +149,9 @@ export default class BackendService{
         try {
             const schedule = await axios.get(URL + `/user/${userId}/schedule/${Date.now()}-${selectedMonth}`);
             
-            schedule.data.forEach(element =>{
-                console.log(element.date);
-            })
+            // schedule.data.forEach(element =>{
+            //     console.log(element.date);
+            // })
 
             // generating the amount of days in the month for calculations later
             let daysInMonth: number = 0;
@@ -437,9 +438,11 @@ export default class BackendService{
         }
     }
 
-    static async writeJobStageToDatabase(jobStage: JobStage){
+    static async writeJobStageToDatabase(jobStage: JobStageWithSchedule){
         try{
+            const res = await axios.post(URL + 'user/jobstage/create', {jobStage});
 
+            return res;
         }
         catch(err){
             console.log(err);
