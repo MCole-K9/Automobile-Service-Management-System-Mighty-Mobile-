@@ -93,6 +93,7 @@
                         <div>{{selectedJob.town}}</div>
                         <div>{{selectedJob.parish}}</div>
                     </div>
+                    <div>Client: {{selectedJob.vehicle.owner.firstName}} {{selectedJob.vehicle.owner.lastName}} (ID: {{selectedJob.vehicle.owner.id}})</div>
                 </div>
             </div>
 
@@ -105,7 +106,7 @@
                 <input type="checkbox" />
                 <div class="collapse-title">Vehicle Information</div>
                 <div class="collapse-content">
-                    <div>Whatever the Vehicle information is</div>
+                    <div>{{selectedJob.vehicle.year}} {{selectedJob.vehicle.make}} {{selectedJob.vehicle.model}} (License Plate: {{selectedJob.vehicle.licensePlate}})</div>
                     <div>Required Parts</div>
                 </div>
             </div>
