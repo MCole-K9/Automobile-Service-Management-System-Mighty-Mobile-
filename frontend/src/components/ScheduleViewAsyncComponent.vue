@@ -39,13 +39,31 @@
         emit('openViewer', id, blocktype, day);
     }
 
-    function checkForScheduleConflict(duration: number, time: number, day: number){
+    function checkForScheduleConflict(duration: number, timeTarget: number, dayTarget: number){
         let isClash: boolean = false;
+
+        let dayIndexPosition: number = 0;
+        let timeIndexPosition: number = 0;
+
+        // Can't know the index position of a given day ahead of time, so forEach for its position
+        schedule.value.workingDays.forEach((workingDay, index) => {
+            if (workingDay.day === dayTarget){
+                dayIndexPosition = index;
+            }
+        });
+
+        // Can't know how many blocks are in a given day, so need to get the index of this specific time
+        schedule.value.workingDays[dayIndexPosition].hourBlocks.forEach((hourBlock, index) => {
+            if (hourBlock.time === timeTarget){
+                timeIndexPosition = index;
+            }
+        });
         
-        for (let i: number = time; i<=time+duration; i++){
-            // need to actually figure out how to access the specific hours i need
-            if (monthInformation.workingDays[day-1] !== null){
+        for (let i: number = timeIndexPosition; i<=timeIndexPosition+duration; i++){
+
+            if (schedule.value.workingDays[dayIndexPosition].hourBlocks[timeIndexPosition].id !== null){
                 isClash = true;
+                break;
             }
         }
     }
