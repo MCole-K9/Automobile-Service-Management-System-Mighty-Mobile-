@@ -1,7 +1,8 @@
 <script setup lang="ts">
-
+    import { useRouter } from "vue-router";
     import {currentUserStore} from "../stores/User"
 
+    const router = useRouter();
 
     const currentUser = currentUserStore();    
     const props = defineProps<{
@@ -13,7 +14,7 @@
 
         currentUser.$reset();
         //Navigate to Home
-       // await router.push({path: "/"})
+         router.push({path: "/"})
 
     }
 
@@ -37,7 +38,6 @@
             <router-link v-else to="/">Home</router-link>
           </li>
           <li><a>Profile</a></li>
-          <li><a>Settings</a></li>
           <li><a @click="logout">Logout</a></li>
         </ul>
       </div>

@@ -4,8 +4,9 @@
     import {currentUserStore, newUserStore} from "@/stores/User"
     import BackendService from "../../BackendService.js";
     import RegisterForm from "@/components/RegisterForm.vue";
-import router from "@/router/index.js";
+    import { useRouter } from "vue-router";
     
+    const router = useRouter()
     const newUser = newUserStore();
     const currentUser = currentUserStore();
 
@@ -54,8 +55,7 @@ import router from "@/router/index.js";
             
             const res = await bookAppointment(userId)
             //Route to login
-            router.push({path: "/login"}) // Not changing right away
-
+            router.push({path: "/login"});
         }catch(err){
 
             console.log({error:err, source: "onRegister Function in AppointmentBooking"});

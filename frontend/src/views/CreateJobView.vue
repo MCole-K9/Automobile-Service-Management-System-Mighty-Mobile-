@@ -1,72 +1,77 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-import DashboardLayout from '@/components/DashboardLayout.vue';
-import BackendService from "../../BackendService";
-import type { Job, User, Vehicle, JobPart } from '@/classlib/Types';
-import { currentUserStore } from "@/stores/User";
+    import { onMounted, ref } from "vue";
+    import DashboardLayout from '@/components/DashboardLayout.vue';
+    import BackendService from "../../BackendService";
+    import type { Job, User, Vehicle, JobPart } from '@/classlib/Types';
+    import { currentUserStore } from "@/stores/User";
+    import { useRouter } from "vue-router";
 
-let currentUser = currentUserStore();
-let customers = ref<User[]>([]);
-let customer = ref<User>({
-    id: 0,
-    email: "",
-    firstName: "",
-    lastName: ""
-});
+    const router = useRouter()
+    let currentUser = currentUserStore();
+    let customers = ref<User[]>([]);
+    let customer = ref<User>({
+        id: 0,
+        email: "",
+        firstName: "",
+        lastName: ""
+    });
 
-let customerVehicle = ref<Vehicle>()
+    let customerVehicle = ref<Vehicle>()
 
-let job = ref<Job>({
-    jobNumber: 0,
-    endDate: new Date(),
-    serviceFee: 0,
-    serviceType: "",
-    startDate: new Date(),
-    summary: "",
-    vehicleId: customerVehicle.value?.id as number,
-    requiredParts: []
+    let job = ref<Job>({
+        jobNumber: 0,
+        endDate: new Date(),
+        serviceFee: 0,
+        serviceType: "",
+        startDate: new Date(),
+        summary: "",
+        vehicleId: customerVehicle.value?.id as number,
+        requiredParts: []
 
-});
+    });
 
-let jobPart = ref<JobPart>({
-    name: "",
-    price: 0,
-})
-
-function addPart() {
-
-    job.value.requiredParts?.push({ ...jobPart.value }); // solves the pushing the reference of jobPart object issue
-
-    jobPart.value.name = "";
-    jobPart.value.price = 0;
-    console.log(job.value.requiredParts)
-
-}
-
-function removePart(position: number) {
-    job.value.requiredParts = job.value.requiredParts?.filter((part, index) => {
-        return index != position;
+    let jobPart = ref<JobPart>({
+        name: "",
+        price: 0,
     })
-}
 
-async function addJob() {
-    //Do checks before doing these(Validation)
-    job.value.createdById = currentUser.User.id;
-    job.value.vehicleId = customerVehicle.value?.id as number;
+    function addPart() {
 
-    const res = await BackendService.createJob(job.value);
-    console.log(res)
+        job.value.requiredParts?.push({ ...jobPart.value }); // solves the pushing the reference of jobPart object issue
+
+        jobPart.value.name = "";
+        jobPart.value.price = 0;
+        console.log(job.value.requiredParts)
+
+    }
+
+    function removePart(position: number) {
+        job.value.requiredParts = job.value.requiredParts?.filter((part, index) => {
+            return index != position;
+        })
+    }
+
+    async function addJob() {
+        //Do checks before doing these(Validation)
+        job.value.createdById = currentUser.User.id;
+        job.value.vehicleId = customerVehicle.value?.id as number;
+
+        const res = await BackendService.createJob(job.value);
+        
+        if (res?.status && res?.status < 300){
+            router.push({name: "jobboard"});
+        }
 
 
 
-}
+    }
 
-onMounted(async () => {
-    const res = await BackendService.getCustomers()
-    customers.value = [...res?.data]
+    onMounted(async () => {
+        const res = await BackendService.getCustomers()
+        customers.value = [...res?.data]
 
-    console.log()
-})
+        console.log()
+    })
 </script>
 
 

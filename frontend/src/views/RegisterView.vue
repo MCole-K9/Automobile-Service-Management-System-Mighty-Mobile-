@@ -1,21 +1,24 @@
 <script setup lang="ts">
-import NavBar from '@/components/NavBar.vue';
-import RegisterForm from '@/components/RegisterForm.vue';
-import { defineComponent} from 'vue';
+  import NavBar from '@/components/NavBar.vue';
+  import RegisterForm from '@/components/RegisterForm.vue';
+  import { defineComponent} from 'vue';
+  import {useRouter} from "vue-router"
 
-defineComponent({
-  name: "RegisterView",
-    components:{
-      NavBar,
-      RegisterForm
-    }
-    
-})
+  const router = useRouter();
+
+  defineComponent({
+    name: "RegisterView",
+      components:{
+        NavBar,
+        RegisterForm
+      }
+      
+  })
 
 
-function onRegister(){
-
-}
+  function onRegister(){
+    router.push({path: "/login"})
+  }
 
 </script>
 
