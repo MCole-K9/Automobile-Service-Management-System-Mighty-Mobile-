@@ -65,6 +65,17 @@ export default class BackendService{
         }
     }
 
+    static async getAppointment(appointmentId: number){
+        try{
+            const res = await axios.get(URL + `/appointment/${appointmentId}`);
+            return res;
+
+        }catch(err){
+
+        }
+    }
+
+
     static async getUpcomingJobs() {
 
         try{

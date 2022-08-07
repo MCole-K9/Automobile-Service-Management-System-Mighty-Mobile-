@@ -93,6 +93,12 @@ const router = createRouter({
       name: "euAppointmentBooking",
       meta: {auth: true},
       component: ()=> import("@/views/EUAppointmentBookingView.vue")
+    },
+    {
+      path: "/dashboard/appointment/:id",
+      name: "appointmentview",
+      meta: {auth: true},
+      component: ()=> import("@/views/AppointmentView.vue")
     }
   ]
 })

@@ -298,6 +298,31 @@ export default class Routes{
             res.send(appointments);
         });
 
+        router.route("/appointment/:id").get(async (req:Request, res:Response)=>{
+            try{
+
+                const apptId: number = parseInt(req.params.id);
+
+                const appointment = await prisma.appointment.findUniqueOrThrow({
+                    where: {
+                        id: apptId
+                    },
+                    include: {
+                        assignedMech: true,
+                        customer: true,
+                        vehicle: true,
+                    }
+                })
+                console.log(appointment)
+                res.send(appointment);
+
+            }catch(err){
+                console.log(err)
+            }
+        }).put(async (req:Request, res:Response)=>{
+
+        });
+
         router.route("/jobs").get(async (req:Request, res:Response)=>{
             //Code Here
         }).post(async (req:Request, res:Response)=>{
