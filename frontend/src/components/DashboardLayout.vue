@@ -31,6 +31,7 @@ const currentUser = currentUserStore();
       <li v-if="!currentUser.isCustomer"><router-link to="/yourschedule">Schedule</router-link></li>
       <li v-if="currentUser.isCustomer"><router-link to="/dashboard/vehicles">Vehicles</router-link></li>
       <li v-if="!currentUser.isCustomer"><router-link to="/dashboard/workhistory">Work History</router-link></li>
+      <li v-if="!currentUser.isCustomer"><router-link to="/dashboard/manageusers">Manage Users</router-link></li>
     </ul>
   
   </div>

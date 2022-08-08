@@ -99,6 +99,12 @@ const router = createRouter({
       name: "appointmentview",
       meta: {auth: true},
       component: ()=> import("@/views/AppointmentView.vue")
+    },
+    {
+      path: "/dashboard/manageusers",
+      name: "manageusers",
+      meta: {auth: true},
+      component: ()=> import("@/views/ManageUserView.vue")
     }
   ]
 })
