@@ -44,8 +44,8 @@ export default defineComponent({
             reader.addEventListener("load", async (e)=>{
                 console.log(e);
                 // console.log(reader.result);
-                let red = this.getBase64StringFromDataURL(e.target?.result)
-                console.log(red);
+                let base64string:string = this.getBase64StringFromDataURL(e.target?.result)
+                this.$emit('imageUpload',base64string)
                 
                 
             })
