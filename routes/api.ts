@@ -28,6 +28,16 @@ export default class Routes{
             res.send("API Call");
         });
 
+        router.route("/users").get(async (req:Request, res:Response)=>{
+
+            const users = await prisma.user.findMany({
+                include: {
+                    roles: true
+                }
+            });
+            res.status(200).send(users);
+        })
+
         router.post("/user/register", (async (req:Request, res:Response)=>{
 
             try{

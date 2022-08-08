@@ -38,6 +38,17 @@ export default class BackendService{
         }
         
     }
+    static async getUsers(){
+        try{
+            const res = await axios.get(URL + "/users")
+            return res;
+
+        }catch(err){
+
+        }
+        
+    }
+
 
     static async registerVehicle(userId: number, vehicle:Vehicle){
 
