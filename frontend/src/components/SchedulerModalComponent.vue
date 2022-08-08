@@ -184,12 +184,12 @@
                         <span>2</span>
                         <span>3</span>
                     </div>
-                    <label :class="{'visible': clashResult}"
+                    <label :class="{'visible': clashResult, 'invisible': !clashResult}"
                     class="text-red-500">ERROR TEXT</label>
                 </label>
                 <!-- <button class="btn">Add images</button> -->
                 <div>
-                    <span class="text-red-500" :class="{'visible': isValidationError}">ERROR: {{validationErrorMessage}}</span>
+                    <span class="text-red-500" :class="{'visible': isValidationError, 'invisible': !isValidationError}">ERROR: {{validationErrorMessage}}</span>
                 </div>
             </div>
 
