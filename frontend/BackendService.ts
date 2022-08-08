@@ -63,7 +63,7 @@ export default class BackendService{
         }
             
     }
-
+    
     static async makeAppointment(userId: number, appointment:Appointment){
         try{
             const res = await axios.post(URL + `/user/${userId}/appointmentbooking`, {
@@ -500,6 +500,20 @@ export default class BackendService{
             console.log(err);
         }
     }
-
+    static async imageUpload(name:string,base64String:string){
+        try{
+            let form = new FormData()
+            form.append('image',base64String)
+            form.append('name',name)
+            let res = axios.post('https://api.imgbb.com/1/upload?&key=1a9b57b4a75755ca7918b790b76e5c4e',form,{
+                headers:{
+                    "Content-Type": "multipart/form-data",
+                }
+            })
+            return res.then(response => response.data)
+        }catch(err){
+            console.log(err);
+        }
+    }
 
 }

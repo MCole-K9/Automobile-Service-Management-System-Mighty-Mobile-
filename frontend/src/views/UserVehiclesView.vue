@@ -9,8 +9,8 @@
 </span>
     <div class="grid grid-cols-1 xl:grid-cols-2 grid-flow-row gap-5 my-10">
         <div class="bg-ourYellow rounded flex flex-col justify-start items-center md:grid lg:grid xl:flex 2xl:grid grid-rows-3 grid-cols-4 gap-4 h-fit p-4 min-w-96" v-for="vehicle in userVehicles">
-        <div class="row-span-3 bg-white aspect-square h-36 col-span-1">
-            <img src="" alt="">
+        <div class="row-span-3 aspect-auto h-fit flex flex-col justify-center col-span-1">
+            <img :src="(vehicle.image == null ? 'http://pictures.dealer.com/a/asbury/1999/fe92a605ee45d85a1d022e6bf95bbedex.jpg' : String(vehicle.image))" class="rounded" alt="Car Image">
         </div>
         <div class="row-span-2 col-span-3 text-center sm:text-left px-3">
             <p class="font-semibold">{{`${vehicle.year} ${vehicle.make} ${vehicle.model}`}}</p>
@@ -60,7 +60,7 @@
                         <Request v-for="job in jobsDoneOnVehicle" :job="job" :key="job.jobNumber"/>
                     </tbody>
                 </table>
-                <loadingAnimation v-if="loading" />
+                <loadingAnimation v-if="loading" class="my-5"/>
                 <p class="text-lg font-medium text-center my-5 w-1/1 opacity-75" v-if="jobsDoneOnVehicle.length == 0 &&!loading">No Jobs Yet</p>
             </div>
     </div>
@@ -68,11 +68,11 @@
     <input type="checkbox" id="addVehicleModal" class="modal-toggle" />
     <div class="modal lg:pl-60 modal-bottom sm:modal-middle">
     <div class="modal-box relative rounded sm:rounded-box sm:w-11/12 sm:max-w-5xl">
-        <label for="addVehicleModal" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+        <label for="addVehicleModal" class="btn btn-sm btn-circle absolute right-2 top-5">✕</label>
         <h3 class="font-bold text-xl text-center my-5">Add new vehicle</h3>
-         <AddVehicleComponent :vehicle="vehicleObject"/>
+         <AddVehicleComponent :vehicle="vehicleObject" @imageUpload="getBase64ImageString"/>
         <div class="modal-action ">
-         <button class="btn" v-if="add">Add Vehicle</button>
+         <button class="btn" v-if="add" @click="addVehicle">Add Vehicle</button>
          <button class="btn" v-else @click="$log(userVehicles)">Save Vehicle</button>
         </div>
     </div>
@@ -111,7 +111,8 @@ export default defineComponent({
             loading : false,
             emptyVehicleObject : <Vehicle>({}),
             add : false,
-            vehicleObject : <Vehicle>({})
+            vehicleObject : <Vehicle>({}),
+            imageBase64String : ''
         }
     },
     async created(){
@@ -132,6 +133,17 @@ export default defineComponent({
                 }
             })
             this.loading = false
+        },
+        async addVehicle(){
+            let imageResponse = await BackendService.imageUpload(this.vehicleObject.make + this.vehicleObject.make + this.vehicleObject.year,this.imageBase64String)
+            this.vehicleObject.image = imageResponse.data.url
+            console.log(this.vehicleObject);
+            let res = await BackendService.registerVehicle(currentUser.User.id,this.vehicleObject)
+            console.log(res);
+        },
+        getBase64ImageString(data:string){
+            this.imageBase64String = data
+            // console.log(this.imageBase64String);
         }
     }
 })
