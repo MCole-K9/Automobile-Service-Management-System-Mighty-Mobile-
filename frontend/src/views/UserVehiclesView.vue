@@ -9,7 +9,7 @@
 </span>
     <div class="grid grid-cols-1 xl:grid-cols-2 grid-flow-row gap-5 my-10">
         <div class="bg-ourYellow rounded flex flex-col justify-start items-center md:grid lg:grid xl:flex 2xl:grid grid-rows-3 grid-cols-4 gap-4 h-fit p-4 min-w-96" v-for="vehicle in userVehicles">
-        <div class="row-span-3 aspect-auto h-24 flex flex-col justify-center col-span-1">
+        <div class="row-span-3 aspect-auto h-fit flex flex-col justify-center col-span-1">
             <img :src="(vehicle.image == null ? 'http://pictures.dealer.com/a/asbury/1999/fe92a605ee45d85a1d022e6bf95bbedex.jpg' : String(vehicle.image))" class="rounded" alt="Car Image">
         </div>
         <div class="row-span-2 col-span-3 text-center sm:text-left px-3">
@@ -60,7 +60,7 @@
                         <Request v-for="job in jobsDoneOnVehicle" :job="job" :key="job.jobNumber"/>
                     </tbody>
                 </table>
-                <loadingAnimation v-if="loading" />
+                <loadingAnimation v-if="loading" class="my-5"/>
                 <p class="text-lg font-medium text-center my-5 w-1/1 opacity-75" v-if="jobsDoneOnVehicle.length == 0 &&!loading">No Jobs Yet</p>
             </div>
     </div>
@@ -68,7 +68,7 @@
     <input type="checkbox" id="addVehicleModal" class="modal-toggle" />
     <div class="modal lg:pl-60 modal-bottom sm:modal-middle">
     <div class="modal-box relative rounded sm:rounded-box sm:w-11/12 sm:max-w-5xl">
-        <label for="addVehicleModal" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+        <label for="addVehicleModal" class="btn btn-sm btn-circle absolute right-2 top-5">✕</label>
         <h3 class="font-bold text-xl text-center my-5">Add new vehicle</h3>
          <AddVehicleComponent :vehicle="vehicleObject" @imageUpload="getBase64ImageString"/>
         <div class="modal-action ">
