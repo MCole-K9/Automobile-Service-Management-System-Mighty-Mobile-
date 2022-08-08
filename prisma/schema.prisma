@@ -51,7 +51,7 @@ model Vehicle{
   make String @db.VarChar(100)
   model String @db.VarChar(100)
   year Int 
-  owner User @relation(fields: [ownerId], references: [id])
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId Int
   image String? @db.VarChar(255)
   jobs Job[]
