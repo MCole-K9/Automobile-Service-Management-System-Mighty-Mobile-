@@ -67,12 +67,35 @@
             console.log(fullJobInformation);
             selectedJob.value = fullJobInformation?.data;
 
-            // newJobStage.value.jobNumber = selectedJob.value?.jobNumber;
+            newJobStage.value.jobNumber = selectedJob.value?.jobNumber;
         }
     });
 
+    const isValidationError: Ref<boolean> = ref(false);
+    const validationErrorMessage: Ref<string> = ref("");
+    
     // method to validate new Job stage information
-    function validateJobStage(){
+    function validateJobStageAndSubmit(){
+        if (props.clashResult === false){
+            // remove "duration error"
+
+            if (newJobStage.value.description !== ""){
+                // remove "description error"
+                if (newJobStage.value.scheduledItem !== null){
+                    // remove "please select a jobStage" error
+                    BackendService.writeJobStageToDatabase(newJobStage.value);
+                }
+                else{
+                    // select a job
+                }
+            }
+            else{
+                // blah blah you need to fill this in
+            }
+        }
+        else{
+            // you need to not clash the date or whatever
+        }
         
     }
 
@@ -165,12 +188,14 @@
                     class="text-red-500">ERROR TEXT</label>
                 </label>
                 <!-- <button class="btn">Add images</button> -->
-                <div></div>
+                <div>
+                    <span class="text-red-500" :class="{'visible': isValidationError}">ERROR: {{validationErrorMessage}}</span>
+                </div>
             </div>
 
             <button 
             class="btn"
-            @click="">Confirm New Job Stage</button>
+            @click="validateJobStageAndSubmit">Confirm New Job Stage</button>
 
         </div>
     </div>
