@@ -5,6 +5,7 @@
     const props = defineProps<{
         job?: Job
         appointment?: Appointment,
+        index? : number 
 
     }>()
 
@@ -12,11 +13,7 @@
 <template>
  <!-- if is an Appointment -->
     <tr v-if="props.appointment">
-        <th>
-            <label>
-                <input type="checkbox" class="checkbox" />
-            </label>
-        </th>
+        <th>{{props.index}}</th>
         <td>
             <div class="flex items-center space-x-3">
                 <div class="avatar">
@@ -54,11 +51,6 @@
 
     <!-- if is a Job -->
      <tr v-if="props.job">
-        <th>
-            <label>
-                <input type="checkbox" class="checkbox" />
-            </label>
-        </th>
         <td>
             <div class="flex items-center space-x-3">
                 <div class="avatar">
