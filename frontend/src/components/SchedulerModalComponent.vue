@@ -6,18 +6,27 @@
     import type {FullJobInformation, JobStageWithSchedule} from '../classlib/PrismaDerivedTypes';
     import type {Ref} from 'vue';
 
+    type TimeToCheck = {
+        targetTime: number,
+        targetDay: number,
+        duration: number
+    }
+
     const props = defineProps<{
         open: boolean
         time: number,
         day: number,
         month: number,
+        clashResult: boolean
     }>();
 
     const emit = defineEmits<{
         (e: 'schedulerModalClose'): void
+        (e: 'durationRangeValueChange', duration: number, time: number, day: number): void,
     }>();
     
     const currentUser = currentUserStore();
+    const timeInformationToCheck: TimeToCheck = {targetTime: 0, targetDay: 0, duration: 0};
 
     let isVehicleInformationOpen: Ref<Boolean> = ref(false);
     let isJobInformationOpen: Ref<Boolean> = ref(false);
@@ -145,13 +154,15 @@
 
                 <label class="form-control">
                     <label class="label">Duration (Hours):</label>
-                    <input v-model="newJobStage.duration" type="range" min="1" max="3" steps="1" class="range"/>
+                    <input v-model="newJobStage.duration" type="range" min="1" max="3" steps="1" class="range"
+                    @change="$emit('durationRangeValueChange', newJobStage.duration, props.time, props.day)"/>
                     <div class="w-full flex justify-between text-xs px-2">
                         <span>1</span>
                         <span>2</span>
                         <span>3</span>
                     </div>
-                    <label>ERROR TEXT</label>
+                    <label :class="{'visible': clashResult}"
+                    class="text-red-500">ERROR TEXT</label>
                 </label>
                 <!-- <button class="btn">Add images</button> -->
                 <div></div>

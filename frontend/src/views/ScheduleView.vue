@@ -17,6 +17,13 @@
     import BackendService from '../../BackendService';
     import { defineAsyncComponent } from 'vue';
 
+    type TimeToCheck = {
+        targetTime: number,
+        targetDay: number,
+        duration: number
+    }
+
+
     const scheduleView = defineAsyncComponent(
         () => import('../components/ScheduleViewAsyncComponent.vue'));
     const schedulerModal = defineAsyncComponent(
@@ -28,9 +35,11 @@
     let isViewerOpen = ref(false);
 
     // schedule-specific values
-    let time: Ref<number> = ref(0);
-    let day: Ref<number> = ref(0);
-    let month: Ref<number> = ref(0);
+    const time: Ref<number> = ref(0);
+    const day: Ref<number> = ref(0);
+    const month: Ref<number> = ref(0);
+    const timeInformationToCheck: Ref<TimeToCheck> = ref({}) as Ref<TimeToCheck>;
+    const clashResult: Ref<boolean> = ref(false);
 
     // viewer-specific values
     let id: Ref<number> = ref(0);
@@ -65,6 +74,14 @@
         isViewerOpen.value = false;
     }
 
+    function changeCheckClash(duration: number, time: number, day: number){
+        timeInformationToCheck.value = {duration: duration, targetTime: time, targetDay: day};
+    }
+
+    function setClashResult(result: boolean){
+        clashResult.value = result;
+    }
+
 </script>
 
 <template>
@@ -74,7 +91,9 @@
         <Suspense>
             <ScheduleViewAsyncComponent
             @open-scheduler="openScheduler"
-            @open-viewer="openViewer"/>
+            @open-viewer="openViewer"
+            @clash-result="setClashResult"
+            :time-information-to-check="timeInformationToCheck"/>
 
             <template #fallback>
                 <div class="w-min container mx-auto my-auto">Loading...</div>
@@ -88,7 +107,9 @@
                 :time="time"
                 :day="day"
                 :month="month"
-                @scheduler-modal-close="closeScheduler"/>
+                :clash-result="clashResult"
+                @scheduler-modal-close="closeScheduler"
+                @duration-range-value-change="changeCheckClash"/>
             <template #fallback>
                 <div v-show="" class="modal">
 
