@@ -156,6 +156,7 @@ export default class Routes{
                 let vehicle = await prisma.vehicle.create({
 
                     data: {
+                        image: req.body.vehicle.image as string,
                         make: req.body.vehicle.make as string,
                         model: req.body.vehicle.model as string,
                         year: Number.parseInt(req.body.vehicle.year) ,
