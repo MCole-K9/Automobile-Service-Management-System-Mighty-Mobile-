@@ -25,11 +25,11 @@
 
     
         const res = await BackendService.getUpcomingJobs();
-
+        
         jobs.value = [...jobs.value, ...res?.data]
 
 
-        console.log(res)
+        console.log(res?.data)
     })
 
 
