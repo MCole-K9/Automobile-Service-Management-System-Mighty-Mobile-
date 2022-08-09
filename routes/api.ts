@@ -1,5 +1,5 @@
 import { Response, Request, Router} from "express";
-import { Job, JobPart, PrismaClient, Role, User } from "@prisma/client"; //Db Connection
+import { Job, JobPart, PrismaClient } from "@prisma/client"; //Db Connection
 import bcrypt, {genSalt, hash} from "bcrypt"
 import { transformDocument } from "@prisma/client/runtime";
 import {JobStageWithSchedule} from "../frontend/src/classlib/PrismaDerivedTypes"
@@ -234,6 +234,7 @@ export default class Routes{
                 let vehicle = await prisma.vehicle.create({
 
                     data: {
+                        image: req.body.vehicle.image as string,
                         make: req.body.vehicle.make as string,
                         model: req.body.vehicle.model as string,
                         year: Number.parseInt(req.body.vehicle.year) ,
@@ -251,7 +252,43 @@ export default class Routes{
             }catch(err){
 
             }
-        });
+        }).put(async (req:Request,res:Response)=>{
+           let vehicle:Vehicle = req.body.vehicle
+        //    let ownerId:number = req.body.ownerId
+            try{
+                await prisma.vehicle.update({
+                    where:{
+                        id : vehicle.id,
+                    },
+                    data:{
+                    //   id : vehicle.id,
+                      image: vehicle.image,
+                      make : vehicle.make,
+                      model : vehicle.model,
+                      licensePlate : vehicle.licensePlate,
+                      year : vehicle.year,
+                    //   ownerId : vehicle.ownerId,
+                    },
+                })
+                res.status(200).json({status:true})
+            }catch(err){
+                console.log(err);
+                res.status(477).json({message:err,status:false})
+            }
+        }).delete(async (req:Request,res:Response)=>{
+            let vid = Number(req.params.id)
+            console.log(vid);
+            try{
+                await prisma.vehicle.delete({
+                    where:{
+                        id : vid
+                    }
+                })
+                res.status(200).json({status:true})
+            }catch(err){
+                console.log(err);
+            }
+        })
 
         router.route("/user/customers").get(async (req:Request, res:Response)=>{
             try{

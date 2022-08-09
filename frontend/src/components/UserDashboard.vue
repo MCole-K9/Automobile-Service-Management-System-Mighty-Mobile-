@@ -5,28 +5,24 @@
                 <button class="btn btn-sm lg:btn-md" @click="$router.push('dashboard/vehicles')">view vehicles</button>
             </span>
         <div class="flex lg:flex-row flex-col w-full  h-fit gap-5 lg:justify-between">
-            <div class="bg-gray-200 rounded grow h-96 relative overflow-y-scroll">
-                <div class="rounded bg-gray-800 w-1/1 h-16 flex sticky top-0 justify-center items-center">
-                    <p class="text-xl lg:text-2xl font bold text-white">Requests For Appointment </p>
+            <div class="rounded grow h-96 relative ">
+                <div class="rounded bg-gray-800 w-1/1 h-16 flex justify-center items-center mb-3">
+                    <p class="text-xl lg:text-2xl font bold text-white">Requests For Appointment</p>
                 </div>
                 <div class="overflow-x-auto w-full">
-                <table class="table w-full">
+                <table class="table w-full overflow-y-scroll">
                     <!-- head -->
                     <thead>
                         <tr>
-                            <th>
-                                <label>
-                                    <input type="checkbox" class="checkbox" />
-                                </label>
-                            </th>
-                            <th>From</th>
-                            <th>For</th>
-                            <th>Date</th>
+                            <th>#</th>
+                            <th class="text-center">Created By</th>
+                            <th class="text-center">For</th>
+                            <th class="text-center">Date</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <Request v-for="app in UserAppointments" :appointment="app"/>
+                        <Request v-for="app,index in UserAppointments" :appointment="app" :index="index"/>
                     </tbody>
 
                 </table>
@@ -50,6 +46,10 @@ import BackendService from "../../BackendService"
 import { defineComponent } from "vue"
 import Request from "./Request.vue"
 import type { Appointment } from '../classlib/Types';
+import { currentUserStore } from "@/stores/User";
+
+const currentUser = currentUserStore();
+
 export default defineComponent({
     name:'UserDashboard',
     components:{
@@ -62,7 +62,9 @@ export default defineComponent({
     },
     async created(){
         let res = await BackendService.getAppointments()
+        // console.log(res?.data);
         this.UserAppointments = res?.data
+        this.UserAppointments = this.UserAppointments.filter(e => e.customerId == currentUser.User.id)
     }
 })
 </script>

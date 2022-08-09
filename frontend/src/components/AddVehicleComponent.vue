@@ -1,27 +1,27 @@
 <template>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
             <div class="mx-auto flex flex-col space-y-4 w-full">
-                <label class="text-center w-full  p-2 bg-ourGrey shadow-lg" for="vmake">Vehicle Make</label>
+                <label class="text-center w-full p-2 bg-ourGrey shadow-lg" for="vmake">Vehicle Make</label>
                 <input class="input w-full input-bordered " type="text" v-model="vehicle.make" id="vmake">
             </div>
             <div class="mx-auto flex flex-col space-y-4 w-full">
-                <label class="text-center w-full  p-2 bg-ourGrey shadow-lg"  for="vmodel">Vehicle Model</label>
+                <label class="text-center w-full p-2 bg-ourGrey shadow-lg"  for="vmodel">Vehicle Model</label>
                 <input class="input w-full input-bordered " type="text" v-model="vehicle.model" id="vmodel">
             </div>
             <div class="mx-auto flex flex-col space-y-4 w-full min-w-52">
-                <label class="text-center w-full  p-2 bg-ourGrey shadow-lg" for="vyear">Vehicle Year</label>
+                <label class="text-center w-full p-2 bg-ourGrey shadow-lg" for="vyear">Vehicle Year</label>
                 <div class="flex items-center space-x-3">
                     <input type="range" min="1990" max="2025" v-model="vehicle.year"  class="range range-sm text-ourGrey flex-grow-1" />
                     <input class="input w-full input-bordered" type="number" id="vyear" v-model="vehicle.year">
                 </div>
             </div>
             <div class="mx-auto flex flex-col space-y-4 w-full min-w-52">
-                <label class="text-center w-full  p-2 bg-ourGrey shadow-lg" for="vplate">License Plate</label>
+                <label class="text-center w-full p-2 bg-ourGrey shadow-lg" for="vplate">License Plate</label>
                 <input class="input w-full input-bordered " type="text" v-model="vehicle.licensePlate" id="vplate">    
             </div>
              <div class="mx-auto flex flex-col space-y-4 w-full min-w-52">
-                <label class="text-center w-full  p-2 bg-ourGrey shadow-lg" for="vimage">Upload Image</label>
-                <input class="input w-full input-bordered " type="file" @change="uploadImage" id="vimage">
+                <label class="text-center w-full p-2 bg-ourGrey shadow-lg" for="vimage">{{vehicle.image == null ? 'Upload':'Change'}} Image</label>
+                <input class="input w-full" type="file" @change="uploadImage" id="vimage">
             </div>
         </div>
 </template>
@@ -35,6 +35,7 @@ export default defineComponent({
     props:['vehicle'],
     data(){
         return{
+            imagePlaceHolder : ''
         }
     },
     components:{},
@@ -42,10 +43,9 @@ export default defineComponent({
         uploadImage(e: any){
             let reader = new FileReader()
             reader.addEventListener("load", async (e)=>{
-                console.log(e);
-                // console.log(reader.result);
-                let red = this.getBase64StringFromDataURL(e.target?.result)
-                console.log(red);
+                this.imagePlaceHolder = String(e.target?.result)
+                let base64string:string = this.getBase64StringFromDataURL(e.target?.result)
+                this.$emit('imageUpload',base64string)
                 
                 
             })
@@ -56,7 +56,7 @@ export default defineComponent({
         }
     },
     created(){
-        
+
     }
 })
 </script>
