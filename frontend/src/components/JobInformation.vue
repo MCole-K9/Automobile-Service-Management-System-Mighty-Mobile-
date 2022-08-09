@@ -3,6 +3,7 @@ import { ref } from "vue";
 import type { Job } from "../classlib/Types";
 import { UserRole } from "../classlib/Types";
 import { currentUserStore } from "@/stores/User";
+import BackendService from "../../BackendService";
 
 const props = defineProps<{
   job: Job;
@@ -18,6 +19,13 @@ let editableAddress = ref(false);
 function changeAddress(event:Event) {
   const { name, value } = event.target as HTMLInputElement ;
   emits("addressChange", name, value);
+}
+
+async function setJobAsCompleted(){
+  props.job.completed = true
+  console.log(props.job);
+  
+  await BackendService.updateJob(props.job)
 }
 </script>
 
@@ -149,10 +157,19 @@ function changeAddress(event:Event) {
               <p class="h-10 flex px-3 items-center border border-success bg-gray-300 rounded text-black font-medium">
                 ${{ props.job.totalCost }}
               </p>
-              <p :class="`h-10 px-3 m-3 flex rounded-lg self-center items-center max-w-fit ${props.job.isPaid ? 'bg-success' : 'bg-error'
-              }`">
-                Payment {{ props.job.isPaid ? "made" : "not made" }}
-              </p>
+              <span class="flex justify-between">
+                <p :class="`h-10 px-3 m-3 flex rounded-lg self-center items-center max-w-fit ${props.job.isPaid ? 'bg-success' : 'bg-error'
+                }`">
+                  Payment {{ props.job.isPaid ? "made" : "not made" }}
+                </p>
+                <p :class="`h-10 px-3 m-3 flex rounded-lg self-center items-center max-w-fit ${props.job.completed ? 'bg-success' : 'bg-error'
+                }`">
+                  Status: {{ props.job.completed ? "Completed" : "Not yet completed" }}
+                </p>
+              </span>
+              <button class="btn btn-success max-w-xs self-center" @click="setJobAsCompleted">Set as Completed
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+              </button>
             </div>
           </div>
         </div>
