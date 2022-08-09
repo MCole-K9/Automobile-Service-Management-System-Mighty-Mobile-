@@ -1,5 +1,5 @@
 import { Response, Request, Router} from "express";
-import { Job, JobPart, PrismaClient } from "@prisma/client"; //Db Connection
+import { Job, JobPart, PrismaClient, Role, User } from "@prisma/client"; //Db Connection
 import bcrypt, {genSalt, hash} from "bcrypt"
 import { transformDocument } from "@prisma/client/runtime";
 import {JobStageWithSchedule} from "../frontend/src/classlib/PrismaDerivedTypes"
@@ -36,6 +36,84 @@ export default class Routes{
                 }
             });
             res.status(200).send(users);
+        })
+
+        router.post("/user", async (req:Request, res:Response)=>{
+            try{
+                console.log(req.body)
+                const firstName:string = req.body.user.firstName;
+                const lastName:string = req.body.user.lastName;
+                const email:string = req.body.user.email;
+                const phoneNumber:string = req.body.user.phoneNumber;
+                const roles: Role[] = req.body.user.roles as Role[]; 
+
+                let user = await prisma.user.findFirst({
+                    where: {
+                        email: email
+                    }
+                })
+
+                if (user !== null){
+                    
+                    res.send({message: "Account Already Exits", created: false})
+
+                }else{
+                    const salt = await genSalt();
+                    const hashedPassword = await hash(req.body.user.password, salt);
+
+                    const createdUser = await prisma.user.create({
+                        data: {
+                            firstName,
+                            lastName,
+                            email,
+                            phoneNumber,
+                            password: hashedPassword,
+                            roles: {
+                                connect: roles
+                            }
+                        },
+                        include:{
+                            roles: true
+                        }
+                        
+                        
+                    })
+
+                    console.log(createdUser)
+                    res.send(createdUser);
+                }
+                
+
+            }catch(err){
+                console.log(err)
+            }
+            
+           
+
+            
+        })
+
+        router.route("/user/:id").get(async (req:Request, res:Response)=>{
+            try{
+
+                const userId: number = Number.parseInt(req.params.id) ;
+                
+                
+
+
+            }catch(err){
+
+                console.log(err)
+            }
+                
+
+        }).put(async (req:Request, res:Response)=>{
+            try{
+                const userId: number = Number.parseInt(req.params.id) ;
+            }catch(err){
+
+            }
+
         })
 
         router.post("/user/register", (async (req:Request, res:Response)=>{

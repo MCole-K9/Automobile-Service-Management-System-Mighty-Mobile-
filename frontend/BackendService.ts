@@ -16,9 +16,33 @@ export default class BackendService{
         
         try{
             
+            const res = await axios.post(URL + "/user", {
+                user   
+            })
+            return(res);
+
+        }catch(err){
+            
+        }
+    }
+    static async registerUser(user:User) {
+        
+        try{
+            
             const res = await axios.post(URL + "/user/register", {
                 user   
             })
+            return(res);
+
+        }catch(err){
+            
+        }
+    }
+    static async getRandUser() {
+        
+        try{
+            
+            const res = await axios.get("https://randomuser.me/api")
             return(res);
 
         }catch(err){
@@ -48,7 +72,18 @@ export default class BackendService{
         }
         
     }
+    static async getRandomPassword(length:number){
+        try{
+            const res = await axios.get(`https://random.justyy.workers.dev/api/random/?cached&n=${length}`)
+            return res;
 
+        }catch(err){
+
+        }
+        
+    }
+
+    
 
     static async registerVehicle(userId: number, vehicle:Vehicle){
 

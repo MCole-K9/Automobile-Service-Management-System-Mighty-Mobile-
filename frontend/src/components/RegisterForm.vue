@@ -45,7 +45,7 @@ async function register(){
 
         newUser.changeAttr("password", password.value)
 
-        const res = await BackendService.createUser(newUser.User);
+        const res = await BackendService.registerUser(newUser.User);
         console.log(res?.data)
 
         if (res?.data.registered){
