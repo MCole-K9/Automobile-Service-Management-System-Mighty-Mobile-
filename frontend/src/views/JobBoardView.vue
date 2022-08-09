@@ -46,7 +46,7 @@
             </div>
         </div>
         <section id="Jobs"  class="mt-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                 <component  :jobs="jobs" :is="activeTab"/>
             </div>  
         </section>
