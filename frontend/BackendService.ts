@@ -449,6 +449,24 @@ export default class BackendService{
             console.log(err)
         }
     }
+    static async updateUserVehicle(userId:number,vehicle:Vehicle){
+        try{
+            let res = await axios.put(URL + `/user/${userId}/vehicle`,{
+                vehicle
+            })
+            return res;
+        }catch(err){
+            console.log(err)
+        }
+    }
+    static async deleteVehicle(vehicleId:number){
+        try{
+            let res = await axios.delete(URL + `/user/${vehicleId}/vehicle`)
+            return res;
+        }catch(err){
+            console.log(err)
+        }
+    }
 
     static async getActiveJobsForMechanic(mechanicId: number){
         try{
