@@ -1,5 +1,5 @@
 import { Response, Request, Router} from "express";
-import { Job, JobPart, PrismaClient } from "@prisma/client"; //Db Connection
+import { Job, JobPart, PrismaClient, Role, Vehicle } from "@prisma/client"; //Db Connection
 import bcrypt, {genSalt, hash} from "bcrypt"
 import { transformDocument } from "@prisma/client/runtime";
 import {JobStageWithSchedule} from "../frontend/src/classlib/PrismaDerivedTypes"
