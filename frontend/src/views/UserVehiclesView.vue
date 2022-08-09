@@ -4,13 +4,13 @@
 <div class="lg:px-12 p-3 lg:py-10">
 <span class="flex justify-between">
     <p class="text-gray-800 text-xl sm:text-2xl lg:text-4xl font-bold">Vehicles</p>
-    <label for="addVehicleModal" class="btn btn-sm lg:btn-md modal-button" @click="vehicleObject = emptyVehicleObject; add = true">add a Vehicle</label>
+    <label for="addVehicleModal" class="btn btn-sm lg:btn-md modal-button" @click="vehicleObject = emptyVehicleObject; add = true; resetInput();">add a Vehicle</label>
 
 </span>
     <div class="grid grid-cols-1 xl:grid-cols-2 grid-flow-row gap-5 my-10">
         <div class="bg-ourYellow rounded flex flex-col justify-start items-center md:grid lg:grid xl:flex 2xl:grid grid-rows-3 grid-cols-4 gap-4 h-fit p-4 min-w-96" v-for="vehicle in userVehicles">
         <div class="row-span-3 aspect-auto h-fit flex flex-col justify-center col-span-1">
-            <img :src="(vehicle.image == null ? 'http://pictures.dealer.com/a/asbury/1999/fe92a605ee45d85a1d022e6bf95bbedex.jpg' : String(vehicle.image))" class="rounded" alt="Car Image">
+            <img :src="(vehicle.image == null ? 'https://demofree.sirv.com/nope-not-here.jpg' : String(vehicle.image))" class="rounded" alt="Car Image">
         </div>
         <div class="row-span-2 col-span-3 text-center sm:text-left px-3">
             <p class="font-semibold">{{`${vehicle.year} ${vehicle.make} ${vehicle.model}`}}</p>
@@ -22,13 +22,13 @@
                 <span class="hidden sm-600:block">work history</span>
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
             </label>
-            <label for="addVehicleModal"  class="btn btn-sm flex gap-x-2" @click="vehicleObject = vehicle; add = false">
+            <label for="addVehicleModal"  class="btn btn-sm flex gap-x-2" @click="vehicleObject = vehicle; add = false; resetInput();">
                <span class="hidden sm-600:block">edit</span>
                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
             </label>
-            <button class="btn btn-sm btn-error flex gap-x-2">
+            <label for="deleteConfirmation" class="btn btn-sm btn-error flex gap-x-2" @click="IDToBeDeleted = Number(vehicle.id)">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-            </button>
+            </label>
         </div>
         </div>
     </div>
@@ -68,15 +68,30 @@
     <input type="checkbox" id="addVehicleModal" class="modal-toggle" />
     <div class="modal lg:pl-60 modal-bottom sm:modal-middle">
     <div class="modal-box relative rounded sm:rounded-box sm:w-11/12 sm:max-w-5xl">
-        <label for="addVehicleModal" class="btn btn-sm btn-circle absolute right-2 top-5">✕</label>
-        <h3 class="font-bold text-xl text-center my-5">Add new vehicle</h3>
+        <label for="addVehicleModal" id="modalButton"  class="btn btn-sm btn-circle absolute right-2 top-5">✕</label>
+        <h3 class="font-bold text-xl text-center my-5" v-if="add">Add new vehicle</h3>
+        <h3 class="font-bold text-xl text-center my-5" v-else>Edit vehicle</h3>
          <AddVehicleComponent :vehicle="vehicleObject" @imageUpload="getBase64ImageString"/>
-        <div class="modal-action ">
+        <div class="modal-action items-center">
+            <p class="text-error font-medium mx-5">{{errorMsg}}</p>
          <button class="btn" v-if="add" @click="addVehicle">Add Vehicle</button>
-         <button class="btn" v-else @click="$log(userVehicles)">Save Vehicle</button>
+         <button class="btn" v-else @click="updateVehicle">Save Vehicle</button>
         </div>
     </div>
     </div>
+
+    <!-- delete confirmation modal -->
+    <input type="checkbox" id="deleteConfirmation" class="modal-toggle" />
+    <label for="deleteConfirmation" class="modal cursor-pointer">
+    <label class="modal-box relative" for="">
+        <h3 class="text-lg font-bold">Delete Vehicle?</h3>
+        <p class="py-4">Are you sure you want to delete this vehicle</p>
+         <div class="modal-action items-center">
+            <label for="deleteConfirmation" class="btn btn-sm">cancel</label>
+            <button class="btn btn-error btn-sm" @click="deleteVehicle">Delete Vehicle</button>
+        </div>
+    </label>
+    </label>
 </div>
 
 </template>
@@ -112,7 +127,9 @@ export default defineComponent({
             emptyVehicleObject : <Vehicle>({}),
             add : false,
             vehicleObject : <Vehicle>({}),
-            imageBase64String : ''
+            imageBase64String : '',
+            errorMsg : '',
+            IDToBeDeleted : <number>({})
         }
     },
     async created(){
@@ -141,9 +158,41 @@ export default defineComponent({
             let res = await BackendService.registerVehicle(currentUser.User.id,this.vehicleObject)
             console.log(res);
         },
+        async updateVehicle(){
+            if(this.imageBase64String != ''){
+                let imageResponse = await BackendService.imageUpload(this.vehicleObject.make + this.vehicleObject.make + this.vehicleObject.year,this.imageBase64String)
+                this.vehicleObject.image = imageResponse.data.url
+                this.imageBase64String = ''
+            }
+            let res = await BackendService.updateUserVehicle(currentUser.User.id,this.vehicleObject)
+            if(res?.data.status){
+                document.getElementById('modalButton')?.click()
+                console.log('success');
+                
+                this.errorMsg = ''
+            }else{
+                this.errorMsg = 'Something went wrong'
+            }
+            
+        },
+        async deleteVehicle(){
+           let res = await BackendService.deleteVehicle(this.IDToBeDeleted)
+           if(res?.data.status){
+                this.userVehicles = this.userVehicles.filter(e => e.id != this.IDToBeDeleted)
+                document.getElementById('deleteConfirmation')?.click()
+                console.log('success');
+           }else{
+            console.log(res);
+            
+           }
+        },
+        resetInput(){
+            let foo = document.getElementById('vimage') as HTMLInputElement
+            foo.value = ''
+            
+        },
         getBase64ImageString(data:string){
             this.imageBase64String = data
-            // console.log(this.imageBase64String);
         }
     }
 })
