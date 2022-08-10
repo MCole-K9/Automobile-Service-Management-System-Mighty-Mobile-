@@ -97,8 +97,16 @@ export default class Routes{
             try{
 
                 const userId: number = Number.parseInt(req.params.id) ;
-                
-                
+                const user = await prisma.user.findUnique({
+                    where:{
+                        id : userId
+                    },
+                    include:{
+                        roles : true
+                    }
+                })
+                console.log(user);
+                res.status(200).send(user)
 
 
             }catch(err){
