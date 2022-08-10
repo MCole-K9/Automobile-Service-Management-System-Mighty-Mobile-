@@ -1,20 +1,20 @@
-<script lang="ts">
+<script setup lang="ts">
 
 import DashboardLayout from "../components/DashboardLayout.vue";
 import UserDashboard from "../components/UserDashboard.vue";
-export default{
-    components:{
-        DashboardLayout,
-        UserDashboard,
-    }
-}
+import MechanicDashboard from "@/components/MechanicDashboard.vue";
+import { currentUserStore } from "@/stores/User";
+const currentUser = currentUserStore();
+
+
 </script>
 
 <template>
   <main>
     <DashboardLayout>
         <template #content>
-          <UserDashboard/>
+          <UserDashboard v-if="currentUser.isCustomer" />
+          <MechanicDashboard v-if="currentUser.isMechanic || currentUser.isManager"/>
         </template>
         </DashboardLayout>
   </main>
