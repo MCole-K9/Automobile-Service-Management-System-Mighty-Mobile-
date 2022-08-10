@@ -4,6 +4,10 @@
     import type { Role, User } from '@/classlib/Types';
     import { ref } from 'vue';
     import BackendService from '../../BackendService';
+    import { useRouter } from 'vue-router';
+
+    const router = useRouter();
+
     const user = ref<User>({
 
         id: 0,
@@ -18,7 +22,10 @@
 
     async function create() {
         const res = await BackendService.createUser(user.value);
-        console.log(res);
+        if (res?.status && res?.status < 300){
+            
+            router.push({name: "manageusers"});
+        }
     }
 
     function handleRoleSelect(roles:Role[]){
