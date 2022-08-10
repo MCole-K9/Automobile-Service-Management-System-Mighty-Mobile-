@@ -74,7 +74,10 @@
          <AddVehicleComponent :vehicle="vehicleObject" @imageUpload="getBase64ImageString"/>
         <div class="modal-action items-center">
             <p class="text-error font-medium mx-5">{{errorMsg}}</p>
-         <button class="btn" v-if="add" @click="addVehicle">Add Vehicle</button>
+         <button class="btn" v-if="add" @click="addVehicle">
+         <span v-if="!processingVehicle">Add Vehicle</span>
+         <loadingAnimation v-else/>
+         </button>
          <button class="btn" v-else @click="updateVehicle">Save Vehicle</button>
         </div>
     </div>
@@ -129,15 +132,20 @@ export default defineComponent({
             vehicleObject : <Vehicle>({}),
             imageBase64String : '',
             errorMsg : '',
-            IDToBeDeleted : <number>({})
+            IDToBeDeleted : <number>({}),
+            processingVehicle : false,
         }
     },
-    async created(){
-        let res = await BackendService.getUserVehicles(currentUser.User.id)
-        console.log(res?.data);
-        this.userVehicles = res?.data;
+     created(){
+        this.getAllVehicles()
     },
+
     methods:{
+        async getAllVehicles(){
+            let res = await BackendService.getUserVehicles(currentUser.User.id)
+            console.log(res?.data);
+            this.userVehicles = res?.data;
+        },
         async getJobsDoneOnVehicle(vehicleId:number|undefined){
             this.loading = true
             this.jobsDoneOnVehicle = []
@@ -152,12 +160,15 @@ export default defineComponent({
             this.loading = false
         },
         async addVehicle(){
+            this.processingVehicle = true
             let imageResponse = await BackendService.imageUpload(this.vehicleObject.make + this.vehicleObject.make + this.vehicleObject.year,this.imageBase64String)
             this.vehicleObject.image = imageResponse.data.url
             console.log(this.vehicleObject);
-            let res = await BackendService.registerVehicle(currentUser.User.id,this.vehicleObject)
-            // console.log(res);
-            document.getElementById('modalButton')?.click()
+            await BackendService.registerVehicle(currentUser.User.id,this.vehicleObject)
+            this.getAllVehicles()
+            document.getElementById('addVehicleModal')?.click()
+            this.processingVehicle = false
+
         },
         async updateVehicle(){
             if(this.imageBase64String != ''){
@@ -188,9 +199,16 @@ export default defineComponent({
            }
         },
         resetInput(){
-            let foo = document.getElementById('vimage') as HTMLInputElement
-            foo.value = ''
-            
+            let imageInput = document.getElementById('vimage') as HTMLInputElement
+            let make = document.getElementById('vmake') as HTMLInputElement
+            let model = document.getElementById('vmodel') as HTMLInputElement
+            let plate = document.getElementById('vplate') as HTMLInputElement
+            let year = document.getElementById('vyear') as HTMLInputElement
+            make.value = ''
+            model.value = ''
+            plate.value = ''
+            imageInput.value = ''
+            year.value = ''
         },
         getBase64ImageString(data:string){
             this.imageBase64String = data
