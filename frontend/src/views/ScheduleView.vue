@@ -85,8 +85,8 @@
 </script>
 
 <template>
-    <NavBar />
-    
+    <DashboardLayout>
+    <template #content>
     <div class="max-w-screen px-4 overflow-hidden overscroll-x-auto lg:mx-auto lg:w-min">
         <Suspense>
             <ScheduleViewAsyncComponent
@@ -132,6 +132,8 @@
         </Suspense>
         
     </div>
+    </template>
+    </DashboardLayout>
     
 
 </template>

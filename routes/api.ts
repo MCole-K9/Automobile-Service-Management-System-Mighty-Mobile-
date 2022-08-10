@@ -255,21 +255,18 @@ export default class Routes{
             }
         })
         .put(async (req:Request,res:Response)=>{
-           let vehicle:Vehicle = req.body.vehicle
-        //    let ownerId:number = req.body.ownerId
             try{
+                let vehicle:Vehicle = req.body.vehicle
                 await prisma.vehicle.update({
                     where:{
                         id : vehicle.id,
                     },
                     data:{
-                    //   id : vehicle.id,
                       image: vehicle.image,
                       make : vehicle.make,
                       model : vehicle.model,
                       licensePlate : vehicle.licensePlate,
                       year : vehicle.year,
-                    //   ownerId : vehicle.ownerId,
                     },
                 })
                 res.status(200).json({status:true})
@@ -278,9 +275,9 @@ export default class Routes{
                 res.status(477).json({message:err,status:false})
             }
         }).delete(async (req:Request,res:Response)=>{
-            let vid = Number(req.params.id)
-            console.log(vid);
             try{
+                let vid = Number(req.params.id)
+                console.log(vid);
                 await prisma.vehicle.delete({
                     where:{
                         id : vid
@@ -292,7 +289,7 @@ export default class Routes{
             }
         })
 
-        router.route("/customs").get(async (req:Request, res:Response)=>{
+        router.get("/customs",async (req:Request, res:Response)=>{
             try{
                 const customers = await prisma.user.findMany({
                     where: {
@@ -312,7 +309,7 @@ export default class Routes{
                 res.status(200).send(customers);
 
             }catch(err){
-
+                console.log(err);
             }
         });
 
