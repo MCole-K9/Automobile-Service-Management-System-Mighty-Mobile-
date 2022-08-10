@@ -37,7 +37,7 @@
             </router-link>
             <router-link v-else to="/">Home</router-link>
           </li>
-          <li><a>Profile</a></li>
+          <li><router-link to="/profile">Profile</router-link></li>
           <li><a @click="logout">Logout</a></li>
         </ul>
       </div>
