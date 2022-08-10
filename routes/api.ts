@@ -325,17 +325,17 @@ export default class Routes{
 
             try{
                 console.log("User job requests");
-                const userId: number = Number.parseInt(req.params.id) ;
-
+                const userId: number = Number.parseInt(req.params.id) ;         
                 const jobs = await prisma.job.findMany({
                     where: {
                     
                         vehicle: {
                             ownerId: userId,
                         },
-                        startDate: {
-                            gte: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())
-                        }
+                        // startDate: {
+                        //     gte: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())
+                        // }
+                        completed : false
                 
                         
                     },
@@ -346,7 +346,7 @@ export default class Routes{
                     }
 
                 })
-
+                
                 res.status(200).send(jobs)
             }catch(err){
                 console.log(err)
