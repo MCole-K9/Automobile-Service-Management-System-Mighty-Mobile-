@@ -33,7 +33,9 @@ export const currentUserStore = defineStore("currentUser", {
             let hasRole = false;
             this.User.roles?.forEach((role)=>{
                 
-                hasRole =  (roleId === role.id);
+                if(roleId === role.id){
+                    hasRole = true;
+                }
             });
 
             return hasRole;
