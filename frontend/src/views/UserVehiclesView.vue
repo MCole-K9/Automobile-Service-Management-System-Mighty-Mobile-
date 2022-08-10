@@ -156,7 +156,8 @@ export default defineComponent({
             this.vehicleObject.image = imageResponse.data.url
             console.log(this.vehicleObject);
             let res = await BackendService.registerVehicle(currentUser.User.id,this.vehicleObject)
-            console.log(res);
+            // console.log(res);
+            document.getElementById('modalButton')?.click()
         },
         async updateVehicle(){
             if(this.imageBase64String != ''){
