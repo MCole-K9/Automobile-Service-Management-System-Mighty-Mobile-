@@ -72,6 +72,15 @@ export default class BackendService{
         }
         
     }
+    static async getOneUser(userId:number){
+        try{
+            const res = await axios.get(URL + `/user/${userId}`)
+            return res;
+        }catch(err){
+
+        }
+        
+    }
     static async getRandomPassword(length:number){
         try{
             const res = await axios.get(`https://random.justyy.workers.dev/api/random/?cached&n=${length}`)
