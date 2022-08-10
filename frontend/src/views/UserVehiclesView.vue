@@ -141,7 +141,7 @@ export default defineComponent({
         async getJobsDoneOnVehicle(vehicleId:number|undefined){
             this.loading = true
             this.jobsDoneOnVehicle = []
-            let res = await BackendService.getUpcomingJobs()
+            let res = await BackendService.getAllJobs()
             this.allJobs = res?.data
             this.allJobs.forEach((e)=>{
                 if(e.vehicleId == vehicleId){
