@@ -6,7 +6,7 @@
     import {currentUserStore, newUserStore} from "../stores/User";
     import { ref, reactive, watch} from 'vue';
     import BackendService from '../../BackendService';
-    import { defineAsyncComponent } from 'vue';
+    import { defineAsyncComponent, watchEffect} from 'vue';
 
     type TimeToCheck = {
         targetTime: number,
@@ -26,6 +26,7 @@
 
     // 
     watch(props.timeInformationToCheck, timeInformation => {
+        console.log("time information received");
         if (timeInformation != undefined){
             let isClash: boolean = false;
 
@@ -58,7 +59,7 @@
                 emit("clashResult", isClash);
             }
         }
-    })
+    }, {deep: true})
 
 
     const currentUser = currentUserStore();

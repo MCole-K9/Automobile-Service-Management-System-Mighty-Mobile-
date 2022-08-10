@@ -102,11 +102,11 @@
 </script>
 
 <template>
-    <div class="modal" 
+    <div class="modal z-50" 
         :class="{'modal-open': open}">
         <!-- <input type="checkbox" @change="$emit('schedulerModalClose')" id="close-modal-test"/> -->
-        <div class="modal-box">
-            <div>Schedule New Job-Stage for {{newJobStage.scheduledItem?.date.toDateString()}}</div>
+        <div class="modal-box max-h-[30rem]">
+            <label>Schedule New Job-Stage for {{newJobStage.scheduledItem?.date.toDateString()}}</label>
             
             <label class="form-control">
                 <label for="close-modal-test" @click.stop="$emit('schedulerModalClose')" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
@@ -184,8 +184,8 @@
                         <span>2</span>
                         <span>3</span>
                     </div>
-                    <label :class="{'visible': clashResult, 'invisible': !clashResult}"
-                    class="text-red-500">ERROR TEXT</label>
+                    <label :class="{'visible': clashResult}"
+                    class="text-red-500 invisible">ERROR TEXT</label>
                 </label>
                 <!-- <button class="btn">Add images</button> -->
                 <div>

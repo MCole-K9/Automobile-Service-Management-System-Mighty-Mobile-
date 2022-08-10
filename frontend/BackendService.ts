@@ -532,7 +532,7 @@ export default class BackendService{
 
     static async writeJobStageToDatabase(jobStage: JobStageWithSchedule){
         try{
-            const res = await axios.post(URL + 'user/jobstage/create', {jobStage});
+            const res = await axios.post(URL + 'user/jobstage/create', jobStage);
 
             return res;
         }
