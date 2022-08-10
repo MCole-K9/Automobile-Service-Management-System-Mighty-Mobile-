@@ -155,12 +155,11 @@ export default class BackendService{
     }
     
     static async getCustomers() {
-
         try{
-            const res = await axios.get(URL + "/user/customers");
+            const res = await axios.get(URL + "/customs");       
             return res;
-
         }catch(err){
+            console.log(err.response);
             
         }
     }
