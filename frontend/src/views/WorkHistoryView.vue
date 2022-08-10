@@ -32,8 +32,10 @@ export default defineComponent({
     }
   },
   async mounted() {
-    const res = await BackendService.getUpcomingJobs()
+    const res = await BackendService.getAllJobs()
     this.upcomingJobs = res?.data
+    console.log(res?.data);
+    
     this.upcomingJobs = this.upcomingJobs.filter(e => e.completed == true)
   },
   methods:{
