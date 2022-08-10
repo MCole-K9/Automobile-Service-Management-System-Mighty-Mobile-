@@ -111,6 +111,12 @@ const router = createRouter({
       name: "adduser",
       meta: {auth: true},
       component: ()=> import("@/views/UserProfileView.vue")
+    },
+    {
+      path: "/profile",
+      name: "profile",
+      meta: {auth: true},
+      component: ()=> import("@/views/ProfileView.vue")
     }
   ]
 })
