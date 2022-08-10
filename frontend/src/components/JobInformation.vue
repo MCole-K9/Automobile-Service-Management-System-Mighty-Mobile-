@@ -32,6 +32,9 @@ async function setJobAsCompleted(){
 <template>
   <div class="mx-auto my-auto">
     <div class="md:col-span-2">
+      <button class="btn btn-sm" @click="$router.back()">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"></path></svg>
+      </button>
       <p class="text-2xl my-3 text-center font-bold">Job Information</p>
       <div class="shadow-2xl overflow-hidden rounded-lg">
         <div :class="`px-4 py-5 bg-white  sm:p-6`">
@@ -157,17 +160,27 @@ async function setJobAsCompleted(){
               <p class="h-10 flex px-3 items-center border border-success bg-gray-300 rounded text-black font-medium">
                 ${{ props.job.totalCost }}
               </p>
-              <span class="flex justify-between">
-                <p :class="`h-10 px-3 m-3 flex rounded-lg self-center items-center max-w-fit ${props.job.isPaid ? 'bg-success' : 'bg-error'
-                }`">
-                  Payment {{ props.job.isPaid ? "made" : "not made" }}
-                </p>
-                <p :class="`h-10 px-3 m-3 flex rounded-lg self-center items-center max-w-fit ${props.job.completed ? 'bg-success' : 'bg-error'
-                }`">
-                  Status: {{ props.job.completed ? "Completed" : "Not yet completed" }}
-                </p>
+              <span class="flex flex-col justify-between bg-gray-200 px-5">
+                <span class="flex justify-between items-center w-1/1 m-2">
+                  <label class="font-medium">Confirmed by user:</label>
+                   <p :class="`h-10 px-3 flex rounded self-center items-center max-w-fit ${props.job.confirmed ? 'bg-success' : 'bg-error'}`">
+                    {{ props.job.confirmed ? "Yes" : "No" }}
+                  </p>
+                </span>
+                <span class="flex justify-between items-center w-1/1 m-2">
+                  <label class="font-medium">Payment</label>
+                  <p :class="`h-10 px-3 flex rounded self-center items-center max-w-fit ${props.job.isPaid ? 'bg-success' : 'bg-error'}`">
+                    {{ props.job.isPaid ? "Made" : "Not made" }}
+                  </p>
+                </span>
+                <span class="flex justify-between items-center w-1/1 m-2">
+                  <label class="font-medium">Job Status</label>
+                   <p :class="`h-10 px-3 flex rounded self-center items-center max-w-fit ${props.job.completed ? 'bg-success' : 'bg-error'}`">
+                    {{ props.job.completed ? "Completed" : "Not yet done" }}
+                  </p>
+                </span>
               </span>
-              <button class="btn btn-success max-w-xs self-center" @click="setJobAsCompleted">Set as Completed
+              <button class="btn btn-success max-w-xs self-center" @click="setJobAsCompleted" v-if="!props.job.completed && props.job.confirmed && (currentUser.isAdmin || currentUser.isManager || currentUser.isMechanic)">Set as Completed
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
               </button>
             </div>
