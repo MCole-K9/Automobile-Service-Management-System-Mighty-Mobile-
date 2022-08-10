@@ -27,7 +27,7 @@
         const res = await BackendService.getUpcomingJobs();
         
         jobs.value = [...jobs.value, ...res?.data]
-
+        jobs.value = jobs.value.filter(e => e.completed == false)
 
         console.log(res?.data)
     })

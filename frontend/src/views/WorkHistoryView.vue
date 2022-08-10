@@ -16,6 +16,7 @@ import BackendService from '../../BackendService'
 import DashboardLayout from "../components/DashboardLayout.vue"
 import JobComponent from '../components/JobComponent.vue'
 import type {Job} from "../classlib/Types";
+import { th } from 'date-fns/locale';
 
 export default defineComponent({
   components:{
@@ -33,6 +34,7 @@ export default defineComponent({
   async mounted() {
     const res = await BackendService.getUpcomingJobs()
     this.upcomingJobs = res?.data
+    this.upcomingJobs = this.upcomingJobs.filter(e => e.completed == true)
   },
   methods:{
   }
