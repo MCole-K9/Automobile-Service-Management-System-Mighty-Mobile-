@@ -565,6 +565,23 @@ export default class Routes{
 
             
         })
+        router.get('/jobs/all',async (req:Request, res:Response)=>{
+            try{
+                const jobs = await prisma.job.findMany({
+                    include: {
+                        vehicle: {
+                            include: {
+                                owner: true
+                            }
+                        },
+                        assignedMechanic: true,
+                    },
+                })
+                res.status(200).send(jobs)
+            }catch(err){
+                console.log(err);
+            }
+        })
 
         router.get("/jobs/upcoming", async (req:Request, res:Response)=>{
             const jobs = await prisma.job.findMany({
