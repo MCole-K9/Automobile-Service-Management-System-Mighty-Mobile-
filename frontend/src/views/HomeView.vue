@@ -13,7 +13,7 @@ import NavBar from "../components/NavBar.vue";
           <Transition name="in" appear>
             <span>
               <h1 class="mb-5 text-5xl font-bold">Mighty Mobile Auto Service & Repair</h1>
-              <p class="mb-5">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
+              <p class="mb-5">Bringing the garage to you. We offer affordable car repairs and maintenance at your convenience. Sign up today to book an appointment</p>
               <button class="btn btn-primary" @click="$router.push('/appointmentbooking')">Book Appointment</button>
             </span>
           </Transition>
