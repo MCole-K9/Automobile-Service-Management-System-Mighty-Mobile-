@@ -33,20 +33,20 @@
 <div class="sm:w-1/2">
        <div class="form-control">
         <label class="cursor-pointer label justify-start space-x-2">
-            <input @change="onCheck" type="checkbox" name="Customer"  class="checkbox " :value="UserRole.Customer" />
+            <input @change="onCheck" type="checkbox"  class="checkbox " :value="UserRole.Customer" />
             <span class="label-text">Customer</span>
 
         </label>
         <label class="cursor-pointer label justify-start space-x-2 ">
-            <input @change="onCheck"  type="checkbox" name="Mechanic" class="checkbox " :value="UserRole.Mechanic" />
+            <input @change="onCheck"  type="checkbox"  class="checkbox " :value="UserRole.Mechanic" />
             <span class="label-text">Mechanic</span>
         </label>
         <label class="cursor-pointer label justify-start space-x-2">
-            <input @change="onCheck"  type="checkbox"  name="Manager" class="checkbox " :value="UserRole.Manager" />
+            <input @change="onCheck"  type="checkbox"  class="checkbox " :value="UserRole.Manager" />
             <span class="label-text">Manager</span>
         </label>
         <label class="cursor-pointer label justify-start space-x-2">
-            <input @change="onCheck"  type="checkbox" name="Admin"  class="checkbox " :value="UserRole.ADMIN" />
+            <input @change="onCheck"  type="checkbox"   class="checkbox " :value="UserRole.ADMIN" />
             <span class="label-text">Admin</span>
         </label>
     </div>
