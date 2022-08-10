@@ -234,6 +234,7 @@ export default class Routes{
                 let vehicle = await prisma.vehicle.create({
 
                     data: {
+                        licensePlate: req.body.vehicle.licensePlate as string,
                         image: req.body.vehicle.image as string,
                         make: req.body.vehicle.make as string,
                         model: req.body.vehicle.model as string,
@@ -252,7 +253,8 @@ export default class Routes{
             }catch(err){
 
             }
-        }).put(async (req:Request,res:Response)=>{
+        })
+        .put(async (req:Request,res:Response)=>{
            let vehicle:Vehicle = req.body.vehicle
         //    let ownerId:number = req.body.ownerId
             try{
@@ -290,7 +292,7 @@ export default class Routes{
             }
         })
 
-        router.route("/user/customers").get(async (req:Request, res:Response)=>{
+        router.route("/customs").get(async (req:Request, res:Response)=>{
             try{
                 const customers = await prisma.user.findMany({
                     where: {
@@ -305,16 +307,15 @@ export default class Routes{
                         roles: true
                     }
                 })
-
+                console.log(customers);
+                
                 res.status(200).send(customers);
 
             }catch(err){
 
             }
-            
-
-           
         });
+
         router.get("/user/:id/jobrequests", async (req:Request, res:Response)=>{
 
             try{
