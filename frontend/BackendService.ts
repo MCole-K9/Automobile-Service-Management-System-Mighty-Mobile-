@@ -129,7 +129,16 @@ export default class BackendService{
 
         }
     }
+    static async getAllJobs() {
 
+        try{
+            const res = await axios.get(URL + "/jobs/all");
+            return res;
+
+        }catch(err){
+            
+        }
+    }
 
     static async getUpcomingJobs() {
 
