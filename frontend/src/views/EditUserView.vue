@@ -69,7 +69,7 @@
             <p class="text-2xl my-3 text-center font-bold">Edit Profile</p>
             <UserComponent :User="user">
                 <template #Extra>
-                    <div v-if="!currentUser.isCustomer">
+                    <div v-if="currentUser.isAdmin">
                         <label for="">Roles:</label>
                         <SelectRoles   @selected="updateRoles" />
                         
