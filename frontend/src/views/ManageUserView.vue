@@ -63,7 +63,7 @@ onMounted(async () => {
                                 </div>
                             </td>
                             <th>
-                                <button class="btn btn-ghost btn-xs">Edit</button>
+                                <button class="btn btn-ghost btn-xs" @click="$router.push(`/dashboard/manageusers/edit/${user.id}`)">Edit</button>
                                 <button class="btn btn-ghost btn-xs">Delete</button>
                             </th>
                         </tr>

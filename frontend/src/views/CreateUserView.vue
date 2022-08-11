@@ -5,8 +5,11 @@
     import { ref } from 'vue';
     import BackendService from '../../BackendService';
     import { useRouter } from 'vue-router';
+    import UserComponent from '@/components/User.vue';
+    import { rolesStore } from '@/stores/Roles';
 
     const router = useRouter();
+    const roles = rolesStore();
 
     const user = ref<User>({
 
@@ -28,8 +31,8 @@
         }
     }
 
-    function handleRoleSelect(roles:Role[]){
-        user.value.roles = roles;
+    function handleRoleSelect(){
+        user.value.roles = roles.roles;
         console.log(user.value)
     }
 
@@ -52,39 +55,28 @@
 <template>
     <DashboardLayout>
         <template #content>
-            <div class="mx-auto max-w-3xl shadow-lg rounded-lg p-10 grid grid-cols-2 gap-4">
-                <div class="mx-auto flex flex-col space-y-2 w-full">
-                    <label class="text-center w-full  py-2 px-2 bg-ourGrey shadow-lg" for="vmake">First Name</label>
-                    <input class="input w-full input-bordered " type="text" v-model="user.firstName" id="vmake">
-                </div>
-                <div class="mx-auto flex flex-col space-y-2 w-full">
-                    <label class="text-center w-full  py-2 px-2 bg-ourGrey shadow-lg" for="vmake">Last Name</label>
-                    <input class="input w-full input-bordered " type="text" v-model="user.lastName"  id="vmake">
-                </div>
-                <div class="mx-auto flex flex-col space-y-2 w-full col-span-2">
-                    <label class="text-center w-full  py-2 px-2 bg-ourGrey shadow-lg" for="vmake">Email</label>
-                    <input class="input w-full input-bordered " type="text" v-model="user.email" id="vmake">
-                </div>
-                <div class="mx-auto flex flex-col space-y-2 w-full col-span-2">
-                    <label class="text-center w-full  py-2 px-2 bg-ourGrey shadow-lg" for="vmake">Phone Number</label>
-                    <input class="input w-full input-bordered " type="text" v-model="user.phoneNumber"  id="vmake">
-                </div>
-                <div>
-                    <label for="">Roles:</label>
-                    <SelectRoles @selected="handleRoleSelect" />
-                </div>
-                <div class="flex flex-col space-y-3">
-                    <div>
-                        <label for="">Password:</label>
-                        <input v-model="user.password" class="input input-bordered w-full" type="text" name="" id="">
+            <UserComponent :User="user">
+                <template #Extra>
+                        <div>
+                        <label for="">Roles:</label>
+                        <SelectRoles @selected="handleRoleSelect" />
                     </div>
-                    <button @click="generatePass" class="btn">Generate</button>
-                    <button @click="randomUser" class="btn">Random User</button>
-                </div>
-                <div class="flex justify-center col-span-2">
-                    <button @click="create" class="btn w-1/2">Save</button>
-                </div>
-            </div>
+                    <div class="flex flex-col space-y-3">
+                        <div>
+                            <label for="">Password:</label>
+                            <input v-model="user.password" class="input input-bordered w-full" type="text" name="" id="">
+                        </div>
+                        <button @click="generatePass" class="btn">Generate</button>
+                        <button @click="randomUser" class="btn">Random User</button>
+                    </div>
+                    <div class="flex justify-center col-span-2">
+                        <button @click="create" class="btn w-1/2">Save</button>
+                    </div>
+                </template>
+            </UserComponent>
+                
+                
+        
             
         </template>
     </DashboardLayout> 
@@ -93,7 +85,8 @@
     export default {
         name: "UserProfileView",
         components: {
-            SelectRoles
+            SelectRoles,
+            UserComponent
         }
     }
 </script>

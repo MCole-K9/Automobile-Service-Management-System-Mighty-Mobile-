@@ -113,6 +113,13 @@ const router = createRouter({
       component: ()=> import("@/views/CreateUserView.vue")
     },
     {
+      path: "/dashboard/manageusers/edit/:id",
+      name: "edituser",
+      meta: {auth: true},
+      component: ()=> import("@/views/EditUserView.vue")
+
+    },
+    {
       path: "/profile",
       name: "profile",
       meta: {auth: true},

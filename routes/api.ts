@@ -118,8 +118,26 @@ export default class Routes{
         }).put(async (req:Request, res:Response)=>{
             try{
                 const userId: number = Number.parseInt(req.params.id) ;
-            }catch(err){
 
+                const user = await prisma.user.update({
+                    where: {
+                        id: userId
+                    },
+                    data: {
+                        firstName: req.body.user.firstName as string,
+                        lastName: req.body.user.firstName as string,
+                        email: req.body.user.email as string,
+                        phoneNumber: req.body.phoneNumber as string,
+                        roles: {
+                            set:  req.body.user.roles as Role[]
+                        }
+                    }
+                })
+
+                res.status(200).send(user)
+
+            }catch(err){
+                console.log(err)
             }
 
         })
