@@ -160,7 +160,7 @@ async function setJobAsCompleted(){
               <p class="h-10 flex px-3 items-center border border-success bg-gray-300 rounded text-black font-medium">
                 ${{ props.job.totalCost }}
               </p>
-              <span class="flex flex-col justify-between bg-gray-200 px-5">
+              <span class="flex flex-col justify-between bg-gray-200 px-5 my-5" v-if="currentUser.isAdmin || currentUser.isManager || currentUser.isMechanic">
                 <span class="flex justify-between items-center w-1/1 m-2">
                   <label class="font-medium">Confirmed by user:</label>
                    <p :class="`h-10 px-3 flex rounded self-center items-center max-w-fit ${props.job.confirmed ? 'bg-success' : 'bg-error'}`">
@@ -178,6 +178,12 @@ async function setJobAsCompleted(){
                    <p :class="`h-10 px-3 flex rounded self-center items-center max-w-fit ${props.job.completed ? 'bg-success' : 'bg-error'}`">
                     {{ props.job.completed ? "Completed" : "Not yet done" }}
                   </p>
+                </span>
+              </span>
+              <span class="flex flex-col justify-between bg-gray-200 px-5 my-5" v-else-if="props.job.confirmed">
+                <span class="flex justify-between items-center w-1/1 m-2">
+                  <label class="font-medium">Job Payment</label>
+                  <button class="btn btn-success">pay now</button>
                 </span>
               </span>
               <button class="btn btn-success max-w-xs self-center" @click="setJobAsCompleted" v-if="!props.job.completed && props.job.confirmed && (currentUser.isAdmin || currentUser.isManager || currentUser.isMechanic)">Set as Completed
