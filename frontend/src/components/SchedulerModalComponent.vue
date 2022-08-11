@@ -30,6 +30,7 @@
 
     let isVehicleInformationOpen: Ref<Boolean> = ref(false);
     let isJobInformationOpen: Ref<Boolean> = ref(false);
+    let isDurationClash: Ref<Boolean> = ref(false);
 
     const newJobStage: Ref<JobStageWithSchedule> = ref({}) as Ref<JobStageWithSchedule>;
     if (newJobStage.value.scheduledItem != undefined){
@@ -101,6 +102,13 @@
         }
         
     }
+
+    watch(() => props.clashResult, (result)=>{
+        console.log("clash changed, value: " + result);
+        if (result === true){
+            isDurationClash.value = true;
+        }
+    })
 
 </script>
 
@@ -180,14 +188,14 @@
 
                 <label class="form-control">
                     <label class="label">Duration (Hours):</label>
-                    <input v-model="newJobStage.duration" type="range" min="1" max="3" steps="1" class="range"
+                    <input v-model.number="newJobStage.duration" type="range" min="1" max="3" steps="1" class="range"
                     @change="$emit('durationRangeValueChange', newJobStage.duration, props.time, props.day)"/>
                     <div class="w-full flex justify-between text-xs px-2">
                         <span>1</span>
                         <span>2</span>
                         <span>3</span>
                     </div>
-                    <label :class="{'invisible': clashResult}"
+                    <label :class="{'invisible': isDurationClash}"
                     class="text-red-500">ERROR TEXT</label>
                 </label>
                 <!-- <button class="btn">Add images</button> -->

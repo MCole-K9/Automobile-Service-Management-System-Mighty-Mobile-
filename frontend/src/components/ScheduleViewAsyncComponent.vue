@@ -27,30 +27,56 @@
     // Watches the timeInformationToCheck prop and takes it value to compare with the time information.
     watch(() => props.timeInformationToCheck, timeInformation => {
         
-        if (timeInformation != undefined){
+        if (timeInformation.duration != undefined){
+
+            console.log(timeInformation);
+
             let isClash: boolean = false;
 
             let dayIndexPosition: number = 0;
             let timeIndexPosition: number = 0;
 
             // Can't know the index position of a given day ahead of time, so forEach for its position
-            schedule.value.workingDays.forEach((workingDay, index) => {
+            schedule.value.workingDays.every((workingDay, index) => {
                 if (workingDay.day === timeInformation.targetDay){
                     dayIndexPosition = index;
+
+                    return false;
+                }
+                else{
+                    return true;
                 }
             });
 
+            // if (timeIndexPosition === 0){
+            //     timeIndexPosition = timeInformation.targetTime;
+            // }
+
             // Can't know how many blocks are in a given day, so need to get the index of this specific time
-            schedule.value.workingDays[dayIndexPosition].hourBlocks.forEach((hourBlock, index) => {
+            schedule.value.workingDays[dayIndexPosition].hourBlocks.every((hourBlock, index) => {
                 if (hourBlock.time === timeInformation.targetTime){
                     timeIndexPosition = index;
+
+                    return false;
+                }
+                else{
+                    return true;
                 }
             });
+
+            // this will print a string that's "1X", were X is the duration number. suspect this means that the
+            // duration is being sent as a string, but 
+            const stoppingIndex: number = timeIndexPosition + timeInformation.duration;
+            console.log("stopping index: ", stoppingIndex);
             
-            for (let i: number = timeIndexPosition; i < (timeIndexPosition + timeInformation.duration); i++){
-                if (schedule.value.workingDays[dayIndexPosition].hourBlocks[i].id !== null){
+            for (let i: number = timeIndexPosition; i < stoppingIndex; i++){
+                console.log("index position: " + i);
+                if (schedule.value.workingDays[dayIndexPosition].hourBlocks[i].id === null){
+
+                }
+                else{
+                    console.log("position: " + i + " clashes, duration: " + timeInformation.duration);
                     isClash = true;
-                    break;
                 }
             }
 
