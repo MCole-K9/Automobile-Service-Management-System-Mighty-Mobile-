@@ -222,10 +222,6 @@ export default class BackendService{
 
         try {
             const schedule = await axios.get(URL + `/user/${userId}/schedule/${Date.now()}-${selectedMonth}`);
-            
-            // schedule.data.forEach(element =>{
-            //     console.log(element.date);
-            // })
 
             // generating the amount of days in the month for calculations later
             let daysInMonth: number = 0;
@@ -377,7 +373,6 @@ export default class BackendService{
 
                             workingDay.hourBlocks.push(hourBlock);
 
-                            console.log(hourBlock);
                             // leaving out the address on purpose, since i might choose to leave it out on the UI
                         }
 
@@ -482,11 +477,9 @@ export default class BackendService{
                     let timeToCheck: number = 8;
 
                     checkBlockDifferenceAddMissing(workingDay, hourIndex, timeToCheck);
-                    console.log(workingDay);
                 }
             });
 
-            // console.log(res);
             return res;
 
         }catch(err: any){
