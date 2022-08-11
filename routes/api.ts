@@ -1,5 +1,5 @@
 import { Response, Request, Router} from "express";
-import { Job, JobPart, PrismaClient, Role, Vehicle } from "@prisma/client"; //Db Connection
+import { Appointment, Job, JobPart, PrismaClient, Role, Vehicle } from "@prisma/client"; //Db Connection
 import bcrypt, {genSalt, hash} from "bcrypt"
 import { transformDocument } from "@prisma/client/runtime";
 import {JobStageWithSchedule} from "../frontend/src/classlib/PrismaDerivedTypes"
@@ -312,7 +312,7 @@ export default class Routes{
                         roles: true
                     }
                 })
-                console.log(customers);
+                // console.log(customers);
                 
                 res.status(200).send(customers);
 
@@ -332,10 +332,10 @@ export default class Routes{
                         vehicle: {
                             ownerId: userId,
                         },
-                        // startDate: {
-                        //     gte: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())
-                        // }
-                        completed : false
+                        startDate: {
+                            gte: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())
+                        },
+                        // completed : false
                 
                         
                     },
@@ -444,14 +444,27 @@ export default class Routes{
                         vehicle: true,
                     }
                 })
-                console.log(appointment)
+                // console.log(appointment)
                 res.send(appointment);
 
             }catch(err){
                 console.log(err)
             }
-        }).put(async (req:Request, res:Response)=>{
-
+        }).post(async (req:Request, res:Response)=>{
+            try{
+                const appId: number = parseInt(req.params.id);
+                console.log(appId);
+                await prisma.appointment.update({
+                    where : {
+                        id : appId
+                    },
+                    data:{
+                        fulfilled : true
+                    }
+                })
+            }catch(err){
+                console.log(err)
+            }
         });
 
         router.route("/jobs").get(async (req:Request, res:Response)=>{
