@@ -20,20 +20,26 @@
         clashResult: boolean
     }>();
 
+    watch(() => props.clashResult, (result)=>{
+    console.log("clash changed, value: " + result);
+    if (result === true){
+        isDurationClash.value = true;
+        durationErrorText.value = "ERROR: value exceeds maximum available duration";
+    }
+    else{
+        isDurationClash.value = false;
+    }
+    });
+
     const emit = defineEmits<{
         (e: 'schedulerModalClose'): void
         (e: 'durationRangeValueChange', duration: number, time: number, day: number): void,
     }>();
     
     const currentUser = currentUserStore();
-    const isValidationError: Ref<boolean> = ref(false);
-    const validationErrorMessage: Ref<string> = ref("");
-    const durationErrorText: Ref<string> = ref("");
+
     let isVehicleInformationOpen: Ref<Boolean> = ref(false);
     let isJobInformationOpen: Ref<Boolean> = ref(false);
-    let isDurationClash: Ref<Boolean> = ref(false);
-    const optionSelectJob = ref();
-
 
     const newJobStage: Ref<JobStageWithSchedule> = ref({}) as Ref<JobStageWithSchedule>;
     if (newJobStage.value.scheduledItem != undefined){
@@ -46,6 +52,7 @@
     // Getting and populating the list of open jobs assigned to this user
     const jobsFromDatabase = await BackendService.getActiveJobsForMechanic(currentUser.User.id);
     const listOfJobs: MinimumJobInfoList = {items: []};
+    let selectedJob: Ref<FullJobInformation> = ref({}) as Ref<FullJobInformation>;
     jobsFromDatabase?.data.forEach((job: any) => {
         let jobListItem: MinimumJobInfoItem = {jobNumber: 0, clientFirstName: "", clientLastName: "", clientId: 0};
         jobListItem.jobNumber = job?.jobNumber;
@@ -56,9 +63,7 @@
         listOfJobs.items.push(jobListItem);
     });
 
-    let selectedJob: Ref<FullJobInformation> = ref({}) as Ref<FullJobInformation>;
-
-    // Watches optionSelectJob (the drop-down to select an active job) and makes the call to db for full information
+    const optionSelectJob = ref();
     watch(optionSelectJob, async(optionSelect)=>{
         const jobId = optionSelect;
 
@@ -72,6 +77,10 @@
     });
 
     // method to validate new Job stage information
+    const isValidationError: Ref<boolean> = ref(false);
+    const validationErrorMessage: Ref<string> = ref("");
+    const durationErrorText: Ref<string> = ref("");
+    const isDurationClash: Ref<Boolean> = ref(false);
     function validateJobStageAndSubmit(){
         console.log("test");
         
@@ -103,20 +112,7 @@
         }
         
     }
-
-    watch(() => props.clashResult, (result)=>{
-        console.log("clash changed, value: " + result);
-        if (result === true){
-            isDurationClash.value = true;
-            durationErrorText.value = "ERROR: value exceeds maximum available duration";
-        }
-        else{
-            isDurationClash.value = false;
-        }
-    })
-
 </script>
-
 <template>
     <div class="modal z-50" 
         :class="{'modal-open': open}">
