@@ -24,7 +24,7 @@
     onMounted(async ()=>{
 
     
-        const res = await BackendService.getAllJobs();
+        const res = await BackendService.getUpcomingJobs();
         
         jobs.value = [...jobs.value, ...res?.data]
         jobs.value = jobs.value.filter(e => e.completed == false)
