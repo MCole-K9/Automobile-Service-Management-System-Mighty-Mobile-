@@ -24,9 +24,9 @@
         timeInformationToCheck: TimeToCheck
     }>();
 
-    // 
-    watch(props.timeInformationToCheck, timeInformation => {
-        console.log("time information received");
+    // Watches the timeInformationToCheck prop and takes it value to compare with the 
+    watch(() => props.timeInformationToCheck, timeInformation => {
+        
         if (timeInformation != undefined){
             let isClash: boolean = false;
 
@@ -37,6 +37,7 @@
             schedule.value.workingDays.forEach((workingDay, index) => {
                 if (workingDay.day === timeInformation.targetDay){
                     dayIndexPosition = index;
+                    console.log("index position of day: ", dayIndexPosition);
                 }
             });
 
@@ -44,12 +45,14 @@
             schedule.value.workingDays[dayIndexPosition].hourBlocks.forEach((hourBlock, index) => {
                 if (hourBlock.time === timeInformation.targetTime){
                     timeIndexPosition = index;
+                    console.log("index position of hour", timeIndexPosition);
                 }
             });
             
-            for (let i: number = timeIndexPosition; i<=timeIndexPosition + timeInformation.duration; i++){
+            for (let i: number = timeIndexPosition; i <= (timeIndexPosition + timeInformation.duration); i++){
 
                 if (schedule.value.workingDays[dayIndexPosition].hourBlocks[timeIndexPosition].id !== null){
+                    console.log("index position crashes");
                     isClash = true;
                     break;
                 }
@@ -57,9 +60,13 @@
 
             if (isClash){
                 emit("clashResult", isClash);
+                console.log("clash");
+            }
+            else{
+                console.log("doesn't clash");
             }
         }
-    }, {deep: true})
+    })
 
 
     const currentUser = currentUserStore();

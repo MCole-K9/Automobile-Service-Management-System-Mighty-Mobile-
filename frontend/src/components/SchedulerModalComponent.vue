@@ -59,6 +59,7 @@
     const optionSelectJob = ref();
     let selectedJob: Ref<FullJobInformation> = ref({}) as Ref<FullJobInformation>;
 
+    // Watches optionSelectJob (the drop-down to select an active job) and makes the call to db for full information
     watch(optionSelectJob, async(optionSelect)=>{
         const jobId = optionSelect;
 
@@ -107,9 +108,9 @@
         <!-- <input type="checkbox" @change="$emit('schedulerModalClose')" id="close-modal-test"/> -->
         <div class="modal-box max-h-[30rem]">
             <label>Schedule New Job-Stage for {{newJobStage.scheduledItem?.date.toDateString()}}</label>
-            
+            <label for="close-modal-test" @click.stop="$emit('schedulerModalClose')" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
             <label class="form-control">
-                <label for="close-modal-test" @click.stop="$emit('schedulerModalClose')" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+                
                 <label class="label">
                     <span>Select the Job:</span>
                 </label>
