@@ -129,6 +129,15 @@ export default class BackendService{
 
         }
     }
+    static async fulfillAppointment(appointmentId: number){
+        try{
+            const res = await axios.post(URL + `/appointment/${appointmentId}`);
+            return res;
+
+        }catch(err){
+
+        }
+    }
     static async getAllJobs() {
 
         try{
