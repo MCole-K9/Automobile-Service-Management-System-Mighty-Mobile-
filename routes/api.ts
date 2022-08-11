@@ -102,7 +102,7 @@ export default class Routes{
                         id : userId
                     },
                     include:{
-                        roles : true
+                        roles : true,
                     }
                 })
                 console.log(user);
