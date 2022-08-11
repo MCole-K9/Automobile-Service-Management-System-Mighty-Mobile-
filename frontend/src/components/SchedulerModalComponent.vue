@@ -26,11 +26,14 @@
     }>();
     
     const currentUser = currentUserStore();
-    const timeInformationToCheck: TimeToCheck = {targetTime: 0, targetDay: 0, duration: 0};
-
+    const isValidationError: Ref<boolean> = ref(false);
+    const validationErrorMessage: Ref<string> = ref("");
+    const durationErrorText: Ref<string> = ref("");
     let isVehicleInformationOpen: Ref<Boolean> = ref(false);
     let isJobInformationOpen: Ref<Boolean> = ref(false);
     let isDurationClash: Ref<Boolean> = ref(false);
+    const optionSelectJob = ref();
+
 
     const newJobStage: Ref<JobStageWithSchedule> = ref({}) as Ref<JobStageWithSchedule>;
     if (newJobStage.value.scheduledItem != undefined){
@@ -40,24 +43,19 @@
         newJobStage.value.scheduledItem.date.setHours(props.time);
     }
 
-
     // Getting and populating the list of open jobs assigned to this user
-    const dbJobs = await BackendService.getActiveJobsForMechanic(currentUser.User.id);
-    const jobs: MinimumJobInfoList = {items: []};
-
-    dbJobs?.data.forEach((job: any) => {
+    const jobsFromDatabase = await BackendService.getActiveJobsForMechanic(currentUser.User.id);
+    const listOfJobs: MinimumJobInfoList = {items: []};
+    jobsFromDatabase?.data.forEach((job: any) => {
         let jobListItem: MinimumJobInfoItem = {jobNumber: 0, clientFirstName: "", clientLastName: "", clientId: 0};
         jobListItem.jobNumber = job?.jobNumber;
         jobListItem.clientFirstName = job.vehicle.owner.firstName;
         jobListItem.clientLastName = job.vehicle.owner.lastName;
         jobListItem.clientId = job.vehicle.owner.id;
 
-        jobs.items.push(jobListItem);
+        listOfJobs.items.push(jobListItem);
     });
 
-    // filling job information based on the selection of the dropdown
-    const activeJobs = ref(jobs);
-    const optionSelectJob = ref();
     let selectedJob: Ref<FullJobInformation> = ref({}) as Ref<FullJobInformation>;
 
     // Watches optionSelectJob (the drop-down to select an active job) and makes the call to db for full information
@@ -73,33 +71,35 @@
         }
     });
 
-    const isValidationError: Ref<boolean> = ref(false);
-    const validationErrorMessage: Ref<string> = ref("");
-    const durationErrorText: Ref<string> = ref("");
-    
     // method to validate new Job stage information
     function validateJobStageAndSubmit(){
+        console.log("test");
+        
+        emit('durationRangeValueChange', newJobStage.value.duration, props.time, props.day);
 
         if (props.clashResult === false){
-            // remove "duration error"
-            emit('durationRangeValueChange', newJobStage.value.duration, props.time, props.day);
+            validationErrorMessage.value.replace("Duration", "");
 
             if (newJobStage.value.description !== ""){
-                // remove "description error"
+                validationErrorMessage.value.replace("Description", "");
+
                 if (newJobStage.value.scheduledItem !== null){
-                    // remove "please select a jobStage" error
+                    isValidationError.value = false;
                     BackendService.writeJobStageToDatabase(newJobStage.value);
                 }
                 else{
-                    // select a job
+                    validationErrorMessage.value += "job";
+                    isValidationError.value = true;
                 }
             }
             else{
-                // blah blah you need to fill this in
+                validationErrorMessage.value += "Description";
+                isValidationError.value = true;
             }
         }
         else{
-            
+            validationErrorMessage.value += "Duration";
+            isValidationError.value = true;
         }
         
     }
@@ -108,6 +108,7 @@
         console.log("clash changed, value: " + result);
         if (result === true){
             isDurationClash.value = true;
+            durationErrorText.value = "ERROR: value exceeds maximum available duration";
         }
         else{
             isDurationClash.value = false;
@@ -132,7 +133,7 @@
                     <span class="label-text bg-ourYellow">Job</span>
                     <select v-model.number="optionSelectJob">
                         <option disabled value="" selected>Select a Job</option>
-                        <option v-for="item in jobs.items"
+                        <option v-for="item in listOfJobs.items"
                         :key="item.jobNumber" :value="item.jobNumber">
                             {{item.jobNumber}} | {{item.clientFirstName}} {{item.clientLastName}} (ID: {{item.clientId}})
                         </option>
@@ -199,12 +200,12 @@
                         <span>2</span>
                         <span>3</span>
                     </div>
-                    <label :class="{'invisible': isDurationClash}"
-                    class="text-red-500">ERROR TEXT</label>
+                    <label v-show="isDurationClash"
+                    class="text-red-500">{{durationErrorText}}</label>
                 </label>
                 <!-- <button class="btn">Add images</button> -->
                 <div>
-                    <span class="text-red-500" :class="{'visible': isValidationError, 'invisible': !isValidationError}">ERROR: {{validationErrorMessage}}</span>
+                    <span class="text-red-500" v-show="isValidationError">ERROR: {{validationErrorMessage}}</span>
                 </div>
             </div>
 

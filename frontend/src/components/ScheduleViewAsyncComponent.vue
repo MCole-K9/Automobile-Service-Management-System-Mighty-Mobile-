@@ -68,10 +68,8 @@
                     isClash = true;
                 }
             }
-
-            if (isClash){
-                emit("clashResult", isClash);
-            }
+            
+            emit("clashResult", isClash);
         }
     })
 
