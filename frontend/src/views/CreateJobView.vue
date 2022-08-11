@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { onMounted, ref } from "vue";
+    import { onMounted, ref, computed } from "vue";
     import DashboardLayout from '@/components/DashboardLayout.vue';
     import BackendService from "../../BackendService";
     import type { Job, User, Vehicle, JobPart, Appointment } from '@/classlib/Types';
@@ -45,6 +45,20 @@
         price: 0,
     })
 
+    let totalCost = computed(()=>{
+        
+
+        let partsCost = 0;
+
+        job.value.requiredParts?.forEach(part=>{
+            partsCost += part.price; 
+        });
+
+        return job.value.serviceFee + partsCost;
+
+
+    })
+
     function addPart() {
 
         job.value.requiredParts?.push({ ...jobPart.value }); // solves the pushing the reference of jobPart object issue
@@ -65,6 +79,7 @@
         //Do checks before doing these(Validation)
         job.value.createdById = currentUser.User.id;
         job.value.vehicleId = customerVehicle.value?.id as number;
+        job.value.totalCost = totalCost.value;
 
         const res = await BackendService.createJob(job.value);
         

@@ -498,6 +498,7 @@ export default class Routes{
                         serviceFee:  req.body.job.serviceFee as number,
                         serviceType:  req.body.job.serviceType as string,
                         summary: req.body.job.summary as string,
+                        totalCost: req.body.job.totalCost as number,
                         createdBy: {
                             connect: {
                                 id: req.body.job.createdById as number
@@ -515,6 +516,7 @@ export default class Routes{
                         }
                         
                     },
+
 
                     
                 })
