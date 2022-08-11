@@ -6,7 +6,7 @@
     import {currentUserStore, newUserStore} from "../stores/User";
     import { ref, reactive, watch} from 'vue';
     import BackendService from '../../BackendService';
-    import { defineAsyncComponent } from 'vue';
+    import { defineAsyncComponent, watchEffect} from 'vue';
 
     type TimeToCheck = {
         targetTime: number,
@@ -24,42 +24,54 @@
         timeInformationToCheck: TimeToCheck
     }>();
 
-    // 
-    watch(props.timeInformationToCheck, timeInformation => {
-        if (timeInformation != undefined){
+    // Watches the timeInformationToCheck prop and takes it value to compare with the time information.
+    watch(() => props.timeInformationToCheck, timeInformation => {
+        
+        if (timeInformation.duration != undefined){
+
             let isClash: boolean = false;
 
             let dayIndexPosition: number = 0;
             let timeIndexPosition: number = 0;
 
             // Can't know the index position of a given day ahead of time, so forEach for its position
-            schedule.value.workingDays.forEach((workingDay, index) => {
+            schedule.value.workingDays.every((workingDay, index) => {
                 if (workingDay.day === timeInformation.targetDay){
                     dayIndexPosition = index;
+
+                    return false;
+                }
+                else{
+                    return true;
                 }
             });
 
             // Can't know how many blocks are in a given day, so need to get the index of this specific time
-            schedule.value.workingDays[dayIndexPosition].hourBlocks.forEach((hourBlock, index) => {
+            schedule.value.workingDays[dayIndexPosition].hourBlocks.every((hourBlock, index) => {
                 if (hourBlock.time === timeInformation.targetTime){
                     timeIndexPosition = index;
+
+                    return false;
+                }
+                else{
+                    return true;
                 }
             });
-            
-            for (let i: number = timeIndexPosition; i<=timeIndexPosition + timeInformation.duration; i++){
 
-                if (schedule.value.workingDays[dayIndexPosition].hourBlocks[timeIndexPosition].id !== null){
+            const stoppingIndex: number = timeIndexPosition + timeInformation.duration;
+            
+            for (let i: number = timeIndexPosition; i < stoppingIndex; i++){
+                if (schedule.value.workingDays[dayIndexPosition].hourBlocks[i].id === null){
+
+                }
+                else{
                     isClash = true;
-                    break;
                 }
             }
-
-            if (isClash){
-                emit("clashResult", isClash);
-            }
+            
+            emit("clashResult", isClash);
         }
     })
-
 
     const currentUser = currentUserStore();
     const currentDate: Date = new Date(Date.now());

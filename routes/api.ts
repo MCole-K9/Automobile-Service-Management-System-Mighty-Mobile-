@@ -787,10 +787,6 @@ export default class Routes{
                     
                 }
             })
-            
-            schedule.forEach(schedule =>{
-                console.log(schedule);
-            });
 
             res.status(200).send(schedule);
         

@@ -115,7 +115,7 @@
             <div>Address: {{shortJobInformation.streetAddress}},  {{shortJobInformation.town}}, {{shortJobInformation.parish}}</div>
             <div>Stage Duration: {{shortJobInformation.duration}}</div>
             <div>Stage Description: {{shortJobInformation.description}}</div>
-            <button>See All Jobs</button>
+            <button @click="$router.push(`/dashboard/viewjob/${shortJobInformation.jobNumber}`)">See Full Job</button>
         </div>
         <div v-if="blockType === 'APPOINTMENT'">
             <div>Appointment for {{shortAppointmentInformation.customerFirstName}} 
@@ -124,7 +124,7 @@
             <div>Date: {{shortAppointmentInformation.scheduleDate}}</div>
             <div>Address: {{shortAppointmentInformation.street}},  {{shortAppointmentInformation.town}}, {{shortJobInformation.parish}}</div>
             <div>Problem Description: {{shortAppointmentInformation.problemDescription}}</div>
-            <button>See All Appointments</button>
+            <button @click="$router.push(`/dashboard/appointment/${shortAppointmentInformation.appointmentId}`)">See Full Appointment</button>
         </div>
             <button @click="$emit('viewerModalClose')"></button>
         </div>

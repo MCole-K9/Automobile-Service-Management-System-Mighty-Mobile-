@@ -16,7 +16,7 @@ import BackendService from '../../BackendService'
 import DashboardLayout from "../components/DashboardLayout.vue"
 import JobComponent from '../components/JobComponent.vue'
 import type {Job} from "../classlib/Types";
-import { th } from 'date-fns/locale';
+
 
 export default defineComponent({
   components:{

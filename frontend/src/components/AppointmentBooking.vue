@@ -113,14 +113,14 @@
             <div v-if="!currentUser.loggedIn" class="mx-auto flex flex-col space-y-4 w-full">
                 <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg" >Contact Information</label>
                 <input class="input w-full input-bordered " v-model="fullName" placeholder="Full Name (John Doe)" type="text" id="name">
-                <input class="input w-full input-bordered " v-model="email" placeholder="Email Address" type="email" id="email">
+                <input class="input w-full input-bordered " v-model="email" placeholder="Email Address" type="email" id="new-user-email">
                 <input class="input w-full input-bordered " v-model="phoneNumber" placeholder="Phone Number" type="text" id="firstNam">
                 <p class=" px-2 my-2"><small>Note: This information will be used in the creation of your account</small></p>
             </div>
             <div v-else class="mx-auto flex flex-col space-y-4 w-full">
                 <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg" >Contact Information</label>
                 <input class="input w-full input-bordered " disabled :value="currentUser.fullName" placeholder="Full Name (John Doe)" type="text" id="name">
-                <input class="input w-full input-bordered " disabled :value="currentUser.User.email" placeholder="Email Address" type="email" id="email">
+                <input class="input w-full input-bordered " disabled :value="currentUser.User.email" placeholder="Email Address" type="email" id="current-user-email">
                 <input class="input w-full input-bordered " disabled :value="currentUser.User.phoneNumber" placeholder="Phone Number" type="text" id="firstNam">
             </div>
         </div>
