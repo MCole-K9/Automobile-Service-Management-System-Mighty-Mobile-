@@ -27,7 +27,7 @@ const currentUser = currentUserStore();
     <ul class="menu p-4 overflow-y-auto w-60 sticky text-base-content bg-ourYellow" style="height:calc(100vh - 6rem)">
       <!-- Sidebar content here -->
       <li><router-link to="/dashboard">Dashboard</router-link></li>
-      <li><router-link to="/dashboard/requests">Requests</router-link></li>
+      <li><router-link to="/dashboard/requests">Job Requests</router-link></li>
       <li v-if="!currentUser.isCustomer"><router-link to="/dashboard/jobboard">Job Board</router-link></li>
       <li v-if="!currentUser.isCustomer"><router-link to="/yourschedule">Schedule</router-link></li>
       <li v-if="currentUser.isCustomer"><router-link to="/dashboard/vehicles">Vehicles</router-link></li>
