@@ -152,7 +152,7 @@ export default defineComponent({
             let res = await BackendService.getAllJobs()
             this.allJobs = res?.data
             this.allJobs.forEach((e)=>{
-                if(e.vehicleId == vehicleId){
+                if(e.vehicleId == vehicleId && e.completed){
                     this.jobsDoneOnVehicle.push(e)
                     console.log(e);
                 }
@@ -180,7 +180,6 @@ export default defineComponent({
             if(res?.data.status){
                 document.getElementById('modalButton')?.click()
                 console.log('success');
-                
                 this.errorMsg = ''
             }else{
                 this.errorMsg = 'Something went wrong'
