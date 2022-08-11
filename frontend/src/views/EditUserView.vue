@@ -8,7 +8,8 @@
     import SelectRoles from '@/components/SelectRoles.vue';
     import { rolesStore } from '@/stores/Roles';
     import LoadingAnimation from '@/components/LoadingAnimation.vue';
-
+    import { currentUserStore } from "@/stores/User";
+    const currentUser = currentUserStore();
 
 
     const route = useRoute()
@@ -65,12 +66,16 @@
 <template>
     <DashboardLayout>
         <template #content>
+            <p class="text-2xl my-3 text-center font-bold">Edit Profile</p>
             <UserComponent :User="user">
                 <template #Extra>
-                    <div>
+                    <div v-if="!currentUser.isCustomer">
                         <label for="">Roles:</label>
                         <SelectRoles   @selected="updateRoles" />
                         
+                    </div>
+                    <div v-else>
+
                     </div>
                     <div class="flex justify-center">
                         <button class="btn">Change Password</button>
