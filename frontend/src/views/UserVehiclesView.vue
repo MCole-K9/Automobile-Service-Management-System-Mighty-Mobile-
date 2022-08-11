@@ -9,8 +9,8 @@
 </span>
     <div class="grid grid-cols-1 xl:grid-cols-2 grid-flow-row gap-5 my-10">
         <div class="bg-ourYellow rounded flex flex-col justify-start items-center md:grid lg:grid xl:flex 2xl:grid grid-rows-3 grid-cols-4 gap-4 h-fit p-4 min-w-96" v-for="vehicle in userVehicles">
-        <div class="row-span-3 aspect-auto h-fit flex flex-col justify-center col-span-1">
-            <img :src="(vehicle.image == null ? 'https://demofree.sirv.com/nope-not-here.jpg' : String(vehicle.image))" class="rounded" alt="Car Image">
+        <div class="row-span-3 aspect-auto h-fit  flex flex-col justify-center col-span-1">
+            <img :src="(vehicle.image == null ? 'https://demofree.sirv.com/nope-not-here.jpg' : String(vehicle.image))" class="rounded max-h-36" alt="Car Image">
         </div>
         <div class="row-span-2 col-span-3 text-center sm:text-left px-3">
             <p class="font-semibold">{{`${vehicle.year} ${vehicle.make} ${vehicle.model}`}}</p>
