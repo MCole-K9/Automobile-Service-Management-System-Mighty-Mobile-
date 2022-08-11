@@ -335,8 +335,6 @@ export default class BackendService{
                         continue;
                     }
 
-                    console.log(checkDate.toString());
-
                     if(workingDay.day == checkDate.getDate()){
                         // this means that it's a jobStage
                         if (schedule.data[incrementor].jobStage !== null){
@@ -351,8 +349,6 @@ export default class BackendService{
                             hourBlock.duration = schedule.data[incrementor].jobStage.duration;
                             hourBlock.time = checkDate.getHours();
                             hourBlock.description = schedule.data[incrementor].jobStage.description;
-
-                            console.log(hourBlock)
 
                             workingDay.hourBlocks.push(hourBlock);
 
@@ -412,8 +408,6 @@ export default class BackendService{
                     return;
                 }
 
-                console.log(`Prior to action: hourIndex: ${_hourIndex}, ${_timeToCheck}`);
-
                 // this confirms that there's a schedule item at this increment of timeToCheck
                 if (workingDay.hourBlocks[_hourIndex].time === _timeToCheck){
                     
@@ -421,8 +415,6 @@ export default class BackendService{
                     _timeToCheck = workingDay.hourBlocks[_hourIndex].time + workingDay.hourBlocks[_hourIndex].duration;
                     // increment the hour index so that it checks the next hourblock
                     _hourIndex++;
-                    
-                    console.log("time = " + workingDay.hourBlocks[_hourIndex].time);
 
                 }
                 // this indicates that for a given time, there is no schedule item
@@ -441,7 +433,6 @@ export default class BackendService{
 
                     _timeToCheck = workingDay.hourBlocks[_hourIndex].time + workingDay.hourBlocks[_hourIndex].duration;
 
-                    console.log(_timeToCheck)
                     // ASSUMING the postfix in the splice works, the following SHOULDN'T be necessary
                     _hourIndex++;
                 }
