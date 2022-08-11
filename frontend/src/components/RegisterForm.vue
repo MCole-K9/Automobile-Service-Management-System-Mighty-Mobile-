@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, defineComponent } from "vue"
+import { computed, ref, defineComponent, onUnmounted } from "vue"
 import BackendService from "../../BackendService";
 import {newUserStore} from "../stores/User"
 
@@ -37,6 +37,10 @@ function handleInputChange(event: Event){
     //console.log(newUser.User)
 
 }
+
+onUnmounted(()=>{
+    newUser.$reset();
+})
 
 async function register(){
     
