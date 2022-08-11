@@ -1,6 +1,9 @@
 <script setup lang="ts">
 
     import type { Appointment, Job } from "@/classlib/Types"
+    import { currentUserStore } from "@/stores/User";
+    const currentUser = currentUserStore();
+
 
     const props = defineProps<{
         job?: Job
@@ -44,10 +47,10 @@
             <span class="badge badge-ghost badge-sm">Appointment</span>
         </td>
         <td>{{ $parseDate(props.appointment.suggestedDate) }}</td>
-        <th>
+        <th v-if="(currentUser.isAdmin || currentUser.isManager || currentUser.isMechanic)">
             <button @click="$router.push({path: `/dashboard/appointment/${appointment?.id}`})" class="btn btn-ghost bg-ourYellow btn-xs">Details</button>
         </th>
-        <th>
+        <th v-if="(currentUser.isAdmin || currentUser.isManager || currentUser.isMechanic)">
             <button class="btn btn-ghost bg-ourYellow btn-xs" @click="$router.push(`/dashboard/createjob/${appointment?.id}`)">create job</button>
         </th>
     </tr>
