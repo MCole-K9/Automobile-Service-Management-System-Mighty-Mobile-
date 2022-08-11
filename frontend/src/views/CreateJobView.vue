@@ -2,11 +2,21 @@
     import { onMounted, ref } from "vue";
     import DashboardLayout from '@/components/DashboardLayout.vue';
     import BackendService from "../../BackendService";
-    import type { Job, User, Vehicle, JobPart } from '@/classlib/Types';
+    import type { Job, User, Vehicle, JobPart, Appointment } from '@/classlib/Types';
     import { currentUserStore } from "@/stores/User";
-    import { useRouter } from "vue-router";
+    import { useRouter, useRoute } from "vue-router";
 
     const router = useRouter()
+    const route = useRoute();
+    const id = route.params.id;
+    id ?  getAppointmentFromRouteParam() : console.log('No ID');
+    async function getAppointmentFromRouteParam(){
+        let res = await BackendService.getAppointment(Number(id))
+        let app = res?.data as Appointment
+        customer.value = app.customer as User
+        customerVehicle.value = app.vehicle
+    }
+        
     let currentUser = currentUserStore();
     let customers = ref<User[]>([]);
     let customer = ref<User>({
@@ -61,7 +71,9 @@
         if (res?.status && res?.status < 300){
             router.push({name: "jobboard"});
         }
-
+        if(id){
+            await BackendService.fulfillAppointment(Number(id))
+        }
 
 
     }
@@ -81,12 +93,18 @@
 
             <section id="customer_info">
                 <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 text-center">
-                    <div class="mx-auto flex flex-col space-y-4 w-full">
+                    <div v-if="!id" class="mx-auto flex flex-col space-y-4 w-full">
                         <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg">Customer Name</label>
-                        <select v-model="customer" class="select select-bordered w-full" id="firstNoticed">
+                        <select v-model="customer" class="select select-bordered w-full" id="selectCustomer">
                             <option disabled selected>Select Customer</option>
                             <option v-for="customer in customers" :key="customer.id" :value="customer">
                                 {{ customer.firstName }} {{ customer.lastName }}</option>
+                        </select>
+                    </div>
+                    <div v-else class="mx-auto flex flex-col space-y-4 w-full">
+                        <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg">Customer Name</label>
+                        <select v-model="customer" class="select select-bordered w-full" id="selectCustomer" disabled>
+                            <option disabled selected :value="customer">{{ customer.firstName }} {{ customer.lastName }}</option>
                         </select>
                     </div>
                     <div class="mx-auto flex flex-col space-y-4 w-full">
@@ -97,13 +115,19 @@
                         <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg">Email Address</label>
                         <input class="input w-full input-bordered" type="email" :value="customer.email" disabled>
                     </div>
-                    <div class="mx-auto flex flex-col space-y-4 w-full">
+                    <div v-if="!id" class="mx-auto flex flex-col space-y-4 w-full">
                         <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg">Vehicle</label>
                         <select v-model="customerVehicle" :disabled="customer.id === 0"
                             class="select select-bordered w-full" id="firstNoticed">
                             <option disabled selected>Select Vehicle</option>
                             <option v-for="vehicle in customer.vehicles" :key="vehicle.id" :value="vehicle">
                                 {{ vehicle.year }} {{ vehicle.make }} {{ vehicle.model }}</option>
+                        </select>
+                    </div>
+                    <div v-else class="mx-auto flex flex-col space-y-4 w-full">
+                        <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg">Vehicle</label>
+                        <select v-model="customerVehicle" class="select select-bordered w-full" id="selectCustomer" disabled>
+                            <option disabled selected :value="customerVehicle">{{ customerVehicle?.year }} {{ customerVehicle?.make }} {{ customerVehicle?.model }}</option>
                         </select>
                     </div>
                 </div>
