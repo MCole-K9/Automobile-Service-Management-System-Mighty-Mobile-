@@ -49,6 +49,7 @@ onMounted(async () => {
                             <th>For</th>
                             <th>Date</th>
                             <th></th>
+                            <th v-if="currentUser.isAdmin || currentUser.isMechanic || currentUser.isManager"></th>
                         </tr>
                     </thead>
                     <tbody>
