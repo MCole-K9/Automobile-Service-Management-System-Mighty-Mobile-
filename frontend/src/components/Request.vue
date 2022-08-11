@@ -45,7 +45,10 @@
         </td>
         <td>{{ $parseDate(props.appointment.suggestedDate) }}</td>
         <th>
-            <button @click="$router.push({path: `/dashboard/appointment/${appointment?.id}`})" class="btn btn-ghost btn-xs">Details</button>
+            <button @click="$router.push({path: `/dashboard/appointment/${appointment?.id}`})" class="btn btn-ghost bg-ourYellow btn-xs">Details</button>
+        </th>
+        <th>
+            <button class="btn btn-ghost bg-ourYellow btn-xs" @click="$router.push(`/dashboard/createjob/${appointment?.id}`)">create job</button>
         </th>
     </tr>
 
