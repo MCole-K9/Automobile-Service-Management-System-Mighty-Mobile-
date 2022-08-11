@@ -92,6 +92,10 @@
         <template #content>
 
             <section id="customer_info">
+                <button class="btn btn-sm max-w-fit" @click="$router.back()">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"></path></svg>
+                </button>
+                <p class="text-2xl lg:text-4xl mb-5 text-center font-bold">Create Job</p>
                 <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 text-center">
                     <div v-if="!id" class="mx-auto flex flex-col space-y-4 w-full">
                         <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg">Customer Name</label>
