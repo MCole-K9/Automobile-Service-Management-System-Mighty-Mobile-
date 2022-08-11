@@ -75,9 +75,7 @@
     }
 
     function changeCheckClash(duration: number, time: number, day: number){
-        console.log("emit caught");
         timeInformationToCheck.value = {duration: duration, targetTime: time, targetDay: day};
-        console.log(timeInformationToCheck);
     }
 
     function setClashResult(result: boolean){

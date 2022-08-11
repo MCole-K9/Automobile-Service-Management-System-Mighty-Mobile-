@@ -77,8 +77,10 @@
     
     // method to validate new Job stage information
     function validateJobStageAndSubmit(){
+
         if (props.clashResult === false){
             // remove "duration error"
+            emit('durationRangeValueChange', newJobStage.value.duration, props.time, props.day);
 
             if (newJobStage.value.description !== ""){
                 // remove "description error"
@@ -95,7 +97,7 @@
             }
         }
         else{
-            // you need to not clash the date or whatever
+            
         }
         
     }
@@ -185,8 +187,8 @@
                         <span>2</span>
                         <span>3</span>
                     </div>
-                    <label :class="{'visible': clashResult}"
-                    class="text-red-500 invisible">ERROR TEXT</label>
+                    <label :class="{'invisible': clashResult}"
+                    class="text-red-500">ERROR TEXT</label>
                 </label>
                 <!-- <button class="btn">Add images</button> -->
                 <div>
