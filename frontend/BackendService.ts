@@ -25,6 +25,19 @@ export default class BackendService{
             
         }
     }
+    static async updateUser(user:User) {
+        
+        try{
+            
+            const res = await axios.put(URL + `/user/${user.id}`, {
+                user   
+            })
+            return(res);
+
+        }catch(err){
+            
+        }
+    }
     static async registerUser(user:User) {
         
         try{
