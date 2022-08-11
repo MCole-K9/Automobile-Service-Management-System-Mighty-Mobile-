@@ -29,8 +29,6 @@
         
         if (timeInformation.duration != undefined){
 
-            console.log(timeInformation);
-
             let isClash: boolean = false;
 
             let dayIndexPosition: number = 0;
@@ -48,10 +46,6 @@
                 }
             });
 
-            // if (timeIndexPosition === 0){
-            //     timeIndexPosition = timeInformation.targetTime;
-            // }
-
             // Can't know how many blocks are in a given day, so need to get the index of this specific time
             schedule.value.workingDays[dayIndexPosition].hourBlocks.every((hourBlock, index) => {
                 if (hourBlock.time === timeInformation.targetTime){
@@ -64,29 +58,22 @@
                 }
             });
 
-            // this will print a string that's "1X", were X is the duration number. suspect this means that the
-            // duration is being sent as a string, but 
             const stoppingIndex: number = timeIndexPosition + timeInformation.duration;
-            console.log("stopping index: ", stoppingIndex);
             
             for (let i: number = timeIndexPosition; i < stoppingIndex; i++){
-                console.log("index position: " + i);
                 if (schedule.value.workingDays[dayIndexPosition].hourBlocks[i].id === null){
 
                 }
                 else{
-                    console.log("position: " + i + " clashes, duration: " + timeInformation.duration);
                     isClash = true;
                 }
             }
 
             if (isClash){
                 emit("clashResult", isClash);
-                console.log("clash");
             }
         }
     })
-
 
     const currentUser = currentUserStore();
     const currentDate: Date = new Date(Date.now());

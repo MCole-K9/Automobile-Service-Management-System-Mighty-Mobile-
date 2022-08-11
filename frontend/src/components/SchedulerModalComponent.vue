@@ -75,6 +75,7 @@
 
     const isValidationError: Ref<boolean> = ref(false);
     const validationErrorMessage: Ref<string> = ref("");
+    const durationErrorText: Ref<string> = ref("");
     
     // method to validate new Job stage information
     function validateJobStageAndSubmit(){
@@ -108,6 +109,9 @@
         if (result === true){
             isDurationClash.value = true;
         }
+        else{
+            isDurationClash.value = false;
+        }
     })
 
 </script>
@@ -126,7 +130,7 @@
                 </label>
                 <label class="input-group">
                     <span class="label-text bg-ourYellow">Job</span>
-                    <select v-model="optionSelectJob">
+                    <select v-model.number="optionSelectJob">
                         <option disabled value="" selected>Select a Job</option>
                         <option v-for="item in jobs.items"
                         :key="item.jobNumber" :value="item.jobNumber">
