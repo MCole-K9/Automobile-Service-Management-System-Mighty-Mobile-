@@ -21,6 +21,11 @@ function changeAddress(event:Event) {
   emits("addressChange", name, value);
 }
 
+function handleSaveClick(){
+  editableAddress.value = false;
+  emits('UpdateAddress')
+}
+
 async function setJobAsCompleted(){
   props.job.completed = true
   console.log(props.job);
@@ -100,7 +105,7 @@ async function setJobAsCompleted(){
               </p>
               <input @input="changeAddress" :value="props.job.parish" :class="`input input-bordered w-full ${!editableAddress ? 'hidden' : ''}`" name="parish" type="text" />
               <div :class="`flex justify-end space-x-3 ${!isCustomer ? 'hidden' : ''}`">
-                <button @click="emits('UpdateAddress')" :class="`btn btn-sm my-2 ${!editableAddress ? 'hidden' : ''}`">Save</button>
+                <button @click="handleSaveClick " :class="`btn btn-sm my-2 ${!editableAddress ? 'hidden' : ''}`">Save</button>
                 <button @click="editableAddress = !editableAddress" class="btn btn-sm my-2">
                   {{ editableAddress ? "Disable" : "Edit Address" }}
                 </button>
