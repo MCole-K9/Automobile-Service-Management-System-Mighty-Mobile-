@@ -38,6 +38,7 @@
 <template>
 <DashboardLayout>
     <template #content>
+        <p class="text-xl lg:text-3xl font-bold text-center pb-5">Job Board</p>
         <div class="flex justify-center">
             <div class="btn-group">
                 <button @click="changeActiveTab('Jobs')" :class="['btn','btn-sm' , 'px-10', 'bg-ourYellow', activeTab == 'Jobs' ? 'btn-active': '']">All</button> <!--btn-active-->  
