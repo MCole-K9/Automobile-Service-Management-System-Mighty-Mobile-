@@ -32,8 +32,10 @@ onMounted(async () => {
 <template>
     <DashboardLayout>
         <template #content>
-            <div v-if="currentUser.isCustomer" class="flex justify-start my-4">
-                <router-link  to="/dashboard/appointmentbooking" class="btn ">Book Appointment</router-link>
+            <div :class="`flex my-4 items-center ${currentUser.isAdmin || currentUser.isMechanic || currentUser.isManager ? 'justify-center' : 'justify-between'}`">
+                <p class="text-xl lg:text-4xl font-bold">
+                {{currentUser.isAdmin || currentUser.isMechanic || currentUser.isManager ? 'Appointment' : 'Job'}} Requests</p>
+                <router-link v-if="currentUser.isCustomer"  to="/dashboard/appointmentbooking" class="btn">Book Appointment</router-link>
             </div>
             <div class="overflow-x-auto w-full">
                 <table class="table w-full">

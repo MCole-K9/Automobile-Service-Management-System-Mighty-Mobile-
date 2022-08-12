@@ -87,6 +87,7 @@
 <template>
     <DashboardLayout>
     <template #content>
+    <p class="text-xl lg:text-4xl font-bold text-center py-5">Schedule</p>
     <div class="max-w-screen px-4 overflow-hidden overscroll-x-auto lg:mx-auto lg:w-min">
         <Suspense>
             <ScheduleViewAsyncComponent
