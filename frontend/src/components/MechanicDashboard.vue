@@ -1,7 +1,7 @@
 <template>
     <div class="px-5">
         <span class="flex justify-between my-5">
-                <p class="text-gray-800 text-xl sm:text-2xl lg:text-4xl font-bold">Mechanic Dashboard</p>
+                <p class="text-gray-800 text-xl sm:text-2xl lg:text-4xl font-bold">Dashboard</p>
                 <button class="btn btn-sm lg:btn-md" @click="$router.push('dashboard/jobboard')">view job board</button>
             </span>
             
