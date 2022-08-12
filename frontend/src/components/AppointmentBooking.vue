@@ -10,6 +10,8 @@
     const newUser = newUserStore();
     const currentUser = currentUserStore();
 
+    const emits = defineEmits(["eu-booked"]) // after existing user books appointment
+
     let vehicle = ref<Vehicle>({
         make: "",
         model: "",
@@ -43,11 +45,18 @@
     async function bookAppointment(userId: number){
         const res = await BackendService.makeAppointment(userId, appointment)
         return res;
+
+       
     }
     async function handleBookingClick(){
         
         const data = await bookAppointment(currentUser.User.id)
         console.log(data)
+
+        if(currentUser.loggedIn){
+            
+            router.push("/dashboard")
+        }
     }
     async function onRegister(userId:number){
         try{
