@@ -3,6 +3,7 @@ import axios from "axios";
 import  type { MonthBlock, DayBlock } from "./src/classlib/MonthlySchedule";
 import {HourDataBlock} from "./src/classlib/MonthlySchedule";
 import type { JobStageWithSchedule } from "@/classlib/PrismaDerivedTypes";
+import type { Prisma } from ".prisma/client";
 
 
 
@@ -536,8 +537,10 @@ export default class BackendService{
         }
     }
 
-    static async writeJobStageToDatabase(jobStage: JobStageWithSchedule){
+    static async writeJobStageToDatabase(jobStage: Prisma.JobStageCreateInput){
         try{
+            console.log("Reached Backend");
+            
             const res = await axios.post(URL + 'user/jobstage/create', jobStage);
 
             return res;

@@ -848,25 +848,14 @@ export default class Routes{
         })
 
         // posts a JobStage to the database
-        router.post('/user/jobstage/create', async (req: Request, res: Response)=>{
+        router.post("/user/jobstage/create", async (req: Request, res: Response)=>{
+            const test = JSON.parse(req.body);
+            console.log(test);
 
             try{
                 const newJobStage = prisma.jobStage.create({
-                    data: {
-                        description: req.body.jobstage.description as string,
-                        duration: parseInt(req.body.jobstage.duration),
-                        stageNumber: parseInt(req.body.jobstage.stageNumber),
-                        job: {
-                            connect: {
-                                jobNumber: req.body.jobstage.jobNumber
-                            }
-                        },
-                        scheduledItem: {
-                            create: {
-                                date: req.body.jobstage.schedule.date as Date
-                            }
-                        }
-                    }
+                    data: test
+
                 });
 
                 res.status(200).send(newJobStage);
@@ -877,7 +866,7 @@ export default class Routes{
         })
 
         // gets the minimum necessary appointment corresponding to a schedule item's id
-        router.get('/appointments/short/:appointmentscheduleid', async (req: Request, res: Response)=>{
+        router.get("/appointments/short/:appointmentscheduleid", async (req: Request, res: Response)=>{
             const appointmentId = parseInt(req.params.appointmentscheduleid);
             
             try{
@@ -924,7 +913,7 @@ export default class Routes{
             }
 
             // uses the schedule id to return a basic minimum amount of information relevant to a jobstage
-            router.get('/jobstage/short/:jobstagescheduleid', async (req: Request, res: Response) => {
+            router.get("/jobstage/short/:jobstagescheduleid", async (req: Request, res: Response) => {
                 const stageScheduleId = parseInt(req.params.jobstagescheduleid)
                 
                 try{
@@ -981,7 +970,7 @@ export default class Routes{
             })
 
             // gets all of the information for a specific job. every stage, the vehicle, and the owner entirely
-            router.get('/jobs/:jobnumber/fulljob', async (req: Request, res: Response) => {
+            router.get("/jobs/:jobnumber/fulljob", async (req: Request, res: Response) => {
                 const jobId = parseInt(req.params.jobnumber);
 
                 try{
@@ -999,7 +988,7 @@ export default class Routes{
                             }
                         }
                     });
-
+                    // console.log(fullJobInformation);
                     res.status(200).send(fullJobInformation);
                 }
                 catch(err){

@@ -12,7 +12,7 @@ const jobInformation = Prisma.validator<Prisma.JobArgs>()({
     }
 });
 
-// it's not "all" of the job information, but pretty much everythign i need
+// it's not "all" of the job information, but pretty much everything i need
 export type FullJobInformation = Prisma.JobGetPayload<typeof jobInformation>;
 
 const jobStageInformation = Prisma.validator<Prisma.JobStageArgs>()({

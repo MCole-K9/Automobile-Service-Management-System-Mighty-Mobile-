@@ -5,6 +5,7 @@
     import type {MinimumJobInfoItem, MinimumJobInfoList} from '../classlib/MinimalJobInfo';
     import type {FullJobInformation, JobStageWithSchedule} from '../classlib/PrismaDerivedTypes';
     import type {Ref} from 'vue';
+    import type { Prisma } from '.prisma/client';
 
     type TimeToCheck = {
         targetTime: number,
@@ -41,13 +42,21 @@
     let isVehicleInformationOpen: Ref<Boolean> = ref(false);
     let isJobInformationOpen: Ref<Boolean> = ref(false);
 
-    const newJobStage: Ref<JobStageWithSchedule> = ref({}) as Ref<JobStageWithSchedule>;
-    if (newJobStage.value.scheduledItem != undefined){
-        newJobStage!.value.scheduledItem.date = new Date(Date.now());
-        newJobStage.value.scheduledItem.date.setMonth(props.month);
-        newJobStage.value.scheduledItem.date.setDate(props.day);
-        newJobStage.value.scheduledItem.date.setHours(props.time);
-    }
+    const newJobStage: Ref<Prisma.JobStageCreateInput> = ref({
+        description: "",
+        duration: 0,
+        stageNumber: 0,
+        job: {
+            connect: {
+                jobNumber: 0
+            }
+        },
+        scheduledItem: {
+            create: {
+                date: new Date()
+            }
+        }
+    });
 
     // Getting and populating the list of open jobs assigned to this user
     const jobsFromDatabase = await BackendService.getActiveJobsForMechanic(currentUser.User.id);
@@ -71,8 +80,6 @@
             const fullJobInformation = await BackendService.getFullJobInformation(jobId);
             console.log(fullJobInformation);
             selectedJob.value = fullJobInformation?.data;
-
-            newJobStage.value.jobNumber = selectedJob.value?.jobNumber;
         }
     });
 
@@ -82,7 +89,7 @@
     const durationErrorText: Ref<string> = ref("");
     const isDurationClash: Ref<Boolean> = ref(false);
     function validateJobStageAndSubmit(){
-        console.log("test");
+        console.log("reached validateJobStage");
         
         emit('durationRangeValueChange', newJobStage.value.duration, props.time, props.day);
 
@@ -94,7 +101,17 @@
 
                 if (newJobStage.value.scheduledItem !== null){
                     isValidationError.value = false;
-                    BackendService.writeJobStageToDatabase(newJobStage.value);
+                    
+                    let targetDate: Date = new Date(Date.now());
+                    targetDate.setMonth(props.month);
+                    targetDate.setDate(props.day);
+                    targetDate.setHours(props.time);
+
+                    newJobStage.value.scheduledItem!.create!.date = targetDate;
+                    newJobStage.value.stageNumber = selectedJob.value.stages.length + 1;
+                    newJobStage.value.job.connect!.jobNumber = selectedJob.value.jobNumber;
+
+                    BackendService.writeJobStageToDatabase({...newJobStage.value});
                 }
                 else{
                     validationErrorMessage.value += "job";
@@ -118,7 +135,8 @@
         :class="{'modal-open': open}">
         <!-- <input type="checkbox" @change="$emit('schedulerModalClose')" id="close-modal-test"/> -->
         <div class="modal-box max-h-[30rem]">
-            <label>Schedule New Job-Stage for {{newJobStage.scheduledItem?.date.toDateString()}}</label>
+            <!--This currently shows the current date (because that's what's stored in the object), so i need to rework it to show the intended date-->
+            <label>Schedule New Job-Stage for {{newJobStage.scheduledItem!.create!.date}}</label>
             <label for="close-modal-test" @click.stop="$emit('schedulerModalClose')" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
             <label class="form-control">
                 
