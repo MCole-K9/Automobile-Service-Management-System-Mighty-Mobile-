@@ -125,7 +125,7 @@ export default class Routes{
                     },
                     data: {
                         firstName: req.body.user.firstName as string,
-                        lastName: req.body.user.firstName as string,
+                        lastName: req.body.user.lastName as string,
                         email: req.body.user.email as string,
                         phoneNumber: req.body.phoneNumber as string,
                         roles: {
