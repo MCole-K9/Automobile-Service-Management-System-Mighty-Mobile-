@@ -1,5 +1,6 @@
 <template>
-    <NavBar/>
+    <DashboardLayout>
+    <template #content>
     <div class="bg-white overflow-hidden sm:rounded-lg">
     <div class="px-4 py-5 sm:px-6">
         <h3 class="text-2xl leading-6 font-medium text-center text-gray-900">Applicant Information</h3>
@@ -11,6 +12,8 @@
         </template>
     </UserComponent>
     </div>
+    </template>
+    </DashboardLayout>
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
@@ -19,11 +22,12 @@ import BackendService from '../../BackendService'
 import type { User } from "../classlib/Types";
 import UserComponent from "@/components/User.vue";
 import { currentUserStore } from "@/stores/User";
+import DashboardLayout from "@/components/DashboardLayout.vue";
 const currentUser = currentUserStore();
 
 export default defineComponent({
     name:'ProfileView',
-    components:{NavBar,UserComponent},
+    components:{NavBar,UserComponent,DashboardLayout},
     methods:{},
     data(){
         return{
