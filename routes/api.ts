@@ -868,7 +868,7 @@ export default class Routes{
         // gets the minimum necessary appointment corresponding to a schedule item's id
         router.get("/appointments/short/:appointmentscheduleid", async (req: Request, res: Response)=>{
             const appointmentId = parseInt(req.params.appointmentscheduleid);
-            
+        
             try{
                 const shortAppointment = await prisma.appointment.findUnique({
                     where: {
@@ -911,92 +911,93 @@ export default class Routes{
             catch (err){
                 console.log(err)
             }
+        })
 
-            // uses the schedule id to return a basic minimum amount of information relevant to a jobstage
-            router.get("/jobstage/short/:jobstagescheduleid", async (req: Request, res: Response) => {
-                const stageScheduleId = parseInt(req.params.jobstagescheduleid)
+        // uses the schedule id to return a basic minimum amount of information relevant to a jobstage
+        router.get("/jobstage/short/:jobstagescheduleid", async (req: Request, res: Response) => {
+            const stageScheduleId = parseInt(req.params.jobstagescheduleid)
                 
-                try{
-                    const shortJobStage = await prisma.jobStage.findUnique({
-                        where: {
-                            scheduledItemId: stageScheduleId
-                        },
+            try{
+                const shortJobStage = await prisma.jobStage.findUnique({
+                    where: {
+                        scheduledItemId: stageScheduleId
+                    },
 
-                        select: {
-                            description: true,
-                            duration: true,
-                            stageNumber: true,
-                            job: {
-                                select: {
-                                    streetAddress: true,
-                                    town: true,
-                                    parish: true,
-                                    jobNumber: true,
-                                    summary: true,
-                                    vehicle: {
-                                        select: {
-                                            make: true,
-                                            model: true,
-                                            year: true,
-                                            id: true,
-                                            owner: {
-                                                select: {
-                                                    id: true,
-                                                    lastName: true,
-                                                    firstName: true
-                                                }
+                    select: {
+                        description: true,
+                        duration: true,
+                        stageNumber: true,
+                        job: {
+                            select: {
+                                streetAddress: true,
+                                town: true,
+                                parish: true,
+                                jobNumber: true,
+                                summary: true,
+                                vehicle: {
+                                    select: {
+                                        make: true,
+                                        model: true,
+                                        year: true,
+                                        id: true,
+                                        owner: {
+                                            select: {
+                                                id: true,
+                                                lastName: true,
+                                                firstName: true
                                             }
                                         }
                                     }
                                 }
-                            },
-                            scheduledItem: {
-                                select: {
-                                    id: true,
-                                    date: true
-                                }
                             }
-
-                        }
-    
-                    })
-
-                    res.status(200).send(shortJobStage);
-                }
-                catch(err){
-                    console.log(err);
-                }
-                
-            })
-
-            // gets all of the information for a specific job. every stage, the vehicle, and the owner entirely
-            router.get("/jobs/:jobnumber/fulljob", async (req: Request, res: Response) => {
-                const jobId = parseInt(req.params.jobnumber);
-
-                try{
-                    const fullJobInformation = await prisma.job.findUniqueOrThrow({
-                        where: {
-                            jobNumber: jobId
                         },
-
-                        include: {
-                            stages: true,
-                            vehicle:{
-                                include: {
-                                    owner: true
-                                }
+                        scheduledItem: {
+                            select: {
+                                id: true,
+                                date: true
                             }
                         }
-                    });
-                    // console.log(fullJobInformation);
-                    res.status(200).send(fullJobInformation);
-                }
-                catch(err){
-                    console.log(err);
-                }
-            })
-            
+
+                    }
+
+                })
+
+                res.status(200).send(shortJobStage);
+            }
+            catch(err){
+                console.log(err);
+            }
+                
         })
+
+        // gets all of the information for a specific job. every stage, the vehicle, and the owner entirely
+        router.get("/jobs/:jobnumber/fulljob", async (req: Request, res: Response) => {
+            const jobId = parseInt(req.params.jobnumber);
+
+            try{
+                const fullJobInformation = await prisma.job.findUniqueOrThrow({
+                    where: {
+                        jobNumber: jobId
+                    },
+
+                    include: {
+                        stages: true,
+                        vehicle:{
+                            include: {
+                                owner: true
+                            }
+                        }
+                    }
+                });
+                // console.log(fullJobInformation);
+                res.status(200).send(fullJobInformation);
+            }
+            catch(err){
+                console.log(err);
+            }
+        })
+            
+        
         return router;
 
     }
