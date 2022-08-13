@@ -4,7 +4,7 @@
                 <section class="flex justify-center space-x-3">
                     <button @click="acceptJob" :class="`btn btn-sm ${isCustomer  && !job.confirmed? '' : 'hidden' } `">Accept Request</button>
                 </section>
-                <JobInformation @address-change="handleAddressChange" @update-address="updateJob" :job="job"/>
+                <JobInformation @address-change="handleAddressChange" @update-address="updateJob" @assignmechanic="updateJob" :job="job"/>
                 
             </template>
         </DashboardLayout>

@@ -1,37 +1,67 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import type { Job } from "../classlib/Types";
-import { UserRole } from "../classlib/Types";
-import { currentUserStore } from "@/stores/User";
-import BackendService from "../../BackendService";
+  import { onMounted, onUpdated, ref } from "vue";
+  import type { Job, User } from "../classlib/Types";
+  import { UserRole } from "../classlib/Types";
+  import { currentUserStore } from "@/stores/User";
+  import BackendService from "../../BackendService";
 
-const props = defineProps<{
-  job: Job;
-}>();
+  const props = defineProps<{
+    job: Job;
+  }>();
 
-const emits = defineEmits(["addressChange", "UpdateAddress"]);
+  const emits = defineEmits(["addressChange", "UpdateAddress", "assignmechanic"]);
 
-const currentUser = currentUserStore();
-let isCustomer = ref<boolean>(currentUser.hasRole(UserRole.Customer));
+  const currentUser = currentUserStore();
+  let isCustomer = ref<boolean>(currentUser.hasRole(UserRole.Customer));
 
-let editableAddress = ref(false);
+  let editableAddress = ref(false);
 
-function changeAddress(event:Event) {
-  const { name, value } = event.target as HTMLInputElement ;
-  emits("addressChange", name, value);
-}
+  function changeAddress(event:Event) {
+    const { name, value } = event.target as HTMLInputElement ;
+    emits("addressChange", name, value);
+  }
 
-function handleSaveClick(){
-  editableAddress.value = false;
-  emits('UpdateAddress')
-}
+  function handleSaveClick(){
+    editableAddress.value = false;
+    emits('UpdateAddress')
+  }
 
-async function setJobAsCompleted(){
-  props.job.completed = true
-  console.log(props.job);
+  async function setJobAsCompleted(){
+    props.job.completed = true
+    console.log(props.job);
+    
+    await BackendService.updateJob(props.job)
+  }
+
+  let mechanics = ref<User[]>([])
+
+  let editableMech = ref(false)
+
+  function handleAssignMechClick(){
+    
+    if(editableMech.value){
+      emits("assignmechanic")
+    }
+    editableMech.value = !editableMech.value;
+
+  }
+  const updatedRun = ref(0);
+
+  onUpdated(async ()=>{
+
+
+    if (currentUser.isManager && updatedRun.value < 1){
+
+      const res = await BackendService.getMechanics();
+      mechanics.value = res?.data;
+
+      
+    }
+
+    updatedRun.value ++;
   
-  await BackendService.updateJob(props.job)
-}
+    
+  })
 </script>
 
 <template>
@@ -121,7 +151,7 @@ async function setJobAsCompleted(){
             </div>
             <div class="col-span-6 sm:col-span-2">
               <label for="email-address" class="block text-sm font-medium text-gray-700">Assigned Mechanic</label>
-              <p class="h-10 flex px-3 items-center bg-gray-300 rounded text-black font-medium">
+              <p :class="`h-10 flex px-3 items-center bg-gray-300 rounded text-black font-medium ${editableMech ? 'hidden': ''}`">
                 {{
                     props.job.assignedMechanic
                       ? `${props.job.assignedMechanic?.firstName}
@@ -129,6 +159,16 @@ async function setJobAsCompleted(){
                       : "Unassigned"
                 }}
               </p>
+               <select v-model="props.job.assignedMechanicId" :class="`select select-bordered w-full ${!editableMech ? 'hidden': ''} `" id="selectCustomer">
+                            <option disabled selected>Select Mechanic</option>
+                            <option v-for="mechanic in mechanics" :key="mechanic.id" :value="mechanic.id">
+                                {{ mechanic.firstName }} {{ mechanic.lastName }}</option>
+                </select>
+              <div class="flex justify-end space-x-2 py-2" v-if="currentUser.isManager">
+                <button @click="handleAssignMechClick" class="btn btn-sm">{{editableMech? "Save": "Assign Mechanic"}}</button>
+                <button v-if="editableMech" @click="editableMech = false" class="btn btn-sm">Cancel</button>
+              </div>
+              
             </div>
 
             <div class="col-span-6 sm:col-span-2">

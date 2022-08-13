@@ -204,6 +204,15 @@ export default class BackendService{
             
         }
     }
+    static async getMechanics() {
+        try{
+            const res = await axios.get(URL + "/mechanics");       
+            return res;
+        }catch(err){
+            console.log(err.response);
+            
+        }
+    }
     static async createJob(job:Job) {
 
         try{
