@@ -541,7 +541,7 @@ export default class BackendService{
         try{
             console.log("Reached Backend");
             
-            const res = await axios.post(URL + 'user/jobstage/create', jobStage);
+            const res = await axios.post(URL + '/user/jobstage/create', jobStage);
 
             return res;
         }

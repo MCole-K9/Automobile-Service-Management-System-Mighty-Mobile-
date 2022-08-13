@@ -849,12 +849,13 @@ export default class Routes{
 
         // posts a JobStage to the database
         router.post("/user/jobstage/create", async (req: Request, res: Response)=>{
-            const test = JSON.parse(req.body);
-            console.log(test);
+            console.log("REACHED");
+            
+            console.log(req.body);
 
             try{
                 const newJobStage = prisma.jobStage.create({
-                    data: test
+                    data: req.body
 
                 });
 
@@ -989,7 +990,7 @@ export default class Routes{
                         }
                     }
                 });
-                // console.log(fullJobInformation);
+
                 res.status(200).send(fullJobInformation);
             }
             catch(err){
