@@ -506,6 +506,30 @@ export default class Routes{
             }catch(err){
                 console.log(err)
             }
+        }).put(async (req:Request, res:Response)=>{
+            try{
+                const apptId: number = parseInt(req.params.id);
+               
+                const appointment = await prisma.appointment.update({
+                    where : {
+                        id : apptId
+                    },
+                    data:{
+                        assignedMechId: req.body.appointment.assignedMechId,
+                        fulfilled: req.body.appointment.fulfilled
+                        
+                    },
+                    include: {
+                        assignedMech: true,
+                        customer: true,
+                        vehicle: true
+                    }
+                })
+
+                res.status(200).send(appointment)
+            }catch(err){
+                console.log(err)
+            }
         });
 
         router.route("/jobs").get(async (req:Request, res:Response)=>{

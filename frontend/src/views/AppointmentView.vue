@@ -12,6 +12,16 @@
 
     const appointment = ref<Appointment>() as Ref<Appointment>;
 
+
+    async function updateAppointment(){
+        const res = await BackendService.updateAppointment(appointment.value)
+        appointment.value = res?.data
+        console.log(res?.data);
+        
+
+        
+        
+    }
     onMounted(async ()=>{
         //Get Appt id from route param
 
@@ -32,7 +42,7 @@
     <DashboardLayout>
         <template #content>
             <LoadingAnimation v-if="!appointment"   />
-            <AppointmentInformation v-if="appointment" :appointment="appointment" :key="appointment.id" />
+            <AppointmentInformation @assignmechanic="updateAppointment" v-if="appointment" :appointment="appointment" :key="appointment.id" />
         </template>
     </DashboardLayout> 
 </template>
@@ -40,6 +50,7 @@
     export default {
         name: "AppointmentView",
         components: {
+            AppointmentInformation
         }
     }
 </script>

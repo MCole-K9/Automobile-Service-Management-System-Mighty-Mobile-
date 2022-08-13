@@ -1,11 +1,33 @@
 <script setup lang="ts">
-    import type { Appointment } from '@/classlib/Types';
+  import type { Appointment } from '@/classlib/Types';
+  import { ref } from 'vue';
+  import SelectMechanic from './SelectMechanic.vue';
+  import { currentUserStore } from '@/stores/User';
 
+  const currentUser = currentUserStore();
 
+  const emits = defineEmits(["assignmechanic"])
 
-    const props = defineProps<{
-        appointment: Appointment
-    }>()
+  const props = defineProps<{
+    appointment: Appointment
+  }>();
+
+  const editableMech = ref(false)
+
+  function handleAssignMechClick(){
+    
+    if(editableMech.value){
+      emits("assignmechanic")
+    }
+    editableMech.value = !editableMech.value;
+
+  }
+
+  function handleMechSelect(mechanicId: number){
+    console.log(mechanicId);
+    
+    props.appointment.assignedMechId = mechanicId;
+  }
    
 </script>
 <template>
@@ -76,9 +98,10 @@
         </div>
         <div class="col-span-6 md:col-span-3">
             <label for="full-name" class="block text-sm font-medium text-gray-700">Assigned Mechanic</label>
-            <p class="h-10 flex px-3 items-center bg-gray-300 rounded text-black font-medium">
+            <p :class="`h-10 flex px-3 items-center bg-gray-300 rounded text-black font-medium ${editableMech ? 'hidden': ''}`">
               {{  props.appointment.assignedMech ? `${props.appointment.assignedMech?.firstName} ${props.appointment.assignedMech?.lastName }` : "Unassigned"   }}  
             </p>
+            <SelectMechanic v-if="currentUser.isManager" @cancel="editableMech = false"  @assign-mechanic="handleAssignMechClick" @selected="handleMechSelect" :editableMech="editableMech"/>
         </div>
         <div class="col-span-6 flex justify-end">
           <button class="btn btn-ghost bg-ourYellow" @click="$router.push(`/dashboard/createjob/${appointment?.id}`)">Create Job</button>
@@ -89,6 +112,7 @@
     export default {
         name: "AppointmentInformation",
         components: {
+          SelectMechanic
         }
     }
 </script>

@@ -248,6 +248,19 @@ export default class BackendService{
             
         }
     }
+    static async updateAppointment(appointment: Appointment) {
+
+        try{
+            const res = await axios.put(URL + `/appointment/${appointment.id}`, {
+                appointment
+            })
+            return res;
+
+        }catch(err){
+            console.log(err);
+            
+        }
+    }
 
     static async getMonthSchedule(selectedMonth: number, userId: number = 0): Promise<MonthBlock>{
         const res: MonthBlock = {month: selectedMonth, workingDays: []} as MonthBlock;
@@ -588,7 +601,7 @@ export default class BackendService{
             console.log(err);
         }
     }
-    static async imageUpload(name:string,base64String:string){
+    static async imageUpload(name:string, base64String:string){
         try{
             let form = new FormData()
             form.append('image',base64String)
