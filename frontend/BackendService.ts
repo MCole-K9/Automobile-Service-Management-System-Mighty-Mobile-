@@ -539,8 +539,6 @@ export default class BackendService{
 
     static async writeJobStageToDatabase(jobStage: Prisma.JobStageCreateInput){
         try{
-            console.log("Reached Backend");
-            
             const res = await axios.post(URL + '/user/jobstage/create', jobStage);
 
             return res;
