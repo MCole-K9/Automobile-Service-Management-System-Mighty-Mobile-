@@ -1,5 +1,5 @@
 import { Response, Request, Router} from "express";
-import { Appointment, Job, JobPart, PrismaClient, Role, Vehicle } from "@prisma/client"; //Db Connection
+import { Appointment, Job, JobPart, PrismaClient, Prisma, Role, Vehicle } from "@prisma/client"; //Db Connection
 import bcrypt, {genSalt, hash} from "bcrypt"
 import { transformDocument } from "@prisma/client/runtime";
 import {JobStageWithSchedule} from "../frontend/src/classlib/PrismaDerivedTypes"
@@ -897,17 +897,20 @@ export default class Routes{
 
         // posts a JobStage to the database
         router.post("/user/jobstage/create", async (req: Request, res: Response)=>{
-            console.log("REACHED");
-            
-            console.log(req.body);
+
+            const newJobStage: Prisma.JobStageCreateInput = req.body;
+            console.log(newJobStage);
 
             try{
-                const newJobStage = prisma.jobStage.create({
-                    data: req.body
+                const JobStage = await prisma.jobStage.create({
+                    data: newJobStage,
+                    
 
                 });
 
-                res.status(200).send(newJobStage);
+                console.log(JobStage);
+
+                res.status(200).send(JobStage);
             }
             catch(err){
                 console.log(err);
