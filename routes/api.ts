@@ -238,6 +238,29 @@ export default class Routes{
 
         }));
 
+        router.get("/mechanics", async (req:Request, res:Response)=>{
+
+            try{
+                const mechanics = await prisma.user.findMany({
+                    where: {
+                        roles: {
+                            some: {
+                                id: UserRole.Mechanic
+                            } 
+                        }
+                    }
+                })
+
+                res.send(mechanics)
+
+            }catch(err){
+                console.log(err)
+            }
+            
+
+            
+        } );
+
         router.route("/user/:id/vehicle").get(async (req:Request, res:Response)=>{
 
             //Get User Vehicles 
@@ -557,7 +580,7 @@ export default class Routes{
         }).put(async (req:Request, res:Response) =>{
 
             try{
-                console.log("update hit")
+                console.log(req.body)
 
                 
                 
@@ -566,7 +589,8 @@ export default class Routes{
                         jobNumber: req.body.job.jobNumber as number
                     },
                     data: {
-                        assignedMechanicId: req.body.job.assignedMechanicId ? req.body.job.assignedMechanicId as number: null,
+                        assignedMechanicId: req.body.job.assignedMechanicId as number ? req.body.job.assignedMechanicId as number : null, 
+                        
                         completed: req.body.job.completed ? req.body.job.completed as boolean: false,
                         isPaid:  req.body.job.isPaid ?  req.body.job.isPaid as boolean : false,
                         streetAddress: req.body.job.streetAddress ? req.body.job.streetAddress : null ,
