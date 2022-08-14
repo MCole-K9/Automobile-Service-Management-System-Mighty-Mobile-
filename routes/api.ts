@@ -807,15 +807,14 @@ export default class Routes{
                     AND: [
                         {
                             date: {
-                                /*  Weird bug(?): Dates are stored as MySQL datetime fields, where the month goes from 1-12 (Jan-Dec),
-                                    but the date object here is a JS date, which stores months as zero-indexed (0-11). getMonth() is
-                                    supposed to output 7 for August (it does), but prisma seems to convert the value for datetime here
-                                    in some way that it returns records for the next month over (so it returns for Sept./8 instead of Aug./7).
-        
-                                    happens even if you use .toISOString(). Solution is to put -1 after getMonth(). idk why.
+                                /*  MySQL datetime month values are 1-index (i.e. Jan-Dec = 1-12), JS date month
+                                    values are 0-indexed (0-11). Request sends JS date (e.g. '7' for August), so need 
+                                    to convert it to ISO 8601 (where August is 08)
                                 */
-                                gte: `${new Date(Date.now()).getFullYear()}-${selectedMonth.getMonth()+1 < 10 ? '0' + (selectedMonth.getMonth()+1) : selectedMonth.getUTCMonth()+1}-01T00:00:00.000Z`,
-                                lte: `${new Date(Date.now()).getFullYear()}-${selectedMonth.getMonth()+1 < 10 ? '0' + (selectedMonth.getMonth()+1) : selectedMonth.getUTCMonth()+1}-${daysInMonth}T00:00:00.000Z`
+                                gte: `${new Date(Date.now()).getFullYear()}-${selectedMonth.getMonth()+1 < 10 ? '0' 
+                                    + (selectedMonth.getMonth()+1) : selectedMonth.getUTCMonth()+1}-01T00:00:00.000Z`,
+                                lte: `${new Date(Date.now()).getFullYear()}-${selectedMonth.getMonth()+1 < 10 ? '0' 
+                                    + (selectedMonth.getMonth()+1) : selectedMonth.getUTCMonth()+1}-${daysInMonth}T00:00:00.000Z`
                             },
                         },
                         {
@@ -851,7 +850,7 @@ export default class Routes{
                 }
             })
 
-            console.log(schedule);
+            // console.log(schedule);
             res.status(200).send(schedule);
         
         });

@@ -152,6 +152,10 @@
         }
         
     }
+
+    function resetAllJobValues(){
+        
+    }
 </script>
 <template>
     <div class="modal z-50" 

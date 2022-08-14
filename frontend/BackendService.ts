@@ -324,6 +324,10 @@ export default class BackendService{
 
             // generate a Date object that corresponds to the month the user wants to be fed
             const intendedDate: Date = new Date(Date.now());
+            intendedDate.setHours(0);
+            intendedDate.setMinutes(0);
+            intendedDate.setSeconds(0);
+            intendedDate.setMilliseconds(0);
             if (intendedDate.getMonth() === selectedMonth){
                 // nothing, will probably refactor this
             }
@@ -335,6 +339,7 @@ export default class BackendService{
             // check for and only add the days that are workdays (not saturday or sunday) to the res object
             for (let i: number = intendedDate.getDate(); i <= daysInMonth; i++){
                 
+                // Check for and exclude Saturdays (6) and Sundays (0)
                 intendedDate.setDate(i);
                 if (intendedDate.getDay() === 6){
                     continue;
@@ -343,11 +348,9 @@ export default class BackendService{
                     continue;
                 }
 
-                // Check for and exclude Saturdays and Sundays
                 let workingDayBlock: DayBlock = {} as DayBlock;
                 workingDayBlock.day = i === 1 ? i : intendedDate.getDate();
                 res.workingDays.push(workingDayBlock);
-
 
             }
 
@@ -356,27 +359,24 @@ export default class BackendService{
                 workingDay.hourBlocks = [];
             });
 
-            // res.workingDays.forEach(day => console.log(day));
             let incrementor: number = 0;
 
             // Put the scheduled items into their corresponding hour blocks of every working day
             res.workingDays.forEach((workingDay)=>{
-                // the second i remove this the entire page will freeze. no idea why, yet
 
-                // not sure that this is correct, do not want to truth-table it
                 do {
                     if (schedule.data[incrementor] === undefined){
                         break;
                     }
                     const checkDate: Date = new Date(Date.parse(schedule.data[incrementor].date));
                     
-                    // if i don't do this, it returns July (in August) as the date because of some kind of ISO 8601 fuckery. deeven know
-                    checkDate.setMonth(checkDate.getMonth()+1);
+                    checkDate.setMonth(checkDate.getMonth());
+                    console.log(checkDate.getMonth());
                     
                     // Without this check, if someone (in this case: me) fucks up and schedules something for
                     // a weekend, then the do-while will loop forever and crash the page. might still happen, not sure yet
                     if (checkDate.getDay() === 0 || checkDate.getDay() === 6){
-                     incrementor++;   
+                        incrementor++;   
                         continue;
                     }
 
