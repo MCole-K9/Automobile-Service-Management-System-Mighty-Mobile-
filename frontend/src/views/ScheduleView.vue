@@ -40,6 +40,7 @@
     const month: Ref<number> = ref(0);
     const timeInformationToCheck: Ref<TimeToCheck> = ref({}) as Ref<TimeToCheck>;
     const clashResult: Ref<boolean> = ref(false);
+    const newTargetMonth: Ref<number> = ref(0);
 
     // viewer-specific values
     let id: Ref<number> = ref(0);
@@ -82,6 +83,10 @@
         clashResult.value = result;
     }
 
+    function generateScheduleWithTargetMonth(targetMonth: number){
+        
+    }
+
 </script>
 
 <template>
@@ -94,7 +99,8 @@
             @open-scheduler="openScheduler"
             @open-viewer="openViewer"
             @clash-result="setClashResult"
-            :time-information-to-check="timeInformationToCheck"/>
+            :time-information-to-check="timeInformationToCheck"
+            :new-target-month="newTargetMonth"/>
 
             <template #fallback>
                 <div class="w-min container mx-auto my-auto">Loading...</div>
@@ -110,7 +116,8 @@
                 :month="month"
                 :clash-result="clashResult"
                 @scheduler-modal-close="closeScheduler"
-                @duration-range-value-change="changeCheckClash"/>
+                @duration-range-value-change="changeCheckClash"
+                @update-schedule="generateScheduleWithTargetMonth"/>
             <template #fallback>
                 <div v-show="" class="modal">
 

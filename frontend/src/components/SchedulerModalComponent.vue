@@ -35,6 +35,7 @@
     const emit = defineEmits<{
         (e: 'schedulerModalClose'): void
         (e: 'durationRangeValueChange', duration: number, time: number, day: number): void,
+        (e: 'updateSchedule', targetMonth: number): void
     }>();
     
     const currentUser = currentUserStore();
@@ -85,6 +86,7 @@
 
     // method to validate new Job stage information
     const isValidationError: Ref<boolean> = ref(false);
+    const isPostSuccess: Ref<boolean> = ref(false);
     const validationErrorMessage: Ref<string> = ref("");
     const durationErrorText: Ref<string> = ref("");
     const isDurationClash: Ref<Boolean> = ref(false);
@@ -94,10 +96,10 @@
         emit('durationRangeValueChange', newJobStage.value.duration, props.time, props.day);
 
         if (props.clashResult === false){
-            validationErrorMessage.value.replace("Duration", "");
+            validationErrorMessage.value.replace("Duration of Job Stage at 4PM cannot be longer than 1 hour. ", "");
 
             if (newJobStage.value.description !== ""){
-                validationErrorMessage.value.replace("Description", "");
+                validationErrorMessage.value.replace("Description is missing. ", "");
 
                 if (newJobStage.value.scheduledItem !== null){
                     isValidationError.value = false;
@@ -106,6 +108,7 @@
                     targetDate.setMonth(props.month);
                     targetDate.setDate(props.day);
                     targetDate.setHours(props.time);
+                    targetDate.setMinutes(0);
                     targetDate.setMilliseconds(0);
                     targetDate.setSeconds(0);
 
@@ -116,15 +119,13 @@
                     const result = await BackendService.writeJobStageToDatabase({...newJobStage.value});
 
                     if (result?.status == 201){
-                        // write "it worked" or whatever
-                        // reset the whole thing (how?)
-                            // close the modal (emit)
-                            // wipe the modal data
-                            // re-generate the schedule with the selected month (emit?)
-                        // 
+                        isPostSuccess.value = true;
+                        
+                        setTimeout(() => emit('schedulerModalClose'), 2000);
+                        emit('updateSchedule', props.month);
                     }
                     else if (result?.status == 503){
-                        validationErrorMessage.value = "Could not connect to Database. Please try again or try again later";
+                        validationErrorMessage.value = "Could not connect to Database. Please try again or try again later. ";
                         isValidationError.value = true;
                     }
 
@@ -135,12 +136,18 @@
                 }
             }
             else{
-                validationErrorMessage.value += "Description";
+                if (validationErrorMessage.value.search("Description is missing. ") === -1){
+                    validationErrorMessage.value += "Description is missing";
+                }
                 isValidationError.value = true;
             }
         }
         else{
-            validationErrorMessage.value += "Duration";
+            if (props.time === 16 && newJobStage.value.duration > 1){
+                if (validationErrorMessage.value.search("Duration of Job Stage at 4PM cannot be longer than 1 hour. ") === -1){
+                    validationErrorMessage.value += "Duration of Job Stage at 4PM cannot be longer than 1 hour. ";
+                }
+            }
             isValidationError.value = true;
         }
         
@@ -218,7 +225,7 @@
                 <div>New Stage</div>
                 <label class="form-control">
                     <label class="label">Description:</label>
-                    <input v-model="newJobStage.description" type="textarea" class="flex justify-between text-xs px-2"/>
+                    <input v-model.trim="newJobStage.description" type="textarea" class="flex justify-between text-xs px-2"/>
                 </label>
 
                 <label class="form-control">
@@ -235,7 +242,7 @@
                 </label>
                 <!-- <button class="btn">Add images</button> -->
                 <div class="text-red-500" v-show="isValidationError">ERROR: {{validationErrorMessage}}</div>
-                <div class="text-green-500" v-show="">Job Stage has been created</div>
+                <div class="text-green-500" v-show="isPostSuccess">Job Stage has been created. Updating schedule...</div>
             </div>
 
             <button 

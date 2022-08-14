@@ -21,7 +21,8 @@
     }>();
 
     const props = defineProps<{
-        timeInformationToCheck: TimeToCheck
+        timeInformationToCheck: TimeToCheck,
+        newTargetMonth: number
     }>();
 
     // Watches the timeInformationToCheck prop and takes it value to compare with the time information.
@@ -61,7 +62,10 @@
             const stoppingIndex: number = timeIndexPosition + timeInformation.duration;
             
             for (let i: number = timeIndexPosition; i < stoppingIndex; i++){
-                if (schedule.value.workingDays[dayIndexPosition].hourBlocks[i].id === null){
+                if (schedule.value.workingDays[dayIndexPosition].hourBlocks[i] === undefined){
+                    isClash = true;
+                }
+                else if (schedule.value.workingDays[dayIndexPosition].hourBlocks[i].id === null){
 
                 }
                 else{
@@ -97,6 +101,12 @@
         // emits the id, blocktype, and day, though the last part is not necessary
         emit('openViewer', id, blocktype, day);
     }
+
+    watch(()=> props.newTargetMonth, month =>{
+        if (month != 0){
+            changeTargetMonth(month);
+        }
+    })
 
 </script>
 
