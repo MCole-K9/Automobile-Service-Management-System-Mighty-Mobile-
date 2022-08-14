@@ -77,7 +77,7 @@
     watch(optionSelectJob, async(optionSelect)=>{
         const jobId = optionSelect;
 
-        if (jobId !== ""){
+        if (jobId !== NaN){
             const fullJobInformation = await BackendService.getFullJobInformation(jobId);
             // console.log(fullJobInformation);
             selectedJob.value = fullJobInformation?.data;
@@ -121,7 +121,10 @@
                     if (result?.status == 201){
                         isPostSuccess.value = true;
                         
-                        setTimeout(() => emit('schedulerModalClose'), 2000);
+                        setTimeout(() => {
+                            emit('schedulerModalClose');
+                            resetAllJobValues();
+                        }, 2000);
                         emit('updateSchedule', props.month);
                     }
                     else if (result?.status == 503){
@@ -154,7 +157,25 @@
     }
 
     function resetAllJobValues(){
-        
+        optionSelectJob.value = null;
+        selectedJob.value = {} as FullJobInformation;
+        newJobStage.value = {
+            description: "",
+            duration: 1,
+            stageNumber: 0,
+            job: {
+                connect: {
+                    jobNumber: 0
+                }
+            },
+            scheduledItem: {
+                create: {
+                    date: new Date()
+                }
+            }
+        }
+        isValidationError.value = false;
+        isPostSuccess.value = false;
     }
 </script>
 <template>
