@@ -28,20 +28,6 @@ let passwordIsMatch = computed(()=>{
 })
 
 
-function handleInputChange(event: Event){
-
-    const {name, value} = event.target as HTMLInputElement;
-    let attrName: string = name;
-    //Store
-    newUser.changeAttr(attrName, value)
-    //console.log(newUser.User)
-
-}
-
-onUnmounted(()=>{
-    newUser.$reset();
-})
-
 async function register(){
     
     if (passwordIsMatch){ 
@@ -67,6 +53,9 @@ async function register(){
      
  }
 
+onUnmounted(()=>{
+    newUser.$reset();
+})
 
  
 
@@ -80,19 +69,19 @@ async function register(){
                 <div class="flex flex-col space-y-4">
                     <div>
                         <label class="block" for="first_name">First Name</label>
-                        <input type="text" @input="handleInputChange" :value="newUser.User.firstName"  id="first_name" name="firstName" placeholder="First Name" class="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600">
+                        <input type="text" v-model="newUser.User.firstName"  id="first_name" name="firstName" placeholder="First Name" class="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600">
                     </div>
                     <div>
                         <label class="block" for="last_name">Last Name</label>
-                        <input type="text" @input="handleInputChange" :value="newUser.User.lastName"   id="last_name" name="lastName" placeholder="Name" class="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600">
+                        <input type="text"  v-model="newUser.User.lastName"   id="last_name" name="lastName" placeholder="Name" class="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600">
                     </div>
                     <div >
                         <label class="block" for="email">Email </label>
-                        <input type="text" @input="handleInputChange" :value="newUser.User.email" id="email" name="email"  placeholder="Email"  class="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600">
+                        <input type="text" v-model="newUser.User.email" id="email" name="email"  placeholder="Email"  class="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600">
                     </div>
                     <div >
                         <label class="block" for="phone_number">Phone Number </label>
-                        <input type="text" @input="handleInputChange" :value="newUser.User.phoneNumber" id="phone_number" name="phoneNumber"  placeholder="Phone Number" class="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600">
+                        <input type="text" v-model="newUser.User.phoneNumber" id="phone_number" name="phoneNumber"  placeholder="Phone Number" class="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600">
                     </div>
                     <div >
                         <label class="block">Password </label>
