@@ -4,7 +4,7 @@ import {UserRole} from "../classlib/Types"
 
 
 
-let User: User  =  {
+let currentUser: User  =  {
     id: 0,
     firstName: "",
     lastName: "",
@@ -14,11 +14,20 @@ let User: User  =  {
     roles: []
 };
 
+let newUser: User  =  {
+    id: 0,
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    phoneNumber: ""
+};
+
 
 
 export const currentUserStore = defineStore("currentUser", {
     state: ()=>({
-        User: User,
+        User: currentUser,
         loggedIn: false, 
     }),
     actions:{
@@ -68,7 +77,7 @@ export const currentUserStore = defineStore("currentUser", {
 
 export const newUserStore = defineStore("newUser", {
     state: ()=>({
-        User : User
+        User : newUser
     }),
     actions: {
         changeAttr(attrName:string, value:string){
@@ -89,7 +98,7 @@ export const newUserStore = defineStore("newUser", {
             }
         },
         clearData(){
-            this.User = User;
+            this.User = newUser;
         }
     },
     getters: {
