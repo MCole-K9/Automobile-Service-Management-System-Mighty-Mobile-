@@ -1,7 +1,7 @@
 import { Response, Request, Router} from "express";
 import { Appointment, Job, JobPart, PrismaClient, Prisma, Role, Vehicle } from "@prisma/client"; //Db Connection
 import bcrypt, {genSalt, hash} from "bcrypt"
-import { transformDocument } from "@prisma/client/runtime";
+import { PrismaClientKnownRequestError, transformDocument } from "@prisma/client/runtime";
 import {JobStageWithSchedule} from "../frontend/src/classlib/PrismaDerivedTypes"
 
 
@@ -827,6 +827,7 @@ export default class Routes{
                 }
             })
 
+            console.log(schedule);
             res.status(200).send(schedule);
         
         });
@@ -875,21 +876,24 @@ export default class Routes{
         router.post("/user/jobstage/create", async (req: Request, res: Response)=>{
 
             const newJobStage: Prisma.JobStageCreateInput = req.body;
-            console.log(newJobStage);
+            // console.log(newJobStage);
 
             try{
                 const JobStage = await prisma.jobStage.create({
                     data: newJobStage,
-                    
-
                 });
 
-                console.log(JobStage);
-
-                res.status(200).send(JobStage);
+                res.status(201).send("Job Stage Created");
             }
             catch(err){
-                console.log(err);
+                if (err instanceof PrismaClientKnownRequestError){
+                    if (err.code == 'P1001'){
+                        res.status(503).send("Database Temporarily Unavailable");
+                    }
+                }
+                else{
+                    // if there's any other way this could go wrong (that i want to write in rn)
+                }
             }
         })
 

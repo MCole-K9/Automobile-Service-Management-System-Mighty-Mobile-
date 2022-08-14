@@ -78,7 +78,7 @@
 
         if (jobId !== ""){
             const fullJobInformation = await BackendService.getFullJobInformation(jobId);
-            console.log(fullJobInformation);
+            // console.log(fullJobInformation);
             selectedJob.value = fullJobInformation?.data;
         }
     });
@@ -88,7 +88,7 @@
     const validationErrorMessage: Ref<string> = ref("");
     const durationErrorText: Ref<string> = ref("");
     const isDurationClash: Ref<Boolean> = ref(false);
-    function validateJobStageAndSubmit(){
+    async function validateJobStageAndSubmit(){
         console.log("reached validateJobStage");
         
         emit('durationRangeValueChange', newJobStage.value.duration, props.time, props.day);
@@ -106,12 +106,28 @@
                     targetDate.setMonth(props.month);
                     targetDate.setDate(props.day);
                     targetDate.setHours(props.time);
+                    targetDate.setMilliseconds(0);
+                    targetDate.setSeconds(0);
 
                     newJobStage.value.scheduledItem!.create!.date = targetDate;
                     newJobStage.value.stageNumber = selectedJob.value.stages.length + 1;
                     newJobStage.value.job.connect!.jobNumber = selectedJob.value.jobNumber;
 
-                    BackendService.writeJobStageToDatabase({...newJobStage.value});
+                    const result = await BackendService.writeJobStageToDatabase({...newJobStage.value});
+
+                    if (result?.status == 201){
+                        // write "it worked" or whatever
+                        // reset the whole thing (how?)
+                            // close the modal (emit)
+                            // wipe the modal data
+                            // re-generate the schedule with the selected month (emit?)
+                        // 
+                    }
+                    else if (result?.status == 503){
+                        validationErrorMessage.value = "Could not connect to Database. Please try again or try again later";
+                        isValidationError.value = true;
+                    }
+
                 }
                 else{
                     validationErrorMessage.value += "job";
@@ -218,9 +234,8 @@
                     class="text-red-500">{{durationErrorText}}</label>
                 </label>
                 <!-- <button class="btn">Add images</button> -->
-                <div>
-                    <span class="text-red-500" v-show="isValidationError">ERROR: {{validationErrorMessage}}</span>
-                </div>
+                <div class="text-red-500" v-show="isValidationError">ERROR: {{validationErrorMessage}}</div>
+                <div class="text-green-500" v-show="">Job Stage has been created</div>
             </div>
 
             <button 
