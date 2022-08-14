@@ -359,41 +359,43 @@ export default class BackendService{
                 workingDay.hourBlocks = [];
             });
 
-            let incrementor: number = 0;
 
+            let scheduleDateIncrementor: number = 0;
+
+            console.log(res);
             // Put the scheduled items into their corresponding hour blocks of every working day
             res.workingDays.forEach((workingDay)=>{
 
+
                 do {
-                    if (schedule.data[incrementor] === undefined){
+                    if (schedule.data[scheduleDateIncrementor] === undefined){
                         break;
                     }
-                    const checkDate: Date = new Date(Date.parse(schedule.data[incrementor].date));
                     
-                    checkDate.setMonth(checkDate.getMonth());
-                    console.log(checkDate.getMonth());
+                    const checkDate: Date = new Date(Date.parse(schedule.data[scheduleDateIncrementor].date));
+                    console.log(checkDate);
                     
                     // Without this check, if someone (in this case: me) fucks up and schedules something for
                     // a weekend, then the do-while will loop forever and crash the page. might still happen, not sure yet
                     if (checkDate.getDay() === 0 || checkDate.getDay() === 6){
-                        incrementor++;   
+                        scheduleDateIncrementor++;   
                         continue;
                     }
-
+                    
                     if(workingDay.day == checkDate.getDate()){
                         // this means that it's a jobStage
-                        if (schedule.data[incrementor].jobStage !== null){
+                        if (schedule.data[scheduleDateIncrementor].jobStage !== null){
                             let hourBlock = new HourDataBlock();
 
                             hourBlock.blocktype = "JOBSTAGE";
-                            hourBlock.id = schedule.data[incrementor].id;
+                            hourBlock.id = schedule.data[scheduleDateIncrementor].id;
 
-                            hourBlock.client = schedule.data[incrementor].jobStage.job.vehicle.owner.firstName + " " +
-                                schedule.data[incrementor].jobStage.job.vehicle.owner.lastName;
+                            hourBlock.client = schedule.data[scheduleDateIncrementor].jobStage.job.vehicle.owner.firstName + " " +
+                                schedule.data[scheduleDateIncrementor].jobStage.job.vehicle.owner.lastName;
 
-                            hourBlock.duration = schedule.data[incrementor].jobStage.duration;
+                            hourBlock.duration = schedule.data[scheduleDateIncrementor].jobStage.duration;
                             hourBlock.time = checkDate.getHours();
-                            hourBlock.description = schedule.data[incrementor].jobStage.description;
+                            hourBlock.description = schedule.data[scheduleDateIncrementor].jobStage.description;
 
                             workingDay.hourBlocks.push(hourBlock);
 
@@ -403,29 +405,32 @@ export default class BackendService{
                             let hourBlock = new HourDataBlock();
 
                             hourBlock.blocktype = "APPOINTMENT";
-                            hourBlock.id = schedule.data[incrementor].id;
+                            hourBlock.id = schedule.data[scheduleDateIncrementor].id;
 
-                            hourBlock.client = schedule.data[incrementor].appointment.customer.firstName + " " +
-                                schedule.data[incrementor].appointment.customer.lastName;
+                            hourBlock.client = schedule.data[scheduleDateIncrementor].appointment.customer.firstName + " " +
+                                schedule.data[scheduleDateIncrementor].appointment.customer.lastName;
 
                             hourBlock.duration = 1;
                             hourBlock.time = checkDate.getHours();
-                            hourBlock.description = schedule.data[incrementor].appointment.problemDescription;
+                            hourBlock.description = schedule.data[scheduleDateIncrementor].appointment.problemDescription;
 
                             workingDay.hourBlocks.push(hourBlock);
 
                             // leaving out the address on purpose, since i might choose to leave it out on the UI
                         }
 
-                        incrementor++;
+                        scheduleDateIncrementor++;
+                    }
+                    else if(checkDate.getDate() > workingDay.day){
+                        break;
                     }
                     else{
-                        // if the working day is 13 and the day doesn't match because it's 14, then you break without incrementing 
-                        // incrementor++;
-                        break;
+                        scheduleDateIncrementor++;
+                        // break;
                     }
                 }while(true);
             });
+            console.log(res);
 
             // this function WILL crash the page if the datetimes aren't adjusted for the time difference
             function checkBlockDifferenceAddMissing(workingDay: DayBlock, 
