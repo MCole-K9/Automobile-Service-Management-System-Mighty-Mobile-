@@ -159,7 +159,7 @@
         <!-- <input type="checkbox" @change="$emit('schedulerModalClose')" id="close-modal-test"/> -->
         <div class="modal-box max-h-[30rem]">
             <!--This currently shows the current date (because that's what's stored in the object), so i need to rework it to show the intended date-->
-            <label>Schedule New Job-Stage for {{newJobStage.scheduledItem!.create!.date}}</label>
+            <label>Schedule New Job-Stage for {{`${new Date(Date.now()).getFullYear()}/${(props.month+1)}/${props.day}, ${props.time >12 ? props.time-12: props.time}:00 ${props.time > 12 ? 'PM':'AM'}`}}</label>
             <label for="close-modal-test" @click.stop="$emit('schedulerModalClose')" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
             <label class="form-control">
                 
