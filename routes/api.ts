@@ -814,8 +814,8 @@ export default class Routes{
         
                                     happens even if you use .toISOString(). Solution is to put -1 after getMonth(). idk why.
                                 */
-                                gte: new Date(selectedMonth.getFullYear(), selectedMonth.getMonth()-1),
-                                lte: new Date(selectedMonth.getFullYear(), selectedMonth.getMonth()-1, daysInMonth)
+                                gte: `${new Date(Date.now()).getFullYear()}-${selectedMonth.getUTCMonth() < 10 ? '0' + selectedMonth.getUTCMonth() : selectedMonth.getUTCMonth()}-01T00:00:00.000Z`,
+                                lte: `${new Date(Date.now()).getFullYear()}-${selectedMonth.getUTCMonth() < 10 ? '0' + selectedMonth.getUTCMonth() : selectedMonth.getUTCMonth()}-${daysInMonth}T00:00:00.000Z`
                             },
                         },
                         {
