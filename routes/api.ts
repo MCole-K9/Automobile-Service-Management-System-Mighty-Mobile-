@@ -613,15 +613,15 @@ export default class Routes{
                         jobNumber: req.body.job.jobNumber as number
                     },
                     data: {
-                        assignedMechanicId: req.body.job.assignedMechanicId as number ? req.body.job.assignedMechanicId as number : null, 
+                        assignedMechanicId: req.body.job.assignedMechanicId as number , 
                         
-                        completed: req.body.job.completed ? req.body.job.completed as boolean: false,
-                        isPaid:  req.body.job.isPaid ?  req.body.job.isPaid as boolean : false,
-                        streetAddress: req.body.job.streetAddress ? req.body.job.streetAddress : null ,
-                        town: req.body.job.town ? req.body.job.town : null ,
-                        parish: req.body.job.parish ? req.body.job.parish : null ,
-                        confirmed: req.body.job.confirmed ? req.body.job.confirmed : false,
-                        createdById: req.body.job.createdById ? req.body.job.createdById : null,
+                        completed: req.body.job.completed ,
+                        isPaid:  req.body.job.isPaid ,
+                        streetAddress: req.body.job.streetAddress  ,
+                        town: req.body.job.town ,
+                        parish: req.body.job.parish  ,
+                        confirmed: req.body.job.confirmed ,
+                        createdById: req.body.job.createdById ,
                         endDate: req.body.job.endDate,
                         startDate: req.body.job.startDate,
                         serviceFee: req.body.job.serviceFee,
