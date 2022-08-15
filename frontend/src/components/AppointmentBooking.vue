@@ -27,7 +27,7 @@
         vehicle: vehicle.value
     });
 
-    let firstNoticed = ref<string>();
+    let firstNoticed = ref<string>("First Noticed?");
 
     let fullName = ref("");
     let email = ref("");
@@ -43,6 +43,8 @@
     }
 
     async function bookAppointment(userId: number){
+        
+        appointment.problemDescription += `. I First Noticed This Problem ${firstNoticed.value} `;
         const res = await BackendService.makeAppointment(userId, appointment)
         return res;
 
@@ -60,7 +62,6 @@
     }
     async function onRegister(userId:number){
         try{
-            newUser.clearData()
             
             const res = await bookAppointment(userId)
             //Route to login
@@ -112,8 +113,7 @@
         <div>
             <div class="mx-auto flex flex-col space-y-4 w-full">
                 <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg" for="aptdate">Appointment Date</label>
-                <!-- <input class="input w-full input-bordered " type="date"  id="aptdate"> -->
-                <Datepicker v-model="appointment.suggestedDate" inputClassName="input w-full input-bordered" id="aptdate"></Datepicker>
+                <input class="input w-full input-bordered " type="date"  id="aptdate">
                 <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg" for="apttime">Appointment Time</label>
                 <input class="input w-full input-bordered " type="time"  id="apttime">
             </div>
