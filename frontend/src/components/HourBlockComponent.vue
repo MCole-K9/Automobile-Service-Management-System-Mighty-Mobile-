@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { HourDataBlock } from '@/classlib/MonthlySchedule.js';
+import { HourDataBlock } from '@/classlib/MonthlySchedule.ts';
 import { ref, computed } from 'vue';
 
     
