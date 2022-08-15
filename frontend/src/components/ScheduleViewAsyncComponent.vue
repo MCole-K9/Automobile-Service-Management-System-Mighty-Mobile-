@@ -113,40 +113,40 @@
 <template>
     <div class="w-max-w container">
         <div class="mx-auto flex flex-row space-x-4 overflow-auto overscroll-x-auto lg:w-min lg:h-min mt-2 mb-10">
-                <button class="font-semibold bg-ourYellow rounded btn" 
+                <button class="font-semibold bg-ourYellow rounded btn text-black hover:bg-yellow-500 border-none" 
                     @click="changeTargetMonth(0)"
                     v-if="currentDate.getMonth() == 0">January</button>
-                <button class="font-semibold bg-ourYellow rounded btn" 
+                <button class="font-semibold bg-ourYellow rounded btn text-black hover:bg-yellow-500 border-none" 
                     @click="changeTargetMonth(1)"
                     v-if="currentDate.getMonth() <= 1">February</button>
-                <button class="font-semibold bg-ourYellow rounded btn" 
+                <button class="font-semibold bg-ourYellow rounded btn text-black hover:bg-yellow-500 border-none" 
                     @click="changeTargetMonth(2)"
                     v-if="currentDate.getMonth() <= 2">March</button>
-                <button class="font-semibold bg-ourYellow rounded btn" 
+                <button class="font-semibold bg-ourYellow rounded btn text-black hover:bg-yellow-500 border-none" 
                     @click="changeTargetMonth(3)"
                     v-if="currentDate.getMonth() <= 3">April</button>
-                <button class="font-semibold bg-ourYellow rounded btn" 
+                <button class="font-semibold bg-ourYellow rounded btn text-black hover:bg-yellow-500 border-none" 
                     @click="changeTargetMonth(4)"
                     v-if="currentDate.getMonth() <= 4">May</button>
-                <button class="font-semibold bg-ourYellow rounded btn" 
+                <button class="font-semibold bg-ourYellow rounded btn text-black hover:bg-yellow-500 border-none" 
                     @click="changeTargetMonth(5)"
                     v-if="currentDate.getMonth() <= 5">June</button>
-                <button class="font-semibold bg-ourYellow rounded btn" 
+                <button class="font-semibold bg-ourYellow rounded btn text-black hover:bg-yellow-500 border-none" 
                     @click="changeTargetMonth(6)"
                     v-if="currentDate.getMonth() <= 6">July</button>
-                <button class="font-semibold bg-ourYellow rounded btn" 
+                <button class="font-semibold bg-ourYellow rounded btn text-black hover:bg-yellow-500 border-none" 
                     @click="changeTargetMonth(7)"
                     v-if="currentDate.getMonth() <= 7">August</button>
-                <button class="font-semibold bg-ourYellow rounded btn" 
+                <button class="font-semibold bg-ourYellow rounded btn text-black hover:bg-yellow-500 border-none" 
                     @click="changeTargetMonth(8)"
                     v-if="currentDate.getMonth() <= 8">September</button>
-                <button class="font-semibold bg-ourYellow rounded btn" 
+                <button class="font-semibold bg-ourYellow rounded btn text-black hover:bg-yellow-500 border-none" 
                     @click="changeTargetMonth(9)"
                     v-if="currentDate.getMonth() <= 9">October</button>
-                <button class="font-semibold bg-ourYellow rounded btn" 
+                <button class="font-semibold bg-ourYellow rounded btn text-black hover:bg-yellow-500 border-none" 
                     @click="changeTargetMonth(10)"
                     v-if="currentDate.getMonth() <= 10">November</button>
-                <button class="font-semibold bg-ourYellow rounded btn" 
+                <button class="font-semibold bg-ourYellow rounded btn text-black hover:bg-yellow-500 border-none" 
                     @click="changeTargetMonth(11)"
                     v-if="currentDate.getMonth() <= 11">December</button>
             </div>
