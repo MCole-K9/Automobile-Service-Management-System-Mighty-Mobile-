@@ -184,9 +184,10 @@
         <!-- <input type="checkbox" @change="$emit('schedulerModalClose')" id="close-modal-test"/> -->
         <div class="modal-box max-h-[30rem]">
             <!--This currently shows the current date (because that's what's stored in the object), so i need to rework it to show the intended date-->
-            <label>Schedule New Job-Stage for {{`${new Date(Date.now()).getFullYear()}/${(props.month+1)}/${props.day}, ${props.time >12 ? props.time-12: props.time}:00 ${props.time > 12 ? 'PM':'AM'}`}}</label>
+            <h2 class="text-xl font-semibold">Schedule New Job-Stage for {{`${new Date(Date.now()).getFullYear()}/${(props.month+1)}/${props.day}, ${props.time >12 ? props.time-12: props.time}:00 ${props.time > 12 ? 'PM':'AM'}`}}</h2>
             <label for="close-modal-test" @click.stop="$emit('schedulerModalClose')" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
-            <label class="form-control">
+
+            <label class="form-control sticky ml-4 mr-4">
                 
                 <label class="label">
                     <span>Select the Job:</span>
@@ -206,37 +207,39 @@
             <!--This should stay hidden until the user picks an active job-->
             <div tabindex="0" class="collapse collapse-arrow" v-if="selectedJob.jobNumber !== undefined">
                 <input type="checkbox" />
-                <div class="collapse-title">Job Information</div>
+                <h3 class="collapse-title text-lg font-semibold">Job Information</h3>
                 <div class="collapse-content">
+                    <div>Client: {{selectedJob.vehicle.owner.firstName}} {{selectedJob.vehicle.owner.lastName}} (ID: {{selectedJob.vehicle.owner.id}})</div>
                     <div>Job Number: {{selectedJob.jobNumber}}</div>
-                    <div>Start Date: {{selectedJob.startDate}}</div>
+                    <div>Start Date: {{new Date(selectedJob.startDate).toLocaleString()}}</div>
                     <div>Summary: {{selectedJob.summary}}</div>
-                    <div>Total Cost: {{selectedJob.totalCost}}</div>
+                    <div>Total Cost: ${{selectedJob.totalCost}}</div>
                     <div>Service Type: {{selectedJob.serviceType}}</div>
-                    <div>
-                        <div>Address: </div>
-                        <div>{{selectedJob.streetAddress}}</div>
-                        <div>{{selectedJob.town}}</div>
+                    <div>Address: </div>
+                    <div class="ml-4">
+                        <div>{{selectedJob.streetAddress}},</div>
+                        <div>{{selectedJob.town}},</div>
                         <div>{{selectedJob.parish}}</div>
                     </div>
-                    <div>Client: {{selectedJob.vehicle.owner.firstName}} {{selectedJob.vehicle.owner.lastName}} (ID: {{selectedJob.vehicle.owner.id}})</div>
+                    
                 </div>
             </div>
 
             <!--This should also stay hidden-->
             <div tabindex="0" class="collapse collapse-arrow" v-if="selectedJob.jobNumber !== undefined">
                 <input type="checkbox" />
-                <div class="collapse-title">Vehicle Information</div>
+                <h3 class="collapse-title text-lg font-semibold">Vehicle Information</h3>
                 <div class="collapse-content">
                     <div>{{selectedJob.vehicle.year}} {{selectedJob.vehicle.make}} {{selectedJob.vehicle.model}} (License Plate: {{selectedJob.vehicle.licensePlate}})</div>
-                    <div>Required Parts</div>
+                    <h4>Required Parts</h4>
+                    <div></div>
                 </div>
             </div>
             
             <div v-if="selectedJob !== undefined">
                 <div tabindex="0" class="collapse collapse-arrow" v-for="stage in selectedJob.stages">
                     <input type="checkbox" />
-                    <div class="collapse-title">Stage {{stage.stageNumber}}</div>
+                    <h3 class="collapse-title text-lg font-semibold">Stage {{stage.stageNumber}}</h3>
                     <div class="collapse-content">
                         <div>Description: {{stage.description}}</div>
                         <div>Duration: {{stage.duration}}</div>
@@ -246,8 +249,8 @@
             </div>
 
             <!--This should maybe also be hidden, not sure yet-->
-            <div v-if="selectedJob.jobNumber !== undefined">
-                <div>New Stage</div>
+            <div class="ml-4 mr-4" v-if="selectedJob.jobNumber !== undefined">
+                <h3 class="text-lg font-semibold">New Stage</h3>
                 <label class="form-control">
                     <label class="label">Description:</label>
                     <input v-model.trim="newJobStage.description" type="textarea" class="flex justify-between text-xs px-2"/>
@@ -271,7 +274,7 @@
             </div>
 
             <button 
-            class="btn"
+            class="btn ml-auto mr-auto w-24 h-2"
             @click="validateJobStageAndSubmit">Confirm New Job Stage</button>
 
         </div>
