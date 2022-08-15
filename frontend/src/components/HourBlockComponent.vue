@@ -25,11 +25,13 @@ import { ref, computed } from 'vue';
     <div class="" >
         <!--shows if the id for the block isn't blank-->
         <button v-if="hourDataBlock.id != null"
-            class="filledBlock h-20"
+            class="filledBlock h-20 rounded-lg"
             :class="filledBlockSize"
             @click="$emit('open-viewer', hourDataBlock.id, hourDataBlock.blocktype)">
-            <div  class="truncate ">{{hourDataBlock.description}}</div>
-            <div >Client: {{hourDataBlock.client}}</div>
+            <div class="text-sm ml-1"><span class="font-semibold">{{hourDataBlock.blocktype == "APPOINTMENT" ? "ApptID: " : "StageID: "}}</span>{{hourDataBlock.id}}</div>
+            <!-- <div  class="truncate ">{{hourDataBlock.description}}</div> -->
+            <div class="text-sm font-semibold ml-1">Client:</div>
+            <div class="text-sm truncate ml-1">{{hourDataBlock.client}}</div>
         </button>
         
         <!--shows if the id for the block Is blank-->
