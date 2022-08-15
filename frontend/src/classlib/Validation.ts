@@ -12,5 +12,13 @@ export default class Validation {
 
         return regex.test(number);
     }
+    static isEmpty(str: string):boolean {
+        return (str === "" || str.length <= 1);
+        
+    }
+    static isZeroOrNegative(number: number):boolean {
+
+        return (number <= 0 );
+    }
     
 }
