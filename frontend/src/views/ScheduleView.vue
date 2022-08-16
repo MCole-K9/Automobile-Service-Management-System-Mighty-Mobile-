@@ -84,7 +84,7 @@
     }
 
     function generateScheduleWithTargetMonth(targetMonth: number){
-        
+        newTargetMonth.value = targetMonth;
     }
 
 </script>

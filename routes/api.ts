@@ -1057,12 +1057,17 @@ export default class Routes{
                     },
 
                     include: {
-                        stages: true,
+                        stages: {
+                            include: {
+                                scheduledItem: true
+                            }
+                        },
                         vehicle:{
                             include: {
                                 owner: true
                             }
-                        }
+                        },
+                        requiredParts: true
                     }
                 });
 

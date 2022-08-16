@@ -2,13 +2,17 @@ import {Prisma} from "@prisma/client";
 
 const jobInformation = Prisma.validator<Prisma.JobArgs>()({
     include: {
-        stages: true,
+        stages: {
+            include: {
+                scheduledItem: true
+            }
+        },
         vehicle: {
             include: {
                 owner: true
             }
-        }
-
+        },
+        requiredParts: true
     }
 });
 

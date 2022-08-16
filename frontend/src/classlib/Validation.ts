@@ -38,5 +38,23 @@ export default class Validation {
 
 
     }
+    static dateGte(startDate: Date | string, endDate: Date | string){
+
+        //Date Greater Than
+        try{
+            const varStartDate = new Date(startDate).setHours(0, 0, 0 , 0);
+
+            const varEndDate = new Date(endDate).setHours(0, 0, 0, 0);
+
+            return (varStartDate <= varEndDate) as boolean
+
+        }catch(err){
+            
+            console.log(err);
+        }
+        
+
+
+    }
     
 }

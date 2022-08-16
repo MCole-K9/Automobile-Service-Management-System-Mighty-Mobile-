@@ -111,7 +111,7 @@
                 v-if="blockType === 'JOBSTAGE'">
                 <h2 class="font-semibold text-lg mb-2">Stage {{shortJobInformation.stageNumber}} of Job #{{shortJobInformation.jobNumber}}</h2>
                 <div class="mx-4 mb-4">
-                    <div><span class="font-semibold">Client: </span>{{shortJobInformation.ownerFirstName}} {{shortJobInformation.ownerLastName}} (ID: {{shortJobInformation.ownerId}}) </div>
+                    <div><span class="font-semibold">Client: </span>{{shortJobInformation.ownerFirstName}} {{shortJobInformation.ownerLastName}} (Customer ID: {{shortJobInformation.ownerId}}) </div>
                     <div><span class="font-semibold">Date: </span>{{new Date(shortJobInformation.scheduleDate).toLocaleString()}}</div>
                     <div><span class="font-semibold">Vehicle Information: </span>{{shortJobInformation.vehicleMake}} {{shortJobInformation.vehicleModel}} {{shortJobInformation.vehicleYear}}</div>
                     <div>
@@ -132,18 +132,31 @@
                     </div>
                     
                 </div>
-                <button class="btn bg-ourYellow text-black hover:bg-yellow-500 mx-auto border-none" @click="$router.push(`/dashboard/viewjob/${shortJobInformation.jobNumber}`)">See Full Job</button>
+                <div class="flex justify-center w-max">
+                    <button class="btn bg-ourYellow text-black hover:bg-yellow-500 mx-auto border-none justify-center" 
+                    @click="$router.push(`/dashboard/viewjob/${shortJobInformation.jobNumber}`)">See Full Job</button>
+                </div>
+               
             </div>
             <div 
                 class=""
                 v-if="blockType === 'APPOINTMENT'">
                 <h2 class="font-semibold text-lg">Appointment for {{shortAppointmentInformation.customerFirstName}} 
-                {{shortAppointmentInformation.customerLastName}} (ID: {{shortAppointmentInformation.customerId}})</h2>
+                {{shortAppointmentInformation.customerLastName}} (Customer ID: {{shortAppointmentInformation.customerId}})</h2>
                 <div class="mb-4">
-                    <div>Vehicle Information: {{shortAppointmentInformation.vehicleMake}} {{shortAppointmentInformation.vehicleModel}} {{shortAppointmentInformation.vehicleYear}}</div>
-                    <div>Date: {{shortAppointmentInformation.scheduleDate}}</div>
-                    <div>Address: {{shortAppointmentInformation.street}},  {{shortAppointmentInformation.town}}, {{shortJobInformation.parish}}</div>
-                    <div>Problem Description: {{shortAppointmentInformation.problemDescription}}</div>
+                    <div><span class="font-semibold">Vehicle Information: </span>{{shortAppointmentInformation.vehicleMake}} {{shortAppointmentInformation.vehicleModel}} {{shortAppointmentInformation.vehicleYear}}</div>
+                    <div><span class="font-semibold">Date: </span>{{shortAppointmentInformation.scheduleDate}}</div>
+                    <div>
+                        <div class="font-semibold">Address: </div>
+                        <div class="ml-4">{{shortAppointmentInformation.street}},</div>
+                        <div class="ml-4">{{shortAppointmentInformation.town}},</div>
+                        <div class="ml-4">{{shortJobInformation.parish}}</div>
+                    </div>
+                    <div>
+                        <div class="font-semibold">Problem Description:</div>
+                        <div class="ml-4">{{shortAppointmentInformation.problemDescription}}</div>
+                    </div>
+                    
                 </div>
                 <button class="btn bg-ourYellow text-black hover:bg-yellow-500 border-none" @click="$router.push(`/dashboard/appointment/${shortAppointmentInformation.appointmentId}`)">See Full Appointment</button>
             </div>
