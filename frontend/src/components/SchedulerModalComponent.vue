@@ -285,7 +285,7 @@
             </div>
 
             <button 
-            class="btn ml-auto mr-auto w-36 h-2 bg-ourYellow border-none text-black"
+            class="btn ml-auto mr-auto w-36 h-2 bg-ourYellow border-none text-black hover:bg-yellow-500"
             @click="validateJobStageAndSubmit">Confirm New Job Stage</button>
 
         </div>
