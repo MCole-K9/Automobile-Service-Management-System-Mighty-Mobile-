@@ -20,5 +20,23 @@ export default class Validation {
 
         return (number <= 0 );
     }
+
+    static dateGteToday(date: Date | string){
+
+        try{
+            const varDate = new Date(date).setHours(0, 0, 0 , 0);
+
+            const today = new Date().setHours(0, 0, 0, 0);
+
+            return (varDate >= today)
+
+        }catch(err){
+            
+            console.log(err);
+        }
+        
+
+
+    }
     
 }
