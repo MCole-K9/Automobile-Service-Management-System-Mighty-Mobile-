@@ -1,10 +1,11 @@
 <script setup lang="ts">
-    import { onMounted, ref, computed } from "vue";
+    import { onMounted, ref, computed, reactive } from "vue";
     import DashboardLayout from '@/components/DashboardLayout.vue';
     import BackendService from "../../BackendService";
     import type { Job, User, Vehicle, JobPart, Appointment } from '@/classlib/Types';
     import { currentUserStore } from "@/stores/User";
     import { useRouter, useRoute } from "vue-router";
+    import Validation from "@/classlib/Validation";
 
     const router = useRouter()
     const route = useRoute();
@@ -39,6 +40,9 @@
         requiredParts: []
 
     });
+    
+    const startDate = ref("")
+    const endDate = ref("")
 
     let jobPart = ref<JobPart>({
         name: "",
@@ -60,12 +64,14 @@
     })
 
     function addPart() {
+        if(validationInfo.part.valid){
 
-        job.value.requiredParts?.push({ ...jobPart.value }); // solves the pushing the reference of jobPart object issue
-
-        jobPart.value.name = "";
-        jobPart.value.price = 0;
-        console.log(job.value.requiredParts)
+            job.value.requiredParts?.push({ ...jobPart.value }); // solves the pushing the reference of jobPart object issue
+            jobPart.value.name = "";
+            jobPart.value.price = 0;
+        } 
+      
+        
 
     }
 
@@ -75,20 +81,80 @@
         })
     }
 
-    async function addJob() {
-        //Do checks before doing these(Validation)
-        job.value.createdById = currentUser.User.id;
-        job.value.vehicleId = customerVehicle.value?.id as number;
-        job.value.totalCost = totalCost.value;
+    //Validation****************************************************
 
-        const res = await BackendService.createJob(job.value);
+    const validationInfo = reactive({
+        customer: computed(()=>{
+            return (customer.value.id > 0)
+        }),
+        vehicle: computed(()=>{
+            return (customerVehicle.value?.id as number > 0)
+        }),
+        serviceType: computed(()=>{
+            return (!Validation.isEmpty(job.value.serviceType))
+        }),
+        serviceFee: computed(()=>{
+            return !Validation.isZeroOrNegative(job.value.serviceFee)
+        }),
+        startDate: computed(()=>{
+            return Validation.dateGteToday(startDate.value) 
+        }),
+        endDate: computed(()=>{
+            return Validation.dateGte(startDate.value, endDate.value ) as boolean
+        }),
+        part: {
+            valid: computed(()=>{
+                return (!Validation.isEmpty(jobPart.value.name) && !Validation.isZeroOrNegative(jobPart.value.price))
+            }),
+            name: computed(()=>{
+                return !Validation.isEmpty(jobPart.value.name);
+            }),
+            price: computed(()=>{
+                return !Validation.isZeroOrNegative(jobPart.value.price);
+            })
+        },
+        summary: computed(()=>{
+            return !Validation.isEmpty(job.value.summary)
+        }),
+        showErrorMsg: false
         
-        if (res?.status && res?.status < 300){
-            router.push({name: "jobboard"});
+
+
+    })
+
+    function isValid(){
+        return (
+            validationInfo.customer &&
+            validationInfo.vehicle && 
+            validationInfo.summary && 
+            validationInfo.serviceFee && 
+            validationInfo.serviceType &&
+            validationInfo.startDate &&
+            validationInfo.endDate 
+            
+        ) as  boolean
+    }
+    //Validation****************************************************
+
+    async function addJob() {
+        
+        if(isValid()){
+            job.value.createdById = currentUser.User.id;
+            job.value.vehicleId = customerVehicle.value?.id as number;
+            job.value.totalCost = totalCost.value;
+
+            const res = await BackendService.createJob(job.value);
+            
+            if (res?.status && res?.status < 300){
+                router.push({name: "jobboard"});
+            }
+            if(id){
+                await BackendService.fulfillAppointment(Number(id))
+            }
+        }else{
+            validationInfo.showErrorMsg = true;
         }
-        if(id){
-            await BackendService.fulfillAppointment(Number(id))
-        }
+        
 
 
     }
@@ -119,6 +185,7 @@
                             <option v-for="customer in customers" :key="customer.id" :value="customer">
                                 {{ customer.firstName }} {{ customer.lastName }}</option>
                         </select>
+                        <span v-if="validationInfo.showErrorMsg" :class="`text-xs text-red-400 px-2 ${validationInfo.customer ? 'hidden': 'block'}`">Customer Is Required</span>
                     </div>
                     <div v-else class="mx-auto flex flex-col space-y-4 w-full">
                         <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg">Customer Name</label>
@@ -142,6 +209,8 @@
                             <option v-for="vehicle in customer.vehicles" :key="vehicle.id" :value="vehicle">
                                 {{ vehicle.year }} {{ vehicle.make }} {{ vehicle.model }}</option>
                         </select>
+                        <span v-if="validationInfo.showErrorMsg" :class="`text-xs text-red-400 px-2 ${validationInfo.vehicle ? 'hidden': 'block'}`">Vehicle  Is Required</span>
+
                     </div>
                     <div v-else class="mx-auto flex flex-col space-y-4 w-full">
                         <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg">Vehicle</label>
@@ -160,23 +229,20 @@
                             <option value="Repair">Repair</option>
                             <option value="Maintenance">Maintenance</option>
                         </select>
+                        <span v-if="validationInfo.showErrorMsg" :class="`text-xs text-red-400 px-2 ${validationInfo.serviceType ? 'hidden': 'block'}`">Service Type Is Required</span>
                     </div>
                     <div class="mx-auto flex flex-col space-y-4 w-full">
                         <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg">Start Date</label>
-                        <!-- <input class="input input-bordered"  type="date" v-model="job.startDate"> -->
-                        <Datepicker v-model="job.startDate" inputClassName="input w-full input-bordered"
-                            format="yyyy-mm-dd"></Datepicker>
-
+                        <input class="input input-bordered"  type="date" v-model="startDate">
+                        <span v-if="validationInfo.showErrorMsg" :class="`text-xs text-red-400 px-2 ${validationInfo.startDate ? 'hidden': 'block'}`">Invalid Date</span>
                     </div>
                     <div class="mx-auto flex flex-col space-y-4 w-full">
                         <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg">End Date</label>
                         <div class="flex w-full space-x-2 items-center">
-                            <!-- <input class="input input-bordered w-full flex-grow-1" type="date"  v-model="job.endDate"> -->
-                            <Datepicker v-model="job.endDate" inputClassName="input w-full input-bordered flex-grow-1"
-                                format="yyyy-mm-dd"></Datepicker>
-                            <button class="btn btn-sm" @click="job.endDate = job.startDate">Same Day</button>
+                            <input class="input input-bordered w-full flex-grow-1" type="date"  v-model="endDate">
+                            <button class="btn btn-sm" @click="endDate = startDate">Same Day</button>
                         </div>
-
+                        <span v-if="validationInfo.showErrorMsg" :class="`text-xs text-red-400 px-2 ${validationInfo.endDate ? 'hidden': 'block'}`">Invalid Date</span>
                     </div>
                 </div>
 
@@ -189,6 +255,7 @@
                             <span>$</span>
                             <input type="number" class="input input-bordered w-full" v-model="job.serviceFee" />
                         </label>
+                        <span v-if="validationInfo.showErrorMsg" :class="`text-xs text-red-400 px-2 ${validationInfo.endDate ? 'hidden': 'block'}`">Service Fee Required</span>
                     </div>
                     <div class="mx-auto flex flex-col space-y-4 w-full sm:col-span-2">
                         <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg">Parts Needed</label>
@@ -217,6 +284,8 @@
                         <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg">Summery</label>
                         <textarea rows="8" class="textarea textarea-bordered" placeholder="Summery"
                             v-model="job.summary"></textarea>
+                        <span v-if="validationInfo.showErrorMsg" :class="`text-xs text-red-400 px-2 ${validationInfo.summary ? 'hidden': 'block'}`">Summery is Required</span>
+
                     </div>
 
                 </div>
