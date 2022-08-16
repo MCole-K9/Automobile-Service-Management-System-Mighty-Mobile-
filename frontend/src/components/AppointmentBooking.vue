@@ -1,10 +1,11 @@
 <script setup lang="ts">
-    import {onMounted, reactive, ref} from "vue";
+    import {computed, onMounted, reactive, ref} from "vue";
     import type {Appointment, Vehicle} from "@/classlib/Types";
     import {currentUserStore, newUserStore} from "@/stores/User"
     import BackendService from "../../BackendService.js";
     import RegisterForm from "@/components/RegisterForm.vue";
     import { useRouter } from "vue-router";
+    import Validation from "@/classlib/Validation";
     
     const router = useRouter()
     const newUser = newUserStore();
@@ -38,6 +39,7 @@
 
     function handleContinueClick (){
 
+        
         newUser.splitName(fullName.value)
         newUser.User.email = email.value;
         newUser.User.phoneNumber = phoneNumber.value;
@@ -60,15 +62,20 @@
     }
     async function handleBookingClick(){
 
-        //if valid
-
-        const data = await bookAppointment(currentUser.User.id)
-        console.log(data)
-
-        if(currentUser.loggedIn){
+        if(isValid()){
             
-            router.push("/dashboard")
+            const data = await bookAppointment(currentUser.User.id)
+            console.log(data)
+
+            if(currentUser.loggedIn){
+                
+                router.push("/dashboard")
+            }
+        }else {
+            //show error messages
+            alert("Validation Failed")
         }
+
     }
     async function onRegister(userId:number){
         try{
@@ -82,6 +89,85 @@
         }
         
     }
+    // Validation*************************************************//
+
+    // Once True then is Valid
+    const validationInfo = reactive({
+        vehicleMake:  computed(()=>{
+            return !Validation.isEmpty(vehicle.value.make)
+        }),
+        vehicleModel: computed(()=>{
+            return !Validation.isEmpty(vehicle.value.model)
+        }),
+        vehicleYear: computed(()=>{
+            return !(vehicle.value.year < 1990) 
+        }),
+        location: {
+            streetAddress: computed(()=>{
+                return !Validation.isEmpty(appointment.streetAddress)
+            }),
+            town: computed(()=>{
+                return !Validation.isEmpty(appointment.town)
+            }),
+            parish: computed(()=>{
+                return !Validation.isEmpty(appointment.parish)
+            }),
+        },
+        problemDescription: computed(()=>{
+            return !Validation.isEmpty(appointment.problemDescription)
+        }),
+        firstNoticed: computed(()=>{
+            return !Validation.isEmpty(firstNoticed.value) && firstNoticed.value != "First Noticed?"
+        }),
+        appointmentDate: computed(()=>{
+            return true //To be implemented
+        }),
+        appointmentTime: computed(()=>{
+            return true
+        }),
+        fullName: computed(()=>{
+            return ((!Validation.isEmpty(fullName.value) &&  fullName.value.split(" ").length == 2) || currentUser.loggedIn )
+        }),
+        email: computed(()=>{
+            return ((Validation.validEmail(email.value)) || currentUser.loggedIn)
+        }),
+        phoneNumber: computed(()=>{
+            return ((Validation.validPhoneNumber(phoneNumber.value)) || currentUser.loggedIn )
+        }),
+
+    })
+
+    const vehicleValid = computed(()=>{
+        return (
+                (
+                    
+                    validationInfo.vehicleMake &&
+                    validationInfo.vehicleModel && 
+                    validationInfo.vehicleYear
+
+                ) || Number.isInteger(appointment.vehicle?.id ) 
+            ) as boolean
+    })
+
+    function isValid():boolean{
+        return (
+            validationInfo.appointmentDate &&
+            validationInfo.appointmentTime &&
+            validationInfo.email &&
+            validationInfo.firstNoticed && 
+            validationInfo.fullName  && 
+            validationInfo.phoneNumber &&
+            validationInfo.problemDescription && 
+            validationInfo.location.streetAddress && 
+            validationInfo.location.town && 
+            validationInfo.location.parish &&
+            vehicleValid.value
+            
+        )
+    }
+
+ 
+    //Validation ***************************************************//
 
     onMounted(async () => {
         if(currentUser.loggedIn){
@@ -100,16 +186,19 @@
                 <option disabled selected>Select Vehicle</option>
                 <option v-for="vehicle in currentUser.User.vehicles" :key="vehicle.id" :value="vehicle">{{ vehicle.year }} {{ vehicle.make }} {{ vehicle.model }}</option>
             </select>
+            <span :class="`text-xs text-red-400 px-2 ${vehicleValid ? 'hidden': 'block'}`">Vehicle Is Required</span>
         </div>
     </div>
     <div v-else class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
             <div class="mx-auto flex flex-col space-y-4 w-full">
                 <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg" for="vmake">Vehicle Make</label>
                 <input class="input w-full input-bordered " type="text" v-model="vehicle.make" id="vmake">
+                <span :class="`text-xs text-red-400 px-2 ${validationInfo.vehicleMake ? 'hidden': 'block'}`">Vehicle Make Is Required</span>
             </div>
             <div class="mx-auto flex flex-col space-y-4 w-full">
                 <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg"  for="vmodel">Vehicle Model</label>
                 <input class="input w-full input-bordered " type="text" v-model="vehicle.model" id="vmodel">
+                <span :class="`text-xs text-red-400 px-2 ${validationInfo.vehicleModel? 'hidden': 'block'}`">Vehicle Model Is Required</span>
             </div>
             <div class="mx-auto flex flex-col space-y-4 w-full">
                 <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg" for="vyear">Vehicle Year</label>
@@ -117,6 +206,7 @@
                     <input type="range" min="1990" max="2025" v-model="vehicle.year" class="range range-sm text-ourGrey flex-grow-1" />
                     <input class="input w-full input-bordered" type="number" id="vyear" v-model="vehicle.year">
                 </div>
+                <span :class="`text-xs text-red-400 px-2 ${validationInfo.vehicleYear ? 'hidden': 'block'}`">Vehicle Year Below 1990 is not allowed</span>
             </div>
     </div>
     <div class="grid sm:grid-cols-2 gap-4 mt-8">
@@ -133,9 +223,16 @@
         <div>
             <div v-if="!currentUser.loggedIn" class="mx-auto flex flex-col space-y-4 w-full">
                 <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg" >Contact Information</label>
+
                 <input class="input w-full input-bordered " v-model="fullName" placeholder="Full Name (John Doe)" type="text" id="name">
+                <span :class="`text-xs text-red-400 px-2 ${validationInfo.fullName ? 'hidden': 'block'}`">Ensure that First name and Last Name is Entered</span>
+
                 <input class="input w-full input-bordered " v-model="email" placeholder="Email Address" type="email" id="new-user-email">
-                <input class="input w-full input-bordered " v-model="phoneNumber" placeholder="Phone Number" type="text" id="firstNam">
+                <span :class="`text-xs text-red-400 px-2 ${validationInfo.email ? 'hidden': 'block'}`">Enter a Valid Email</span>
+
+                <input class="input w-full input-bordered " v-model="phoneNumber" placeholder="Phone Number" type="text" id="phone-number">
+                <span :class="`text-xs text-red-400 px-2 ${validationInfo.phoneNumber ? 'hidden': 'block'}`">Enter a Valid Phone Number</span>
+
                 <p class=" px-2 my-2"><small>Note: This information will be used in the creation of your account</small></p>
             </div>
             <div v-else class="mx-auto flex flex-col space-y-4 w-full">
@@ -151,6 +248,8 @@
             <div class="mx-auto flex flex-col space-y-4 w-full">
                 <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg" for="problemDescription">Problem Description</label>
                 <textarea rows="6" class="textarea textarea-bordered" v-model="appointment.problemDescription" placeholder="Problem Description" id="problemDescription"></textarea>
+                <span :class="`text-xs text-red-400 px-2 ${validationInfo.problemDescription ? 'hidden': 'block'}`">Problem Description Required</span>
+
                 <select v-model="firstNoticed" class="select select-bordered w-full" id="firstNoticed">
                     <option  disabled selected>First Noticed?</option>
                     <option value="Today">Today</option>
@@ -158,14 +257,19 @@
                     <option value="Some Time This Week">Last 7 Days</option>
                     <option value="Some Time this Month">Some Time this Month</option>
                 </select>
+                <span :class="`text-xs text-red-400 px-2 ${validationInfo.firstNoticed ? 'hidden': 'block'}`">First Notice Required</span>
             </div>
         </div>
         <div>
             <div class="mx-auto flex flex-col space-y-4 w-full">
                 <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg" >Location</label>
                 <input v-model="appointment.streetAddress" class="input w-full input-bordered " placeholder="Street Address" type="text" name="street_address" id="street_address">
+                <span :class="`text-xs text-red-400 px-2 ${validationInfo.location.streetAddress ? 'hidden': 'block'}`">Street Address Required</span>
                 <input v-model="appointment.town" class="input w-full input-bordered " placeholder="City/Town" type="text" name="city" id="city">
+                <span :class="`text-xs text-red-400 px-2 ${validationInfo.location.town ? 'hidden': 'block'}`">City/Town Required</span>
                 <input v-model="appointment.parish" class="input w-full input-bordered " placeholder="Parish" type="text" name="parish" id="parish">
+                <span :class="`text-xs text-red-400 px-2 ${validationInfo.location.parish ? 'hidden': 'block'}`">Parish Required</span>
+
             </div>
         </div>
     </div>
