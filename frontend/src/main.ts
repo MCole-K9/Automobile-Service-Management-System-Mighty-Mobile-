@@ -6,11 +6,12 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import App from './App.vue'
 import router from './router'
 import "./index.css"
+import { plugin, defaultConfig } from '@formkit/vue'
 
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
-
-const app = createApp(App)
+import '@formkit/themes/genesis'
+const app = createApp(App).use(plugin, defaultConfig)
 app.config.globalProperties.$parseDate = (rawDate:Date) => {
     let parsedDate = new Date(rawDate)
     return parsedDate.toLocaleDateString()

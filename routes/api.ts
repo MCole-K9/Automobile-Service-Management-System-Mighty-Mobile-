@@ -14,6 +14,18 @@ enum UserRole{
     Customer 
 }
 
+function jsDateToSql(date: Date):string{
+
+    //prisma does automatic utc conversion. 
+    //So the fix is as follows
+
+    return new Date(
+        Date.parse(date.toUTCString()) - date.getTimezoneOffset() * 60000
+      ).toISOString();
+  
+    
+}
+
 const prisma = new PrismaClient();
 
 //These routes will be called when a request is sent to ip-address/api
@@ -408,7 +420,7 @@ export default class Routes{
                 let appointment = await prisma.appointment.create({
                     data: {
                         problemDescription: req.body.appointment.problemDescription as string,
-                        suggestedDate: req.body.appointment.suggestedDate,
+                        suggestedDate: jsDateToSql(new Date(req.body.appointment.suggestedDate)),
                         streetAddress: req.body.appointment.streetAddress as string,
                         town: req.body.appointment.town as string,
                         parish: req.body.appointment.parish as string,
@@ -613,15 +625,15 @@ export default class Routes{
                         jobNumber: req.body.job.jobNumber as number
                     },
                     data: {
-                        assignedMechanicId: req.body.job.assignedMechanicId as number ? req.body.job.assignedMechanicId as number : null, 
+                        assignedMechanicId: req.body.job.assignedMechanicId as number , 
                         
-                        completed: req.body.job.completed ? req.body.job.completed as boolean: false,
-                        isPaid:  req.body.job.isPaid ?  req.body.job.isPaid as boolean : false,
-                        streetAddress: req.body.job.streetAddress ? req.body.job.streetAddress : null ,
-                        town: req.body.job.town ? req.body.job.town : null ,
-                        parish: req.body.job.parish ? req.body.job.parish : null ,
-                        confirmed: req.body.job.confirmed ? req.body.job.confirmed : false,
-                        createdById: req.body.job.createdById ? req.body.job.createdById : null,
+                        completed: req.body.job.completed ,
+                        isPaid:  req.body.job.isPaid ,
+                        streetAddress: req.body.job.streetAddress  ,
+                        town: req.body.job.town ,
+                        parish: req.body.job.parish  ,
+                        confirmed: req.body.job.confirmed ,
+                        createdById: req.body.job.createdById ,
                         endDate: req.body.job.endDate,
                         startDate: req.body.job.startDate,
                         serviceFee: req.body.job.serviceFee,
@@ -965,6 +977,15 @@ export default class Routes{
             }
             catch (err){
                 console.log(err)
+            }
+        })
+
+        router.get('/jobstage', async(req : Request, res: Response) => {
+            try{
+                const result = await prisma.jobStage.findMany({})
+                res.send(result)
+            }catch(err){
+                console.log(err);
             }
         })
 

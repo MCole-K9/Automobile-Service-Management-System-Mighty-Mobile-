@@ -20,5 +20,41 @@ export default class Validation {
 
         return (number <= 0 );
     }
+
+    static dateGteToday(date: Date | string){
+
+        try{
+            const varDate = new Date(date).setHours(0, 0, 0 , 0);
+
+            const today = new Date().setHours(0, 0, 0, 0);
+
+            return (varDate >= today)
+
+        }catch(err){
+            
+            console.log(err);
+        }
+        
+
+
+    }
+    static dateGte(startDate: Date | string, endDate: Date | string){
+
+        //Date Greater Than
+        try{
+            const varStartDate = new Date(startDate).setHours(0, 0, 0 , 0);
+
+            const varEndDate = new Date(endDate).setHours(0, 0, 0, 0);
+
+            return (varStartDate <= varEndDate) as boolean
+
+        }catch(err){
+            
+            console.log(err);
+        }
+        
+
+
+    }
     
 }

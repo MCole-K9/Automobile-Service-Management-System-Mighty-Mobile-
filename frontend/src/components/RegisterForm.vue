@@ -24,22 +24,26 @@ const newUser = newUserStore()
 let password = ref<string>("");
 let passwordConfirm = ref<string>("");
 
-
+//Validation***************************************************************************
 let validationInfo = computed(()=>{
     return {
         firstNameEntered: !Validation.isEmpty(newUser.User.firstName),
         lastNameEntered: !Validation.isEmpty(newUser.User.lastName),
         emailIsValid: Validation.validEmail(newUser.User.email),
         passwordIsMatch: (password.value === passwordConfirm.value),
-        phoneNumberValid: Validation.validPhoneNumber(newUser.User.phoneNumber as string)
+        phoneNumberValid: Validation.validPhoneNumber(newUser.User.phoneNumber as string),
+        
     }
 });
 
+
+const showErrorMsg = ref(false)
 function isValid(): boolean{
     //All has to be true
     return ( validationInfo.value.emailIsValid && validationInfo.value.firstNameEntered && validationInfo.value.lastNameEntered && validationInfo.value.passwordIsMatch)
 }
 
+//^^Validation***************************************************************************
 
 async function register(){
     
@@ -65,7 +69,7 @@ async function register(){
         
 
     }else{
-        
+        showErrorMsg.value = true
     }
      
  }
@@ -87,23 +91,23 @@ onUnmounted(()=>{
                     <div>
                         <label class="block" for="first_name">First Name</label>
                         <input type="text" v-model="newUser.User.firstName"  id="first_name" name="firstName" placeholder="First Name" class="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600">
-                        <span :class="`text-xs text-red-400 px-2 ${validationInfo.firstNameEntered ? 'hidden': 'block'}`">First Name is Required</span>
+                        <span v-if="showErrorMsg" :class="`text-xs text-red-400 px-2 ${validationInfo.firstNameEntered ? 'hidden': 'block'}`">First Name is Required</span>
                     </div>
                     <div>
                         <label class="block" for="last_name">Last Name</label>
                         <input type="text"  v-model="newUser.User.lastName"   id="last_name" name="lastName" placeholder="Name" class="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600">
-                        <span :class="`text-xs text-red-400 px-2 ${validationInfo.lastNameEntered ? 'hidden': 'block'}`">Last Name is Required</span>
+                        <span v-if="showErrorMsg" :class="`text-xs text-red-400 px-2 ${validationInfo.lastNameEntered ? 'hidden': 'block'}`">Last Name is Required</span>
 
                     </div>
                     <div >
                         <label class="block" for="email">Email </label>
                         <input type="text" v-model="newUser.User.email" id="email" name="email"  placeholder="Email"  class="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600">
-                        <span :class="`text-xs text-red-400 px-2 ${validationInfo.emailIsValid ? 'hidden': 'block'}`">*Invalid Email</span>
+                        <span v-if="showErrorMsg" :class="`text-xs text-red-400 px-2 ${validationInfo.emailIsValid ? 'hidden': 'block'}`">*Invalid Email</span>
                     </div>
                     <div >
                         <label class="block" for="phone_number">Phone Number </label>
                         <input type="text" v-model="newUser.User.phoneNumber" id="phone_number" name="phoneNumber"  placeholder="Phone Number" class="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600">
-                        <span :class="`text-xs text-red-400 px-2 ${validationInfo.phoneNumberValid ? 'hidden': 'block'}`">Phone Number Format Invalid</span>
+                        <span v-if="showErrorMsg" :class="`text-xs text-red-400 px-2 ${validationInfo.phoneNumberValid ? 'hidden': 'block'}`">Phone Number Format Invalid</span>
                     </div>
                     <div >
                         <label class="block">Password </label>
@@ -112,7 +116,7 @@ onUnmounted(()=>{
                     <div >
                         <label class="block"> Confirm Password</label>
                         <input type="password" v-model="passwordConfirm" placeholder="Password" class="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600">
-                        <span :class="[validationInfo.passwordIsMatch ? 'hidden' : 'block' , 'text-xs', 'text-red-400']">Password must be same!</span>
+                        <span v-if="showErrorMsg" :class="[validationInfo.passwordIsMatch ? 'hidden' : 'block' , 'text-xs', 'text-red-400']">Password must be same!</span>
                     </div>
                     
                     
