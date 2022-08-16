@@ -245,9 +245,9 @@
                     <input type="checkbox" />
                     <h3 class="collapse-title text-lg font-semibold">Stage {{stage.stageNumber}}</h3>
                     <div class="collapse-content mx-4">
-                        <div><span class="font-semibold">Description:</span> {{stage.description}}</div>
                         <div><span class="font-semibold">Duration:</span> {{stage.duration}} Hour(s)</div>
                         <div><span class="font-semibold">Date:</span> </div>
+                        <div><span class="font-semibold">Description:</span> {{stage.description}}</div>                        
                     </div>
                 </div>
             </div>
