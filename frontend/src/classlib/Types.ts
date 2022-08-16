@@ -11,6 +11,7 @@
     phoneNumber?: string | null
     roles?: Role[] | null
     vehicles?: Vehicle[]
+    createdAt?: Date
   }
   
   /**
@@ -67,6 +68,7 @@
     assignedMech?: User
     vehicleId?: number
     vehicle?: Vehicle
+    createdAt?: Date
   }
   
   /**
@@ -104,6 +106,7 @@
     createdBy?: User
     requiredParts?:  JobPart[]
     completed?: boolean
+    createdAt?: Date
   }
   
   /**
