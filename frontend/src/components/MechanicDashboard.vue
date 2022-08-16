@@ -1,16 +1,16 @@
 <template>
     <div class="px-5">
             <span>
-                <FormKit
-                type="datetime-local"
-                value="2020-03-13T18:22"
-                label="End of the world"
-                help="When will the end of the world take place?"
-                validation="required|after"
-                validation-visibility="live"
-                v-model="test"
-                />
-                <button class="btn btn-sm m-5" @click="$log(new Date('2022-08-15T15:18'))">test</button>
+                <div class="h-96 w-1/1 bg-ourYellow shadow rounded-lg p-5">
+                    <span class="flex justify-between font-bold text-2xl py-3">
+                        <label class="">Current Jobs</label>
+                        <p>34</p>
+                    </span>
+                    <span class="flex justify-between font-bold text-2xl py-3">
+                        <label for="">Job History</label>
+                        <button class="btn btn-sm">view</button>
+                    </span>
+                </div>
             </span>
     </div>
 </template>
