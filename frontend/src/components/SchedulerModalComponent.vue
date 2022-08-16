@@ -235,8 +235,13 @@
                 <h3 class="collapse-title text-lg font-semibold">Vehicle Information</h3>
                 <div class="collapse-content mx-4">
                     <div>{{selectedJob.vehicle.year}} {{selectedJob.vehicle.make}} {{selectedJob.vehicle.model}} (License Plate: {{selectedJob.vehicle.licensePlate}})</div>
-                    <h4>Required Parts</h4>
-                    <div></div>
+                    <div v-if="selectedJob.requiredParts.length !== 0">
+                        <h4 class="font-semibold text-md mt-2">Required Parts</h4>
+                        <div v-for="parts in selectedJob.requiredParts">
+                        <span>Name: {{parts.name}}</span><span>Cost ${{parts.price}}</span>
+                        </div>
+
+                    </div>
                 </div>
             </div>
             
@@ -246,7 +251,7 @@
                     <h3 class="collapse-title text-lg font-semibold">Stage {{stage.stageNumber}}</h3>
                     <div class="collapse-content mx-4">
                         <div><span class="font-semibold">Duration:</span> {{stage.duration}} Hour(s)</div>
-                        <div><span class="font-semibold">Date:</span> </div>
+                        <div><span class="font-semibold">Date:</span> {{new Date(stage!.scheduledItem!.date).toLocaleString()}}</div>
                         <div><span class="font-semibold">Description:</span> {{stage.description}}</div>                        
                     </div>
                 </div>
