@@ -980,6 +980,15 @@ export default class Routes{
             }
         })
 
+        router.get('/jobstage', async(req : Request, res: Response) => {
+            try{
+                const result = await prisma.jobStage.findMany({})
+                res.send(result)
+            }catch(err){
+                console.log(err);
+            }
+        })
+
         // uses the schedule id to return a basic minimum amount of information relevant to a jobstage
         router.get("/jobstage/short/:jobstagescheduleid", async (req: Request, res: Response) => {
             const stageScheduleId = parseInt(req.params.jobstagescheduleid)
