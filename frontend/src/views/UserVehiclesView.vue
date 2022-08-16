@@ -134,6 +134,7 @@ export default defineComponent({
             errorMsg : '',
             IDToBeDeleted : <number>({}),
             processingVehicle : false,
+            imageAdded : <boolean>({})
         }
     },
      created(){
@@ -160,17 +161,22 @@ export default defineComponent({
             this.loading = false
         },
         async addVehicle(){
-            this.processingVehicle = true
-            let imageResponse = await BackendService.imageUpload(this.vehicleObject.make + this.vehicleObject.make + this.vehicleObject.year,this.imageBase64String)
-            this.vehicleObject.image = imageResponse.data.url
-            console.log(this.vehicleObject);
-            await BackendService.registerVehicle(currentUser.User.id,this.vehicleObject)
-            this.getAllVehicles()
-            document.getElementById('addVehicleModal')?.click()
-            this.processingVehicle = false
-
+            if(this.vehicleObject.make != '' && this.vehicleObject.model != '' && this.vehicleObject.licensePlate != '' && this.imageBase64String != ''){
+                this.processingVehicle = true
+                let imageResponse = await BackendService.imageUpload(this.vehicleObject.make + this.vehicleObject.make + this.vehicleObject.year,this.imageBase64String)
+                this.vehicleObject.image = imageResponse.data.url
+                console.log(this.vehicleObject);
+                await BackendService.registerVehicle(currentUser.User.id,this.vehicleObject)
+                this.getAllVehicles()
+                document.getElementById('addVehicleModal')?.click()
+                this.processingVehicle = false
+                this.imageAdded = false
+            }else{
+                this.errorMsg = 'Please fill out all fields'
+            }
         },
         async updateVehicle(){
+            this.processingVehicle = true
             if(this.imageBase64String != ''){
                 let imageResponse = await BackendService.imageUpload(this.vehicleObject.make + this.vehicleObject.make + this.vehicleObject.year,this.imageBase64String)
                 this.vehicleObject.image = imageResponse.data.url
@@ -181,6 +187,8 @@ export default defineComponent({
                 document.getElementById('modalButton')?.click()
                 console.log('success');
                 this.errorMsg = ''
+                this.processingVehicle = false
+                this.imageAdded = false
             }else{
                 this.errorMsg = 'Something went wrong'
             }
@@ -211,6 +219,7 @@ export default defineComponent({
         },
         getBase64ImageString(data:string){
             this.imageBase64String = data
+            this.imageAdded = true
         }
     }
 })
