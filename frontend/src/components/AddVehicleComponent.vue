@@ -2,7 +2,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
             <div class="mx-auto flex flex-col space-y-4 w-full">
                 <label class="text-center w-full p-2 bg-ourGrey shadow-lg" for="vmake">Vehicle Make</label>
-                <input class="input w-full input-bordered " type="text" v-model="vehicle.make" id="vmake">
+                <input class="input w-full input-bordered" type="text" v-model="vehicle.make" id="vmake">
             </div>
             <div class="mx-auto flex flex-col space-y-4 w-full">
                 <label class="text-center w-full p-2 bg-ourGrey shadow-lg"  for="vmodel">Vehicle Model</label>
@@ -19,9 +19,19 @@
                 <label class="text-center w-full p-2 bg-ourGrey shadow-lg" for="vplate">License Plate</label>
                 <input class="input w-full input-bordered " type="text" v-model="vehicle.licensePlate" id="vplate">    
             </div>
-             <div class="mx-auto flex flex-col space-y-4 w-full min-w-52">
+             <div class="mx-auto flex flex-col space-y-4 w-full min-w-fit text-left ">
                 <label class="text-center w-full p-2 bg-ourGrey shadow-lg" for="vimage">{{vehicle.image == null ? 'Upload':'Change'}} Image</label>
-                <input class="input w-full" type="file" @change="uploadImage" id="vimage">
+                <FormKit
+                type="file"
+                accept=".jpg,.jpeg,.png"
+                help="Select an image"
+                multiple="false"
+                @change="uploadImage" 
+                id="vimage"
+                name="Vehicle name"
+                validation="required"
+                validation-visibility="live"
+                />
             </div>
         </div>
 </template>
