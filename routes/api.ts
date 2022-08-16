@@ -473,11 +473,21 @@ export default class Routes{
 
         router.get("/appointments", async (req:Request, res:Response)=>{
             const appointments = await prisma.appointment.findMany({
+                where: {
+                    NOT: {
+                        fulfilled: true
+                    }
+                },
                 include: {
                     assignedMech: true,
                     customer: true,
                     vehicle: true,
-                }
+                },
+                orderBy: {
+                    createdAt: "desc"
+                },
+                
+               
             })
             res.send(appointments);
         });
@@ -680,7 +690,7 @@ export default class Routes{
             const jobs = await prisma.job.findMany({
                 where: {
                     startDate: {
-                        gte: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())
+                        gte: jsDateToSql(new Date())
                     }
                 },
                 include: {
