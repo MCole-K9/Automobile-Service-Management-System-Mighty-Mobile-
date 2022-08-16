@@ -139,9 +139,13 @@
     async function addJob() {
         
         if(isValid()){
+
             job.value.createdById = currentUser.User.id;
             job.value.vehicleId = customerVehicle.value?.id as number;
             job.value.totalCost = totalCost.value;
+
+            job.value.startDate = new Date(startDate.value);
+            job.value.endDate = new Date(endDate.value);
 
             const res = await BackendService.createJob(job.value);
             
@@ -255,7 +259,7 @@
                             <span>$</span>
                             <input type="number" class="input input-bordered w-full" v-model="job.serviceFee" />
                         </label>
-                        <span v-if="validationInfo.showErrorMsg" :class="`text-xs text-red-400 px-2 ${validationInfo.endDate ? 'hidden': 'block'}`">Service Fee Required</span>
+                        <span v-if="validationInfo.showErrorMsg" :class="`text-xs text-red-400 px-2 ${validationInfo.serviceFee ? 'hidden': 'block'}`">Service Fee Required</span>
                     </div>
                     <div class="mx-auto flex flex-col space-y-4 w-full sm:col-span-2">
                         <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg">Parts Needed</label>
