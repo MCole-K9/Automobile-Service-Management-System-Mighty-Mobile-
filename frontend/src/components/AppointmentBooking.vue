@@ -33,6 +33,9 @@
     let email = ref("");
     let phoneNumber = ref("");
 
+    let selectedDate = ref("");
+    let selectedTime = ref("");
+
     function handleContinueClick (){
 
         newUser.splitName(fullName.value)
@@ -43,7 +46,12 @@
     }
 
     async function bookAppointment(userId: number){
-        
+
+
+        appointment.suggestedDate = new Date(`${selectedDate.value}T${selectedTime.value}`)
+
+    
+
         appointment.problemDescription += `. I First Noticed This Problem ${firstNoticed.value} `;
         const res = await BackendService.makeAppointment(userId, appointment)
         return res;
@@ -51,7 +59,9 @@
        
     }
     async function handleBookingClick(){
-        
+
+        //if valid
+
         const data = await bookAppointment(currentUser.User.id)
         console.log(data)
 
@@ -113,9 +123,11 @@
         <div>
             <div class="mx-auto flex flex-col space-y-4 w-full">
                 <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg" for="aptdate">Appointment Date</label>
-                <input class="input w-full input-bordered " type="date"  id="aptdate">
+                <input class="input w-full input-bordered " v-model="selectedDate" type="date"  id="aptdate">
+
+                
                 <label class="text-center w-full  py-4 px-2 bg-ourGrey shadow-lg" for="apttime">Appointment Time</label>
-                <input class="input w-full input-bordered " type="time"  id="apttime">
+                <input class="input w-full input-bordered " v-model="selectedTime" type="time"  id="apttime">
             </div>
         </div>
         <div>

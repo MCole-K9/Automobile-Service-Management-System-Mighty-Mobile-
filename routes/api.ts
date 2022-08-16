@@ -14,6 +14,18 @@ enum UserRole{
     Customer 
 }
 
+function jsDateToSql(date: Date):string{
+
+    //prisma does automatic utc conversion. 
+    //So the fix is as follows
+
+    return new Date(
+        Date.parse(date.toUTCString()) - date.getTimezoneOffset() * 60000
+      ).toISOString();
+  
+    
+}
+
 const prisma = new PrismaClient();
 
 //These routes will be called when a request is sent to ip-address/api
@@ -408,7 +420,7 @@ export default class Routes{
                 let appointment = await prisma.appointment.create({
                     data: {
                         problemDescription: req.body.appointment.problemDescription as string,
-                        suggestedDate: req.body.appointment.suggestedDate,
+                        suggestedDate: jsDateToSql(new Date(req.body.appointment.suggestedDate)),
                         streetAddress: req.body.appointment.streetAddress as string,
                         town: req.body.appointment.town as string,
                         parish: req.body.appointment.parish as string,
