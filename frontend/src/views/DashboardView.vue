@@ -21,7 +21,7 @@ const currentUser = currentUserStore();
                 </span>
                 
             </span>
-          <UserDashboard v-if="currentUser.isCustomer" />
+          <UserDashboard v-if="currentUser.isCustomer" class="mb-5"/>
           <MechanicDashboard v-if="currentUser.isMechanic || currentUser.isManager"/>
         </template>
         </DashboardLayout>

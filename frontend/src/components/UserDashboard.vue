@@ -1,7 +1,7 @@
 <template>
     <div class="px-5">
         <div class="flex flex-col sm:flex-row justify-start">
-            <div class="stats stats-vertical shadow min-w-fit bg-ourYellow">
+            <div class="stats stats-vertical shadow min-w-fit rounded-lg bg-ourYellow">
             
             <div class="stat">
                 <div class="font-medium stat-title">Vehicle(s)</div>
