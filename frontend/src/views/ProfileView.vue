@@ -3,7 +3,7 @@
     <template #content>
     <div class="bg-white overflow-hidden sm:rounded-lg">
     <div class="px-4 py-5 sm:px-6">
-        <h3 class="text-2xl leading-6 font-medium text-center text-gray-900">Applicant Information</h3>
+        <h3 class="text-2xl leading-6 font-medium text-center text-gray-900">User Information</h3>
         <p class=" text-center text-sm text-gray-500">Personal details and user information.</p>
     </div>
     <UserComponent :forDisplay="true" :User="user" class="my-5">

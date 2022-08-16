@@ -106,6 +106,14 @@ export default class BackendService{
         
     }
 
+    static async getJobStages(){
+        try{
+            const res = await axios.get(URL + "/jobstage")
+            return res;
+        }catch(err){
+            console.log(err);
+        }
+    }
     
 
     static async registerVehicle(userId: number, vehicle:Vehicle){
