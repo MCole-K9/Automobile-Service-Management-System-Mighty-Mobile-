@@ -27,7 +27,7 @@ model User {
   appointments Appointment[] @relation("MadeAppointment")
   assignedAppointments Appointment[] @relation("AssignedMech")
   addresses Address[]
-  createdAt DateTime @db.DateTime() @default(now())
+  createdAt DateTime  @default(now())
 
 }
 
@@ -76,7 +76,7 @@ model Appointment{
   /// Corresponds to the scheduled date and information created by the Manager after processing the appt
   scheduledItem Schedule? @relation(fields: [scheduledItemId], references: [id], onUpdate: Cascade)
   scheduledItemId Int? @unique
-  createdAt DateTime @db.DateTime() @default(now())
+  createdAt DateTime  @default(now())
 }
 
 model Appointment_Image{
@@ -108,7 +108,7 @@ model Job {
   stages JobStage[]
   requiredParts JobPart[]
   completed Boolean @default(false) 
-  createdAt DateTime @db.DateTime() @default(now())
+  createdAt DateTime  @default(now())
 
 }
 
