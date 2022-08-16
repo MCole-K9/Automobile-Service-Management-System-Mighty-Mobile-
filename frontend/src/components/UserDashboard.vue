@@ -1,9 +1,5 @@
 <template>
     <div class="px-5">
-        <span class="flex justify-between my-5">
-                <p class="text-gray-800 text-xl sm:text-2xl lg:text-4xl font-bold">Dashboard</p>
-                <button class="btn btn-sm lg:btn-md" @click="$router.push('dashboard/vehicles')">view vehicles</button>
-            </span>
         <div class="flex flex-col sm:flex-row justify-start">
             <div class="stats stats-vertical shadow min-w-fit bg-ourYellow">
             
@@ -23,14 +19,14 @@
                 <div class="font-medium stat-title">Current Repairs/Maintenance</div>
                 <span class="flex justify-between items-center">
                     <div class="stat-value">1</div>
-                    <button class="btn btn-xs">view</button>
+                    <label for="ongoingJobsModal" class="btn modal-button btn-xs">view</label>
                 </span>
 
             </div>
             
             </div>
             <div class="mt-10 sm:ml-10 sm:mt-0 w-full overflow-x-auto">
-                <p class="text-2xl text-center font-medium mb-3 sticky left-3">Outgoing Requests</p>
+                <p class="text-2xl text-center font-medium mb-3 sticky left-0 bg-ourYellow rounded-lg py-3">Outgoing Requests</p>
                 <table class="table w-full">
                 <!-- head -->
                 <thead>
@@ -49,14 +45,26 @@
             </div>
             
         </div>
-            
+            <!-- Put this part before </body> tag -->
+            <input type="checkbox" id="ongoingJobsModal" class="modal-toggle" />
+            <div class="modal">
+            <div class="modal-box relative">
+                <label for="ongoingJobsModal" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+                <h3 class="text-3xl font-bold text-center mb-5">Ongoing Jobs</h3>
+                <span class="flex flex-col gap-y-3 overflow-y-scroll" style="max-height: 20rem;">
+                    <div class="rounded w-1/1 bg-ourYellow p-3 h-fit" v-for="job,index in currentJobs" :key="index">
+                        <p>{{job.serviceType}} for {{job.vehicle?.year}} {{job.vehicle?.make}} {{job.vehicle?.model}} being done by {{job.assignedMechanic?.firstName}} {{job.assignedMechanic?.lastName}}</p>
+                    </div>
+                </span>
+            </div>
+            </div>
     </div>
 </template>
 <script lang="ts">
 import BackendService from "../../BackendService"
 import { defineComponent } from "vue"
 import Request from "./Request.vue"
-import type { Appointment } from '../classlib/Types';
+import type { Appointment, JobStage, Job, Vehicle } from '../classlib/Types';
 import { currentUserStore } from "@/stores/User";
 const currentUser = currentUserStore();
 
@@ -67,12 +75,25 @@ export default defineComponent({
     },
     data(){
         return{
-            UserAppointments : <Appointment[]>([])
+            UserAppointments : <Appointment[]>([]),
+            userVehicles : <Vehicle[]>([]),
+            currentJobs : <Job[]>([])
         }
     },
+    methods:{
+        async getAllVehicles(){
+            let res = await BackendService.getUserVehicles(currentUser.User.id)
+            console.log(res?.data);
+            this.userVehicles = res?.data;
+        },
+    },
     async created(){
+        await this.getAllVehicles()
         let res = await BackendService.getAppointments()
-        // console.log(res?.data);
+
+        let alljobs  = await BackendService.getAllJobs()
+        let alljobsarray = alljobs?.data as Job[]
+        this.currentJobs = alljobsarray.filter(e => e.vehicle?.ownerId == currentUser.User.id && !e.completed)
         this.UserAppointments = res?.data
         this.UserAppointments = this.UserAppointments.filter(e => e.customerId == currentUser.User.id && !e.fulfilled)
     }
