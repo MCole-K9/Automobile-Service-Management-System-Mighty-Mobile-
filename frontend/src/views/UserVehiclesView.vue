@@ -78,7 +78,10 @@
          <span v-if="!processingVehicle">Add Vehicle</span>
          <loadingAnimation v-else/>
          </button>
-         <button class="btn" v-else @click="updateVehicle">Save Vehicle</button>
+         <button class="btn" v-else @click="updateVehicle">
+         <span v-if="!processingVehicle">Save Vehicle</span>
+         <loadingAnimation v-else/>
+         </button>
         </div>
     </div>
     </div>

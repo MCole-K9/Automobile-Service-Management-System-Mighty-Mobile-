@@ -5,7 +5,7 @@
             
             <div class="stat">
                 <div class="font-medium stat-title">Vehicle(s)</div>
-                <div class="stat-value">2</div>
+                <div class="stat-value">{{userVehicles.length}}</div>
                 <!-- <div class="stat-desc">Jan 1st - Feb 1st</div> -->
             </div>
             
@@ -18,14 +18,14 @@
             <div class="stat">
                 <div class="font-medium stat-title">Current Repairs/Maintenance</div>
                 <span class="flex justify-between items-center">
-                    <div class="stat-value">1</div>
+                    <div class="stat-value">{{currentJobs.length}}</div>
                     <label for="ongoingJobsModal" class="btn modal-button btn-xs">view</label>
                 </span>
 
             </div>
             
             </div>
-            <div class="mt-10 sm:ml-10 sm:mt-0 w-full overflow-auto" style="max-height: 25rem;">
+            <div class="mt-10 sm:ml-10 sm:mt-0 w-full overflow-auto" style="max-height: 20rem;">
                 <p class="text-2xl text-center font-medium mb-3 sticky left-0 bg-ourYellow rounded-lg py-3">Outgoing Requests</p>
                 <table class="table w-full">
                 <!-- head -->
