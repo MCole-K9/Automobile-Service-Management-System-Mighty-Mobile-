@@ -73,7 +73,7 @@ const router = createRouter({
     {
       path: "/yourschedule",
       name: "yourschedule",
-      //Add Auth requirement
+      meta: {auth: true},
       component: () => import("../views/ScheduleView.vue")
     },
     {
@@ -124,6 +124,12 @@ const router = createRouter({
       name: "profile",
       meta: {auth: true},
       component: ()=> import("@/views/ProfileView.vue")
+    },
+    {
+      path: "/dashboard/changepassword",
+      name: "changepassword",
+      meta: {auth: true},
+      component: ()=> import("@/views/ChangePasswordView.vue")
     }
   ]
 })

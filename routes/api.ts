@@ -273,6 +273,46 @@ export default class Routes{
             
         } );
 
+        router.put("/user/:id/changepassword", async (req:Request, res:Response)=>{
+
+            try{
+                console.log("password change hit");
+                
+                const userId = Number.parseInt(req.params.id);  
+
+                const oldPassword = req.body.oldPassword as string;
+                const newPassword = req.body.newPassword as string;
+
+                
+                const user = await prisma.user.findFirstOrThrow({
+                    where: {
+                        id: userId
+                    }
+                })
+
+                if(await bcrypt.compare(oldPassword, user.password)){
+
+                    await prisma.user.update({
+                        where: {
+                            id: userId
+                        },
+                        data: {
+                            password: await bcrypt.hash(newPassword , await genSalt() )
+                        }
+                    })
+                    res.status(200).send({changed: true, message: "Password Changed Successfully"})
+                }else{
+                    res.send({changed: false, message: "Old Password not a Match"})
+                }
+
+
+
+            }catch(err){
+                console.log(err);
+
+            }
+        });
+
         router.route("/user/:id/vehicle").get(async (req:Request, res:Response)=>{
 
             //Get User Vehicles 

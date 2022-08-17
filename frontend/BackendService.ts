@@ -76,6 +76,19 @@ export default class BackendService{
         }
         
     }
+    static async changePassword(userId: number, oldPassword, newPassword:string){
+        try{
+            const res = await axios.put(URL + `/user/${userId}/changepassword`, {
+                oldPassword,
+                newPassword
+            })
+            return res;
+
+        }catch(err){
+
+        }
+        
+    }
     static async getUsers(){
         try{
             const res = await axios.get(URL + "/users")

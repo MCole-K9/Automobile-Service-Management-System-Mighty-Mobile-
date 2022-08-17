@@ -8,7 +8,11 @@
     </div>
     <UserComponent :forDisplay="true" :User="user" class="my-5">
         <template #Extra>
-            <button class="btn col-span-2 justify-self-end" @click="$router.push(`/dashboard/manageusers/edit/${user.id}`)">edit profile</button>
+            <div class="col-span-2 flex justify-end space-x-2">
+                <button class="btn  justify-self-end" @click="$router.push(`/dashboard/manageusers/edit/${user.id}`)">edit profile</button>
+                <button class="btn" @click="$router.push({name: 'changepassword'})">Change Password</button>
+            </div>
+            
         </template>
     </UserComponent>
     </div>
