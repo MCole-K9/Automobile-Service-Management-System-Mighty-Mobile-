@@ -4,10 +4,10 @@ import  type { MonthBlock, DayBlock } from "./src/classlib/MonthlySchedule";
 import {HourDataBlock} from "./src/classlib/MonthlySchedule";
 import type { JobStageWithSchedule } from "@/classlib/PrismaDerivedTypes";
 import type { Prisma } from ".prisma/client";
+const port = process.env.PORT || 5000;
 
 
-
-const URL = "http://localhost:5000/api"
+const URL = `http://localhost:${port}/api`
 // const URL = 'http://192.168.1.3:5000/api'
 // const URL = "/api"
 
