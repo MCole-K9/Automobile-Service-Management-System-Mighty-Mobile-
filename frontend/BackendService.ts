@@ -6,6 +6,7 @@ import {HourDataBlock} from "./src/classlib/MonthlySchedule";
 import type { JobStageWithSchedule } from "@/classlib/PrismaDerivedTypes";
 import type { Prisma } from ".prisma/client";
 const port = process.env.PORT || 5000;
+console.log('port is ' + port);
 
 
 const URL = `http://localhost:${port}/api`
