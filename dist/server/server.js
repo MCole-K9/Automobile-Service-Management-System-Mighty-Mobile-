@@ -29,7 +29,8 @@ if (process.env.NODE_ENV === 'production') {
     app.use(history());
     app.use(express_1.default.static(path_1.default.join(__dirname, '/public/')));
     app.get(/.*/, (req, res) => {
-        res.sendFile(__dirname + "/public/index.html");
+        res.sendFile("app/server/public/index.html");
+        // res.sendFile(__dirname+"/public/index.html");
     });
 }
 app.listen(port, () => {
