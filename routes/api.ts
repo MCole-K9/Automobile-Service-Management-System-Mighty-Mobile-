@@ -327,7 +327,7 @@ export default class Routes{
                       make : vehicle.make,
                       model : vehicle.model,
                       licensePlate : vehicle.licensePlate,
-                      year : vehicle.year,
+                      year : Number(vehicle.year),
                     },
                 })
                 res.status(200).json({status:true})
