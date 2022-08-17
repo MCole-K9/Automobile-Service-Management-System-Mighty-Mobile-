@@ -40,8 +40,8 @@
     </div>
     <div class="navbar-center hidden lg:flex">
       <ul class="menu menu-horizontal p-0">
-        <!-- <li><a>Home</a></li> -->
-        <li tabindex="0">
+        
+        <!-- <li tabindex="0">
           <a>
             Services
             <svg class="fill-current" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
@@ -55,8 +55,8 @@
               <router-link to="/appointmentbooking">Maintenance</router-link>
             </li>
           </ul>
-        </li>
-        <li>
+        </li> -->
+        <li v-if="!currentUser.loggedIn">
           <router-link to="/appointmentbooking">Appointment Booking</router-link>
         </li>
       </ul>
