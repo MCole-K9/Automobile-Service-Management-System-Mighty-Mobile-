@@ -1,17 +1,17 @@
 import type { User, Appointment, Vehicle, Job, JobStage } from "./src/classlib/Types";
 import axios from "axios";
-require('dotenv').config()
+
 import  type { MonthBlock, DayBlock } from "./src/classlib/MonthlySchedule";
 import {HourDataBlock} from "./src/classlib/MonthlySchedule";
 import type { JobStageWithSchedule } from "@/classlib/PrismaDerivedTypes";
 import type { Prisma } from ".prisma/client";
-const port = process.env.PORT || 5000;
-console.log('port is ' + port);
+// const port = import.meta.env || 5000;
+// console.log('port is ' + port);
 
 
-const URL = `http://localhost:${port}/api`
+// const URL = 
 // const URL = 'http://192.168.1.3:5000/api'
-// const URL = "/api"
+const URL = "/api"
 
 export default class BackendService{
 
