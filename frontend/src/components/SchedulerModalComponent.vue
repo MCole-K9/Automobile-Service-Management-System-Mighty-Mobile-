@@ -220,7 +220,7 @@
                     </div>
 
                     <div><span class="font-semibold">Address:</span></div>
-                    <div class="ml-4">
+                    <div v-if="selectedJob.town == null || selectedJob.town == undefined" class="ml-4">
                         <div>{{selectedJob.streetAddress}},</div>
                         <div>{{selectedJob.town}},</div>
                         <div>{{selectedJob.parish}}</div>
@@ -238,7 +238,7 @@
                     <div v-if="selectedJob.requiredParts.length !== 0">
                         <h4 class="font-semibold text-md mt-2">Required Parts</h4>
                         <div v-for="parts in selectedJob.requiredParts">
-                        <span>Name: {{parts.name}}</span><span>Cost ${{parts.price}}</span>
+                        <span>Name: {{parts.name}}</span> <span>Cost ${{parts.price}}</span>
                         </div>
 
                     </div>
@@ -279,13 +279,14 @@
                     <label v-show="isDurationClash"
                     class="text-red-500">{{durationErrorText}}</label>
                 </label>
+
                 <!-- <button class="btn">Add images</button> -->
                 <div class="text-red-500" v-show="isValidationError">ERROR: {{validationErrorMessage}}</div>
                 <div class="text-green-500" v-show="isPostSuccess">Job Stage has been created. Updating schedule...</div>
             </div>
 
             <button 
-            class="btn ml-auto mr-auto w-36 h-2 bg-ourYellow border-none text-black hover:bg-yellow-500"
+            class="btn ml-auto mr-auto w-36 h-2 bg-ourYellow border-none text-black hover:bg-yellow-500 mt-4"
             @click="validateJobStageAndSubmit">Confirm New Job Stage</button>
 
         </div>

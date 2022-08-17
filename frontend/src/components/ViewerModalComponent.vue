@@ -114,7 +114,7 @@
                     <div><span class="font-semibold">Client: </span>{{shortJobInformation.ownerFirstName}} {{shortJobInformation.ownerLastName}} (Customer ID: {{shortJobInformation.ownerId}}) </div>
                     <div><span class="font-semibold">Date: </span>{{new Date(shortJobInformation.scheduleDate).toLocaleString()}}</div>
                     <div><span class="font-semibold">Vehicle Information: </span>{{shortJobInformation.vehicleMake}} {{shortJobInformation.vehicleModel}} {{shortJobInformation.vehicleYear}}</div>
-                    <div>
+                    <div v-if="shortJobInformation.town === null || shortJobInformation.town === undefined">
                         <div class="font-semibold">Address: </div>
                         <div class="ml-4">{{shortJobInformation.streetAddress}},</div>
                         <div class="ml-4">{{shortJobInformation.town}},</div> 
@@ -146,7 +146,7 @@
                 <div class="mb-4">
                     <div><span class="font-semibold">Vehicle Information: </span>{{shortAppointmentInformation.vehicleMake}} {{shortAppointmentInformation.vehicleModel}} {{shortAppointmentInformation.vehicleYear}}</div>
                     <div><span class="font-semibold">Date: </span>{{shortAppointmentInformation.scheduleDate}}</div>
-                    <div>
+                    <div v-if="shortAppointmentInformation.town === null || shortAppointmentInformation.town === undefined">
                         <div class="font-semibold">Address: </div>
                         <div class="ml-4">{{shortAppointmentInformation.street}},</div>
                         <div class="ml-4">{{shortAppointmentInformation.town}},</div>
