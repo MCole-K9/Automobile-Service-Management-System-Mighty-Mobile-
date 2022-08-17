@@ -18,6 +18,10 @@ const pendingJobs = computed(()=>{
 </script>
 <template>
     <JobComponent  v-for="job in pendingJobs" :key="job.jobNumber" :job="job"/>
+    <div class="sm:col-span-2 md:col-span-3 text-center">
+        <p class="text-lg font-medium text-center my-5 w-1/1 opacity-75" v-if="pendingJobs.length == 0">There Are No Jobs Awaiting Customer Acceptance</p>
+
+    </div>
 </template>
 
 <style>

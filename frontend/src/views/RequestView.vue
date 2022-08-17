@@ -9,7 +9,10 @@ import {currentUserStore} from "@/stores/User"
 const currentUser = currentUserStore();
 
 let appointments = ref<Appointment[]>([])
+
 let jobs = ref<Job[]>([])
+
+
 
 onMounted(async () => {
 
@@ -21,6 +24,8 @@ onMounted(async () => {
 
         const apptRes = await BackendService.getAppointments();
         appointments.value = [...apptRes?.data]
+        
+
     }
 
    
@@ -60,6 +65,7 @@ onMounted(async () => {
                     </tbody>
 
                 </table>
+                <p class="text-lg font-medium text-center my-5 w-1/1 opacity-75" v-if="(jobs.length == 0 && currentUser.isCustomer)|| (appointments.length == 0 && !currentUser.isCustomer)">No Requests Yet</p>
             </div>
 
         </template>

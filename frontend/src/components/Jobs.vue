@@ -14,6 +14,10 @@
 
     <JobComponent  v-for="job in props.jobs" :key="job.jobNumber" :job="job"/>
 
+    <div class="sm:col-span-2 md:col-span-3 text-center">
+        <p class="text-lg font-medium text-center my-5 w-1/1 opacity-75" v-if="jobs.length == 0">Nothing Yet. Add Job to Get Started</p>
+    </div>
+
 </template>
 
 
