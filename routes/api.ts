@@ -386,7 +386,7 @@ export default class Routes{
                             ownerId: userId,
                         },
                         startDate: {
-                            gte: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())
+                            gte: jsDateToSql(new Date()) 
                         },
                         // completed : false
                 
