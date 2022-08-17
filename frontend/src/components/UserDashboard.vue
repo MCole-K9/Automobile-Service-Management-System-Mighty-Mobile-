@@ -25,7 +25,7 @@
             </div>
             
             </div>
-            <div class="mt-10 sm:ml-10 sm:mt-0 w-full overflow-x-auto">
+            <div class="mt-10 sm:ml-10 sm:mt-0 w-full overflow-auto" style="max-height: 25rem;">
                 <p class="text-2xl text-center font-medium mb-3 sticky left-0 bg-ourYellow rounded-lg py-3">Outgoing Requests</p>
                 <table class="table w-full">
                 <!-- head -->
