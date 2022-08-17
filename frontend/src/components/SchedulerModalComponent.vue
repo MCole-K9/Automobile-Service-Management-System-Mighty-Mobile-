@@ -195,7 +195,7 @@
                 <label class="label">
                     <span class="font-semibold">Select the Job:</span>
                 </label>
-                <select v-model.number="optionSelectJob">
+                <select v-model.number="optionSelectJob" class="px-3 py-3 bg-gray-300 rounded">
                     <option disabled value="" selected>Select a Job</option>
                     <option v-for="item in listOfJobs.items"
                     :key="item.jobNumber" :value="item.jobNumber">
@@ -260,11 +260,11 @@
             <!--This should maybe also be hidden, not sure yet-->
             <div class="mx-4 mb-4" v-if="selectedJob.jobNumber !== undefined">
                 <h3 class="text-lg font-semibold">New Stage</h3>
-                <label class="form-control mx-2 mb-2">
+                <label class="form-control mx-2 mb-10 h-12">
                     <label class="label font-semibold">Description:</label>
                     <input v-model.trim="newJobStage.description" type="textarea" 
                     rows="4"
-                    class="flex justify-between px-2 bg-gray-300"/>
+                    class="flex justify-between bg-gray-300 rounded px-3 py-3"/>
                 </label>
 
                 <label class="form-control mx-2">
