@@ -2,8 +2,7 @@
 node_modules
 /prisma
 /routes
-public*
-/public
+
 /frontend
 
 # local env files
