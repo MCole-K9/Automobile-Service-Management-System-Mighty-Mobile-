@@ -59,15 +59,15 @@
                 shortAppointmentInformation.value.customerId = fullDetails?.data.customer.id;
                 shortAppointmentInformation.value.customerLastName = fullDetails?.data.customer.lastName;
                 shortAppointmentInformation.value.customerFirstName = fullDetails?.data.customer.firstName;
-                shortAppointmentInformation.value.street = fullDetails?.data.streetAddress;
-                shortAppointmentInformation.value.town = fullDetails?.data.town;
-                shortAppointmentInformation.value.parish = fullDetails?.data.parish;
+                shortAppointmentInformation.value.street = fullDetails!.data.streetAddress;
+                shortAppointmentInformation.value.town = fullDetails!.data.town;
+                shortAppointmentInformation.value.parish = fullDetails!.data.parish;
                 shortAppointmentInformation.value.problemDescription = fullDetails?.data.problemDescription;
                 shortAppointmentInformation.value.vehicleMake = fullDetails?.data.vehicle.make;
                 shortAppointmentInformation.value.vehicleModel = fullDetails?.data.vehicle.model;
                 shortAppointmentInformation.value.vehicleYear = fullDetails?.data.vehicle.year;
                 shortAppointmentInformation.value.vehicleId = fullDetails?.data.vehicle.id;
-                shortAppointmentInformation.value.scheduleDate = fullDetails?.data.schedule.date;
+                shortAppointmentInformation.value.scheduleDate = fullDetails?.data.scheduledItem.date;
             }
             catch(err){
                 console.log(err);
@@ -114,7 +114,7 @@
                     <div><span class="font-semibold">Client: </span>{{shortJobInformation.ownerFirstName}} {{shortJobInformation.ownerLastName}} (Customer ID: {{shortJobInformation.ownerId}}) </div>
                     <div><span class="font-semibold">Date: </span>{{new Date(shortJobInformation.scheduleDate).toLocaleString()}}</div>
                     <div><span class="font-semibold">Vehicle Information: </span>{{shortJobInformation.vehicleMake}} {{shortJobInformation.vehicleModel}} {{shortJobInformation.vehicleYear}}</div>
-                    <div v-if="shortJobInformation.town === null || shortJobInformation.town === undefined">
+                    <div v-if="shortJobInformation.town !== null">
                         <div class="font-semibold">Address: </div>
                         <div class="ml-4">{{shortJobInformation.streetAddress}},</div>
                         <div class="ml-4">{{shortJobInformation.town}},</div> 
@@ -145,8 +145,8 @@
                 {{shortAppointmentInformation.customerLastName}} (Customer ID: {{shortAppointmentInformation.customerId}})</h2>
                 <div class="mb-4">
                     <div><span class="font-semibold">Vehicle Information: </span>{{shortAppointmentInformation.vehicleMake}} {{shortAppointmentInformation.vehicleModel}} {{shortAppointmentInformation.vehicleYear}}</div>
-                    <div><span class="font-semibold">Date: </span>{{shortAppointmentInformation.scheduleDate}}</div>
-                    <div v-if="shortAppointmentInformation.town === null || shortAppointmentInformation.town === undefined">
+                    <div><span class="font-semibold">Date: </span>{{new Date(shortAppointmentInformation.scheduleDate).toLocaleString()}}</div>
+                    <div v-if="shortAppointmentInformation.town === null">
                         <div class="font-semibold">Address: </div>
                         <div class="ml-4">{{shortAppointmentInformation.street}},</div>
                         <div class="ml-4">{{shortAppointmentInformation.town}},</div>

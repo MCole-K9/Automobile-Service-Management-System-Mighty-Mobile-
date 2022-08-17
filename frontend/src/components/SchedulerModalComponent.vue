@@ -245,13 +245,13 @@
                 </div>
             </div>
             
-            <div v-if="selectedJob !== undefined">
+            <div v-if="selectedJob.stages !== null">
                 <div tabindex="0" class="collapse collapse-arrow  divide-y" v-for="stage in selectedJob.stages">
                     <input type="checkbox" />
                     <h3 class="collapse-title text-lg font-semibold">Stage {{stage.stageNumber}}</h3>
                     <div class="collapse-content mx-4">
                         <div><span class="font-semibold">Duration:</span> {{stage.duration}} Hour(s)</div>
-                        <div><span class="font-semibold">Date:</span> {{new Date(stage!.scheduledItem!.date).toLocaleString()}}</div>
+                        <div><span class="font-semibold">Date:</span> {{ stage.scheduledItem != null ? new Date(stage!.scheduledItem!.date).toLocaleString() : ""}}</div>
                         <div><span class="font-semibold">Description:</span> {{stage.description}}</div>                        
                     </div>
                 </div>
