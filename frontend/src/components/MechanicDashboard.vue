@@ -1,12 +1,19 @@
 <template>
     <div class="px-5">
             <span>
-                <div class="h-96 w-1/1 bg-ourYellow shadow rounded-lg p-5">
-                    <span class="flex justify-between font-bold text-2xl py-3">
-                        <label class="">Current Jobs</label>
-                        <p>34</p>
+                <div class="h-fit min-h- w-1/1 bg-ourYellow shadow rounded-lg p-2 gap-y-3 flex flex-col justify-start">
+                    <span class="flex flex-col font-bold text-2xl p-3 bg-gray-800 rounded text-gray-200">
+                        <span class="flex justify-between">
+                            <label class="">Current Jobs</label>
+                            <button class="btn btn-sm" @click="currentJobsToggle = !currentJobsToggle">
+                                {{ currentJobsToggle ? 'hide' : 'show' }}
+                                <svg v-if="!currentJobsToggle" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 17l-4 4m0 0l-4-4m4 4V3"></path></svg>
+                                <svg v-if="currentJobsToggle" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7l4-4m0 0l4 4m-4-4v18"></path></svg>
+                            </button>
+                        </span>
+                        <div class="w-1/1 bg-gray-200 h-64 mt-3" v-if="currentJobsToggle"> </div>
                     </span>
-                    <span class="flex justify-between font-bold text-2xl py-3">
+                    <span class="flex justify-between font-bold text-2xl p-3 bg-gray-800 rounded text-gray-200">
                         <label for="">Job History</label>
                         <button class="btn btn-sm">view</button>
                     </span>
@@ -32,7 +39,8 @@ export default defineComponent({
     data(){
         return{
             UserAppointments : <Appointment[]>([]),
-            test : <any>({})
+            test : <any>({}),
+            currentJobsToggle : false,
         }
     },
     async created(){
