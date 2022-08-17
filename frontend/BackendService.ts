@@ -1,7 +1,6 @@
 import type { User, Appointment, Vehicle, Job, JobStage } from "./src/classlib/Types";
 import axios from "axios";
-import * as dotenv from 'dotenv' // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
-dotenv.config()
+require('dotenv').config()
 import  type { MonthBlock, DayBlock } from "./src/classlib/MonthlySchedule";
 import {HourDataBlock} from "./src/classlib/MonthlySchedule";
 import type { JobStageWithSchedule } from "@/classlib/PrismaDerivedTypes";
