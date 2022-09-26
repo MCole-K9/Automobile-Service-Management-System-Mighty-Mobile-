@@ -11,7 +11,8 @@ let currentUser: User  =  {
     email: "",
     password: "",
     phoneNumber: "",
-    roles: []
+    roles: [],
+    createdAt : new Date()
 };
 
 let newUser: User  =  {

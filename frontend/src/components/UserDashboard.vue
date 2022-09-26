@@ -11,7 +11,7 @@
             
             <div class="stat">
                 <div class="font-medium  stat-title">Date Joined</div>
-                <div class="stat-value">11/8/2022</div>
+                <div class="stat-value">{{created}}</div>
                 <!-- <div class="stat-desc">↗︎ 400 (22%)</div> -->
             </div>
             
@@ -77,7 +77,8 @@ export default defineComponent({
         return{
             UserAppointments : <Appointment[]>([]),
             userVehicles : <Vehicle[]>([]),
-            currentJobs : <Job[]>([])
+            currentJobs : <Job[]>([]),
+            created : <string>({})
         }
     },
     methods:{
@@ -90,7 +91,8 @@ export default defineComponent({
     async created(){
         await this.getAllVehicles()
         let res = await BackendService.getAppointments()
-
+        this.created = new Date().toDateString()
+        
         let alljobs  = await BackendService.getAllJobs()
         let alljobsarray = alljobs?.data as Job[]
         this.currentJobs = alljobsarray.filter(e => e.vehicle?.ownerId == currentUser.User.id && !e.completed)
